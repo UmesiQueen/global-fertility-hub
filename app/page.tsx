@@ -1,11 +1,10 @@
-import { Button } from "@/components/ui/button";
+import { HomeHero } from "@/components/sections/home-hero";
 
 export default function Home() {
   return (
-    <div>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <Button variant="default">Default</Button>
-      </main>
-    </div>
+    <>
+      <HomeHero />
+      <div className="flex items-center justify-center py-5">Other content goes here</div>
+    </>
   );
 }

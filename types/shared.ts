@@ -43,6 +43,11 @@ export const TOPIC_LABELS: Record<FertilityTopic, string> = {
 };
 
 export interface ImageAsset {
+  /**
+   * Empty string means "no photo yet" — cards fall back to a themed gradient
+   * placeholder rather than a broken image. Real photography fills this in
+   * without any component changes.
+   */
   src: string;
   /** Always required — this is an accessibility guardrail, not an option. */
   alt: string;

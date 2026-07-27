@@ -15,18 +15,10 @@ const HERO_IMAGE = {
   alt: "A couple sitting close together on a sofa, foreheads touching, smiling with their eyes closed.",
 };
 
-/**
- * Homepage sections 1 and 2.
- *
- * `lg:min-h-screen` rather than `lg:h-screen`: the section is
- * `overflow-hidden`, and at lg the content runs to roughly 840px — a fixed
- * 100vh would clip the feature panel on the very common 768px-tall laptop.
- * min-h keeps the full-viewport feel on tall screens and lets short ones grow.
- */
 export function HomeHero() {
   return (
     <section
-      className="relative overflow-hidden md:bg-background lg:bg-[#FEF3EE] lg:min-h-screen"
+      className="relative overflow-hidden md:bg-background lg:bg-hero-wash lg:min-h-screen"
     >
       <div className="absolute inset-0 hidden lg:block">
         <Image

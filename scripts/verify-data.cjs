@@ -173,7 +173,7 @@ const check = (cond, msg) => (cond ? ok : fail).push(msg);
   check(fut.length===0, `no content published in the future${fut.length?' -> '+fut.map(x=>x.slug):''}`);
 
 
-  // ---- homepage section render paths ----
+  { // ---- homepage section render paths ----
 
   
   
@@ -226,6 +226,104 @@ const check = (cond, msg) => (cond ? ok : fail).push(msg);
   check(fc.every(c=>cs.includes(c.slug)),'every clinic card links to a real slug');
   check(fs_.every(s=>ss.includes(s.slug)),'every story card links to a real slug');
   check(fe.every(e=>es.includes(e.slug)),'every event card links to a real slug');
+
+  } // end section block
+
+  { // ---- listing page query paths ----
+  const SP=require(ROOT+'/lib/search-params.ts');
+  const qs=(s)=>{const p={};for(const [k,v] of new URLSearchParams(s)){if(k in p){p[k]=[].concat(p[k],v);}else p[k]=v;}return p;};
+  // ---- listing page query paths ----
+
+
+
+
+
+
+
+// ---- the classic pagination bug: filter while deep in a result set
+let h=SP.buildHref('/resources',qs('page=4&sort=oldest'),{category:'ivf-basics'});
+check(!h.includes('page='),`changing a filter on page 4 resets pagination -> ${h}`);
+check(h.includes('sort=oldest'),'unrelated params survive a filter change');
+h=SP.buildHref('/resources',qs('category=ivf-basics&page=2'),{page:'3'});
+check(h.includes('page=3')&&h.includes('category=ivf-basics'),`paging keeps filters -> ${h}`);
+check(SP.buildHref('/resources',qs('page=2'),{page:null})==='/resources','page=1 produces a clean canonical URL');
+check(SP.buildHref('/stories',qs('category=IVF'),{category:null})==='/stories','clearing the last filter returns to the bare path');
+
+// ---- multi-value params, both encodings
+check(JSON.stringify(SP.readParamList(qs('format=video,guide'),'format'))==='["video","guide"]','comma-encoded multi-value parses');
+check(JSON.stringify(SP.readParamList(qs('format=video&format=guide'),'format'))==='["video","guide"]','repeated-key multi-value parses');
+check(SP.readParamList(qs(''),'format').length===0,'absent multi-value param yields []');
+check(SP.readParam(qs('search=%20%20'),'search')===undefined,'whitespace-only search is treated as absent');
+check(SP.readPage(qs('page=abc'))===1 && SP.readPage(qs('page=-3'))===1,'malformed page falls back to 1');
+check(JSON.stringify(SP.toggleInList(['video'],'video'))==='[]','toggling a selected format removes it');
+
+// ---- Resources page paths
+let r=await R.getResources({page:1,pageSize:12});
+check(r.items.length===12 && r.totalPages===2,`resources paginate 12/page (${r.total} total, ${r.totalPages} pages)`);
+const p2=await R.getResources({page:2,pageSize:12});
+const overlap=p2.items.filter(x=>r.items.some(y=>y.id===x.id));
+check(overlap.length===0,'page 2 shares no items with page 1');
+check(r.items.length+p2.items.length===r.total,'pages 1+2 cover every resource exactly once');
+const filtered=await R.getResources({category:'emotional-wellbeing',pageSize:12});
+check(filtered.total>0 && filtered.items.every(x=>x.category==='emotional-wellbeing'),`category filter (${filtered.total} in emotional-wellbeing)`);
+const multi=await R.getResources({formats:['video','download'],pageSize:99});
+check(multi.total>0 && multi.items.every(x=>['video','download'].includes(x.format)),`multi-format filter (${multi.total})`);
+const combo=await R.getResources({category:'treatments-procedures',formats:['article'],search:'egg',pageSize:99});
+check(combo.items.every(x=>x.category==='treatments-procedures'&&x.format==='article'),`filters combine (${combo.total} results)`);
+const dead=await R.getResources({search:'zzzz',pageSize:12});
+check(dead.total===0&&dead.totalPages===1&&dead.page===1,'no-results state is clean (page 1 of 1)');
+const sorted=await R.getResources({sort:'reading-time',pageSize:99});
+check(sorted.items.every((x,i,a)=>i===0||a[i-1].readingTime<=x.readingTime),'reading-time sort is ascending');
+
+// ---- counts drive the sidebar; they must sum to the corpus
+const cc=await R.getResourceCategoryCounts();
+const fc=await R.getResourceFormatCounts();
+check(Object.values(cc).reduce((a,b)=>a+b,0)===r.total,'category counts sum to total resources');
+check(Object.values(fc).reduce((a,b)=>a+b,0)===r.total,'format counts sum to total resources');
+
+// ---- Partners page: five filters that must intersect, not error
+const opts=await C.getClinicFilterOptions();
+let anyEmpty=false;
+for(const c of opts.countries){const res=await C.getClinics({country:c,pageSize:99});if(!res.total)anyEmpty=true;}
+check(!anyEmpty,'every country in the dropdown returns at least one partner');
+for(const l of opts.languages){const res=await C.getClinics({language:l,pageSize:99});if(!res.total)anyEmpty=true;}
+check(!anyEmpty,'every language in the dropdown returns at least one partner');
+for(const t of opts.treatments){const res=await C.getClinics({treatment:t,pageSize:99});if(!res.total)anyEmpty=true;}
+check(!anyEmpty,'every treatment in the dropdown returns at least one partner');
+const narrow=await C.getClinics({country:'Australia',language:'Greek',pageSize:99});
+check(narrow.total===1,`stacked filters narrow correctly (AU + Greek -> ${narrow.total})`);
+const impossible=await C.getClinics({country:'Australia',language:'Marathi',pageSize:99});
+check(impossible.total===0,'an impossible filter combination returns empty, not an error');
+const byName=await C.getClinics({sort:'name',pageSize:99});
+check(byName.items.every((x,i,a)=>i===0||a[i-1].name.localeCompare(x.name)<=0),'name sort is alphabetical');
+check(!('rating' in (byName.items[0]||{})),'partner records still expose no rating field');
+
+// ---- Stories page: every chip must work
+const counts=await S.getStoryCategoryCounts();
+const cats=S.STORY_CATEGORIES;
+const emptyChips=[];
+for(const cat of cats){const res=await S.getStories({category:cat,pageSize:99});if(res.total!==(counts[cat]??0))emptyChips.push(cat);}
+check(emptyChips.length===0,'every story chip count matches its filtered result');
+const zeroChips=cats.filter(c=>!(counts[c]??0));
+check(zeroChips.length===0,`no story chip is empty${zeroChips.length?' -> '+zeroChips.join(', '):''}`);
+const allStories=await S.getStories({pageSize:99});
+check(allStories.items.every(s=>s.status==='approved'),'listing still only shows approved stories');
+
+// ---- Events page tabs
+const now=new Date('2026-07-27');
+const up=await E.getUpcomingEvents({pageSize:99,now});
+const rp=await E.getReplayLibrary({pageSize:99,now});
+check(up.total>0&&rp.total>0,`both tabs have content (${up.total} upcoming, ${rp.total} replays)`);
+const ids=new Set(up.items.map(e=>e.id));
+check(rp.items.every(e=>!ids.has(e.id)),'no event appears in both tabs');
+const tabHref=SP.buildHref('/events',qs('tab=replays&page=2'),{tab:null});
+check(!tabHref.includes('page='),`switching tab resets pagination -> ${tabHref}`);
+const searchUp=await E.getUpcomingEvents({search:'embryologist',pageSize:99,now});
+check(searchUp.total>0,`event search works (${searchUp.total} hit)`);
+
+
+  } // end listing block
+
   console.log('\n--- PASS ---');
   ok.forEach(m=>console.log('  ok  ', m));
   if (fail.length) { console.log('\n--- FAIL ---'); fail.forEach(m=>console.log('  FAIL', m)); }

@@ -172,6 +172,60 @@ const check = (cond, msg) => (cond ? ok : fail).push(msg);
   const fut = [...res,...sto].filter(x=>x.publishedAt>'2026-07-27');
   check(fut.length===0, `no content published in the future${fut.length?' -> '+fut.map(x=>x.slug):''}`);
 
+
+  // ---- homepage section render paths ----
+
+  
+  
+  
+  const F=require(ROOT+'/lib/format.ts');
+
+  // Each homepage section's exact repository call must return content,
+  // otherwise the section self-suppresses and the page silently loses a band.
+  const fr=await R.getFeaturedResources(6);
+  const fc=await C.getFeaturedClinics(6);
+  const fs_=await S.getFeaturedStories(6);
+  const fe=await E.getFeaturedEvents(3);
+  check(fr.length===6,`FeaturedResources renders ${fr.length}/6 cards`);
+  check(fc.length===6,`FeaturedPartners renders ${fc.length}/6 cards`);
+  check(fs_.length===6,`FeaturedStories renders ${fs_.length}/6 cards`);
+  check(fe.length===3,`UpcomingEvents renders ${fe.length}/3 cards`);
+
+  // Card fields the components read must be present on every rendered record.
+  check(fr.every(r=>r.title&&r.excerpt&&r.coverImage.alt&&r.readingTime&&r.format),'resource cards have every field ResourceCard reads');
+  check(fc.every(c=>c.name&&c.city&&c.country&&c.countryCode&&c.treatments.length&&c.coverImage.alt),'clinic cards have every field ClinicCard reads');
+  check(fs_.every(s=>s.title&&s.preview&&s.author?.name&&s.category&&s.coverImage.alt),'story cards have every field StoryCard reads');
+  check(fe.every(e=>e.title&&e.description&&e.timezone&&e.startsAt&&e.speakers.length&&e.image.alt),'event cards have every field EventCard reads');
+
+  // Formatters must not throw on any real record, and must be stable.
+  let threw=null;
+  try{
+    fr.forEach(r=>{F.formatReadingTime(r.readingTime,r.format);F.titleCase(r.format);});
+    fs_.forEach(s=>{F.formatDateShort(s.publishedAt);F.formatReadingTime(s.readingTime);});
+    fc.forEach(c=>{F.countryFlag(c.countryCode);c.treatments.map(F.titleCase);});
+    fe.forEach(e=>{F.formatEventDate(e);F.formatEventTime(e);F.formatDuration(e.durationMinutes);});
+  }catch(err){threw=err.message;}
+  check(!threw,`formatters run clean on every rendered record${threw?' -> '+threw:''}`);
+
+  // Event times must read in the event's own zone, not the server's.
+  const perth=fe.find(e=>e.timezone==='Australia/Perth')||(await E.getUpcomingEvents({pageSize:99})).items.find(e=>e.timezone==='Australia/Perth');
+  const t=F.formatEventTime(perth);
+  check(/AWST|GMT\+8/.test(t),`event time renders in its own timezone -> "${t}"`);
+  const before=F.formatEventTime(perth);
+  process.env.TZ='America/New_York';
+  check(F.formatEventTime(perth)===before,'event time is unaffected by server timezone');
+
+  check(F.formatDate('2026-06-12')==='12 June 2026',`formatDate -> "${F.formatDate('2026-06-12')}"`);
+  check(F.formatDuration(90)==='1h 30m',`formatDuration(90) -> "${F.formatDuration(90)}"`);
+  check(F.formatReadingTime(18,'video')==='18 min watch','videos say "watch" not "read"');
+  check(F.countryFlag('AU').length>0 && F.countryFlag('ZZZ')==='','countryFlag handles valid + invalid codes');
+
+  // Detail routes the cards link to must exist as data.
+  const rs=await R.getAllResourceSlugs(), cs=await C.getAllClinicSlugs(), ss=await S.getAllStorySlugs(), es=await E.getAllEventSlugs();
+  check(fr.every(r=>rs.includes(r.slug)),'every resource card links to a real slug');
+  check(fc.every(c=>cs.includes(c.slug)),'every clinic card links to a real slug');
+  check(fs_.every(s=>ss.includes(s.slug)),'every story card links to a real slug');
+  check(fe.every(e=>es.includes(e.slug)),'every event card links to a real slug');
   console.log('\n--- PASS ---');
   ok.forEach(m=>console.log('  ok  ', m));
   if (fail.length) { console.log('\n--- FAIL ---'); fail.forEach(m=>console.log('  FAIL', m)); }

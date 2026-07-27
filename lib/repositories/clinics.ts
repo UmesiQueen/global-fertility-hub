@@ -9,7 +9,7 @@ import type {
   Resource,
   Treatment,
 } from "@/types";
-import { matches, paginate } from "./shared";
+import { featuredFirst, matches, paginate } from "./shared";
 
 /**
  * The only supported way for a page to read Educational Clinic Partners.
@@ -84,11 +84,12 @@ export async function getClinicBySlug(slug: string): Promise<Clinic | null> {
 }
 
 export async function getFeaturedClinics(limit = 6): Promise<Clinic[]> {
-  const featured = clinics.filter((item) => item.isFeatured);
-  const pool = featured.length ? featured : clinics;
-  return [...pool]
-    .sort((a, b) => b.joinedAt.localeCompare(a.joinedAt))
-    .slice(0, limit);
+  return featuredFirst(
+    clinics,
+    (item) => Boolean(item.isFeatured),
+    (a, b) => b.joinedAt.localeCompare(a.joinedAt),
+    limit,
+  );
 }
 
 export async function getAllClinicSlugs(): Promise<string[]> {

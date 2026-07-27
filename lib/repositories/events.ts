@@ -3,7 +3,7 @@ import { events } from "@/lib/data/events";
 import { resources } from "@/lib/data/resources";
 import { findRelated } from "@/lib/relations";
 import type { Clinic, Event, Paginated, Resource } from "@/types";
-import { matches, paginate } from "./shared";
+import { featuredFirst, matches, paginate } from "./shared";
 
 /**
  * The only supported way for a page to read events.
@@ -87,23 +87,23 @@ export async function getFeaturedEvents(
   limit = 3,
   now = new Date(),
 ): Promise<Event[]> {
-  const upcoming = events
-    .filter((event) => isUpcoming(event, now))
-    .sort(byStartAsc);
-
-  const featured = upcoming.filter((event) => event.isFeatured);
-  const pool = featured.length ? featured : upcoming;
+  const upcoming = events.filter((event) => isUpcoming(event, now));
 
   // If nothing is upcoming, the homepage rail falls back to recent replays
   // rather than rendering empty.
-  if (!pool.length) {
+  if (!upcoming.length) {
     return events
       .filter((event) => isReplay(event, now))
       .sort(byStartDesc)
       .slice(0, limit);
   }
 
-  return pool.slice(0, limit);
+  return featuredFirst(
+    upcoming,
+    (event) => Boolean(event.isFeatured),
+    byStartAsc,
+    limit,
+  );
 }
 
 export async function getAllEventSlugs(): Promise<string[]> {

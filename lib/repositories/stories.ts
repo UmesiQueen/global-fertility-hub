@@ -4,7 +4,7 @@ import { resources } from "@/lib/data/resources";
 import { stories } from "@/lib/data/stories";
 import { findRelated } from "@/lib/relations";
 import type { Clinic, Event, Paginated, Resource, Story } from "@/types";
-import { matches, paginate } from "./shared";
+import { featuredFirst, matches, paginate } from "./shared";
 
 /**
  * The only supported way for a page to read community stories.
@@ -69,12 +69,12 @@ export async function getStoryBySlug(slug: string): Promise<Story | null> {
 }
 
 export async function getFeaturedStories(limit = 6): Promise<Story[]> {
-  const all = published();
-  const featured = all.filter((item) => item.isFeatured);
-  const pool = featured.length ? featured : all;
-  return [...pool]
-    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
-    .slice(0, limit);
+  return featuredFirst(
+    published(),
+    (item) => Boolean(item.isFeatured),
+    (a, b) => b.publishedAt.localeCompare(a.publishedAt),
+    limit,
+  );
 }
 
 export async function getAllStorySlugs(): Promise<string[]> {

@@ -10,7 +10,7 @@ import type {
   ResourceCategory,
   ResourceFormat,
 } from "@/types";
-import { paginate } from "./shared";
+import { featuredFirst, paginate } from "./shared";
 
 /**
  * The only supported way for a page to read resources.
@@ -92,11 +92,12 @@ export async function getResourceBySlug(
 }
 
 export async function getFeaturedResources(limit = 6): Promise<Resource[]> {
-  const featured = resources.filter((item) => item.isFeatured).sort(byNewest);
-  // Falls back to newest so the homepage never renders an empty rail if
-  // nobody has flagged anything as featured in the CMS.
-  const pool = featured.length ? featured : [...resources].sort(byNewest);
-  return pool.slice(0, limit);
+  return featuredFirst(
+    resources,
+    (item) => Boolean(item.isFeatured),
+    byNewest,
+    limit,
+  );
 }
 
 export async function getAllResourceSlugs(): Promise<string[]> {

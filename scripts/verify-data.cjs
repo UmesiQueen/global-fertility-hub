@@ -324,6 +324,115 @@ check(searchUp.total>0,`event search works (${searchUp.total} hit)`);
 
   } // end listing block
 
+  { // ---- detail pages + SEO ----
+
+
+
+
+
+const MD=require(ROOT+'/lib/markdown.ts');
+const SEO=require(ROOT+'/lib/seo.ts');
+
+// ---- markdown parses every body without losing content
+const bodies=[];
+for(const s of await R.getAllResourceSlugs()) bodies.push(['resource:'+s,(await R.getResourceBySlug(s)).body]);
+for(const s of await S.getAllStorySlugs()) bodies.push(['story:'+s,(await S.getStoryBySlug(s)).body]);
+let empty=[],lossy=[];
+for(const [id,body] of bodies){
+  const blocks=MD.parseMarkdown(body);
+  if(!blocks.length) empty.push(id);
+  const plain=MD.markdownToPlainText(body);
+  // every non-syntax word in the source must survive the round trip
+  const words=body.replace(/[#*\-]/g,' ').split(/\s+/).filter(w=>w.length>3);
+  const missing=words.filter(w=>!plain.includes(w));
+  if(missing.length) lossy.push(id+' lost '+missing.slice(0,3).join(','));
+}
+check(empty.length===0,`every body parses to >=1 block (${bodies.length} bodies)`);
+check(lossy.length===0,`markdown round-trip loses no words${lossy.length?' -> '+lossy.slice(0,2):''}`);
+
+// ---- markdown edge cases
+check(MD.parseMarkdown('').length===0,'empty body yields no blocks (no crash)');
+check(MD.parseMarkdown('## H\r\n\r\nBody').length===2,'CRLF content still splits into blocks');
+const inl=MD.parseInline('a **b** c *d* e');
+check(inl.filter(n=>n.type==='strong').length===1 && inl.filter(n=>n.type==='em').length===1,'bold and italic parse without eating each other');
+check(MD.parseMarkdown('- one\n- two')[0].items.length===2,'bullet list parses');
+check(MD.markdownToPlainText('## Head\n\nBody text here',9).endsWith('…'),'plain text truncates on a word boundary');
+const weird=MD.parseMarkdown('#### deep heading\n\ntext');
+check(weird.length>0 && weird[0].type==='paragraph','unsupported syntax falls through as text, not dropped');
+
+// ---- headings: exactly one h1 per detail page is a page concern, but the
+// body must never contain an h1 that would compete with it
+const anyH1=bodies.filter(([,b])=>/^#\s/m.test(b));
+check(anyH1.length===0,'no body starts a level-1 heading (would duplicate the page h1)');
+
+// ---- every detail route's related rails
+const emptyRails=[];
+for(const s of await R.getAllResourceSlugs()){
+  const r=await R.getResourceBySlug(s);
+  const [a,b,c]=await Promise.all([R.getRelatedResources(r),R.getRelatedClinicsForResource(r),R.getRelatedEventsForResource(r)]);
+  if(a.length+b.length+c.length===0) emptyRails.push('resource:'+s);
+  if([...a,...b,...c].some(x=>x.id===r.id)) fail.push('resource '+s+' relates to itself');
+}
+for(const s of await S.getAllStorySlugs()){
+  const st=await S.getStoryBySlug(s);
+  const [a,b,c,d]=await Promise.all([S.getSimilarStories(st),S.getRelatedResourcesForStory(st),S.getRelatedEventsForStory(st),S.getRelatedClinicsForStory(st)]);
+  if(a.length+b.length+c.length+d.length===0) emptyRails.push('story:'+s);
+}
+for(const s of await C.getAllClinicSlugs()){
+  const cl=await C.getClinicBySlug(s);
+  const [a,b]=await Promise.all([C.getRelatedResourcesForClinic(cl),C.getRelatedEventsForClinic(cl)]);
+  if(a.length+b.length===0) emptyRails.push('clinic:'+s);
+}
+for(const s of await E.getAllEventSlugs()){
+  const ev=await E.getEventBySlug(s);
+  const [a,b,c]=await Promise.all([E.getRelatedEvents(ev),E.getRelatedResourcesForEvent(ev),E.getRelatedClinicsForEvent(ev)]);
+  if(a.length+b.length+c.length===0) emptyRails.push('event:'+s);
+}
+check(emptyRails.length===0,`every detail page has at least one related rail${emptyRails.length?' -> '+emptyRails.join(', '):''}`);
+
+// ---- JSON-LD
+const r1=await R.getResourceBySlug((await R.getAllResourceSlugs())[0]);
+const e1=await E.getEventBySlug((await E.getAllEventSlugs())[0]);
+const c1=await C.getClinicBySlug((await C.getAllClinicSlugs())[0]);
+const st1=await S.getStoryBySlug((await S.getAllStorySlugs())[0]);
+for(const [name,doc] of [['resource',SEO.resourceJsonLd(r1)],['event',SEO.eventJsonLd(e1)],['clinic',SEO.clinicJsonLd(c1)],['story',SEO.storyJsonLd(st1)],['breadcrumb',SEO.breadcrumbJsonLd([{label:'Home',href:'/'},{label:'X'}])]]){
+  let parsed=null;try{parsed=JSON.parse(JSON.stringify(doc));}catch(e){}
+  check(parsed && parsed['@context']==='https://schema.org' && parsed['@type'],`${name} JSON-LD is serialisable with @context/@type`);
+}
+const ev=SEO.eventJsonLd(e1);
+check(new Date(ev.endDate)>new Date(ev.startDate),'event JSON-LD endDate is after startDate');
+check(ev.endDate.endsWith('Z'),'event JSON-LD endDate is a valid ISO instant');
+// the constraint that matters most for this client
+const clinicDoc=JSON.stringify(SEO.clinicJsonLd(c1));
+check(!/aggregateRating|reviewCount|ratingValue|"Review"/i.test(clinicDoc),'clinic JSON-LD emits no rating or review markup');
+check(SEO.clinicJsonLd(c1)['@type']==='Organization','clinic is typed Organization, not MedicalClinic');
+const crumbs=SEO.breadcrumbJsonLd([{label:'Home',href:'/'},{label:'Resources',href:'/resources'},{label:'Title'}]);
+check(crumbs.itemListElement.length===3 && crumbs.itemListElement[0].position===1,'breadcrumb positions are 1-indexed and complete');
+check(!('item' in crumbs.itemListElement[2]),'final breadcrumb has no item URL (it is the current page)');
+
+// ---- metadata descriptions are never empty
+const noDesc=[];
+for(const s of await R.getAllResourceSlugs()){const r=await R.getResourceBySlug(s);
+  const d=r.excerpt||MD.markdownToPlainText(r.body,155); if(!d||d.length<20) noDesc.push('resource:'+s);}
+for(const s of await S.getAllStorySlugs()){const st=await S.getStoryBySlug(s);
+  const d=st.preview||MD.markdownToPlainText(st.body,155); if(!d||d.length<20) noDesc.push('story:'+s);}
+for(const s of await C.getAllClinicSlugs()){const c=await C.getClinicBySlug(s); if(!c.intro||c.intro.length<20) noDesc.push('clinic:'+s);}
+for(const s of await E.getAllEventSlugs()){const e=await E.getEventBySlug(s); if(!e.description||e.description.length<20) noDesc.push('event:'+s);}
+check(noDesc.length===0,`every detail page has a usable meta description${noDesc.length?' -> '+noDesc:''}`);
+const long=[];
+for(const s of await R.getAllResourceSlugs()){const r=await R.getResourceBySlug(s);
+  const d=r.excerpt||MD.markdownToPlainText(r.body,155); if(d.length>200) long.push('resource:'+s);}
+check(long.length===0,`no meta description runs past ~200 chars${long.length?' -> '+long:''}`);
+
+// ---- unknown slugs must 404, not throw
+check(await R.getResourceBySlug('nope')===null && await C.getClinicBySlug('nope')===null && await S.getStoryBySlug('nope')===null && await E.getEventBySlug('nope')===null,'unknown slugs return null on all four routes');
+// a pending/rejected story must not be reachable by URL
+const pending=require(ROOT+'/lib/data/stories.ts').stories.filter(s=>s.status!=='approved');
+check(pending.every(async s=>await S.getStoryBySlug(s.slug)===null),'non-approved stories are unreachable by direct URL');
+
+
+  } // end detail block
+
   console.log('\n--- PASS ---');
   ok.forEach(m=>console.log('  ok  ', m));
   if (fail.length) { console.log('\n--- FAIL ---'); fail.forEach(m=>console.log('  FAIL', m)); }

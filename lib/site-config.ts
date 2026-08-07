@@ -43,8 +43,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
   {
     heading: "About",
     links: [
-      { label: "Our Story", href: "/about" },
-      { label: "Meet Henry & Precious", href: "/about#henry-and-precious" },
+      { label: "Meet Henry & Precious", href: "/about" },
       { label: "Book a Consultation", href: "/consultations" },
       { label: "Join the Community", href: "/join" },
       { label: "Contact", href: "/contact" },

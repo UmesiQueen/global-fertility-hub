@@ -23,7 +23,7 @@ export function SiteHeader() {
             <Search className="size-4.5" />
           </ButtonLink>
 
-          <ButtonLink href="/contact" className="hidden sm:inline-flex">
+          <ButtonLink href="/join" className="hidden sm:inline-flex">
             Join Community
           </ButtonLink>
 

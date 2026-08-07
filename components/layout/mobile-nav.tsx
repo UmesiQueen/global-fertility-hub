@@ -78,7 +78,7 @@ export function MobileNav() {
           </nav>
 
           <div className="border-t border-border p-5">
-            <ButtonLink href="/contact" size="lg" className="w-full">
+            <ButtonLink href="/join" size="lg" className="w-full">
               Join the Community
             </ButtonLink>
           </div>

@@ -3,14 +3,6 @@ import { ButtonLink } from "@/components/shared/button-link";
 import { ScriptAccent } from "@/components/shared/script-accent";
 import { cn } from "@/lib/utils";
 
-/**
- * Homepage section 8 — the closing call to action.
- *
- * TODO(client): "Join Community" points at /contact until we know what it
- * actually means — an email list, an external group, or on-platform accounts.
- * That answer decides whether auth enters phase 1, so it's deliberately a
- * single link to change rather than a form built on a guess.
- */
 export function JoinCommunity({ className }: { className?: string }) {
   return (
     <section
@@ -35,7 +27,7 @@ export function JoinCommunity({ className }: { className?: string }) {
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <ButtonLink href="/contact" size="lg">
+            <ButtonLink href="/join" size="lg">
               Join Our Community
             </ButtonLink>
             <ButtonLink href="/resources" variant="outline" size="lg">

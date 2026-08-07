@@ -51,7 +51,7 @@ export function HomeHero() {
               <BookOpen aria-hidden="true" className="size-4" />
               Explore Resources
             </ButtonLink>
-            <ButtonLink href="/contact" variant="outline" size="lg">
+            <ButtonLink href="/join" variant="outline" size="lg">
               <Users aria-hidden="true" className="size-4" />
               Join the Community
             </ButtonLink>

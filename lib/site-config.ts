@@ -14,6 +14,8 @@ export const siteConfig = {
   description:
     "Trusted education, real stories and a global community here to support you through every step of your fertility journey.",
   url: "https://globalfertilityhub.com",
+  /** TODO(client): the real Instagram community handle. */
+  communityUrl: "https://instagram.com/globalfertilityhub",
 } as const;
 
 /** Primary navigation — order matches the mockups. */
@@ -44,6 +46,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
       { label: "Our Story", href: "/about" },
       { label: "Meet Henry & Precious", href: "/about#henry-and-precious" },
       { label: "Book a Consultation", href: "/consultations" },
+      { label: "Join the Community", href: "/join" },
       { label: "Contact", href: "/contact" },
     ],
   },

@@ -433,6 +433,66 @@ check(pending.every(async s=>await S.getStoryBySlug(s.slug)===null),'non-approve
 
   } // end detail block
 
+  { // ---- join form schema + phone ----
+  const V=require(ROOT+'/lib/validation/join.ts');
+  const CO=require(ROOT+'/lib/countries.ts');
+  const S=V.joinSchema;
+  const good={fullName:'Sarah Whitfield',email:'sarah@example.com',countryCode:'AU',phone:'',referralSource:'Instagram',reason:'',marketingConsent:false};
+  const err=(r,p)=>r.success?null:r.error.issues.find(i=>i.path[0]===p)?.message;
+
+  check(S.safeParse(good).success,'minimal valid submission parses');
+  check(err(S.safeParse({...good,fullName:'A'}),'fullName'),'one-character name rejected');
+  check(err(S.safeParse({...good,fullName:'   '}),'fullName'),'whitespace-only name rejected');
+  check(err(S.safeParse({...good,fullName:'x'.repeat(101)}),'fullName'),'over-long name rejected');
+  check(err(S.safeParse({...good,email:'nope'}),'email'),'malformed email rejected');
+  check(err(S.safeParse({...good,email:'a@b'}),'email'),'email without TLD rejected');
+  check(S.safeParse({...good,email:'first.last+tag@sub.example.co.uk'}).success,'plus-addressing accepted');
+  check(S.safeParse({...good,email:'  SARAH@EXAMPLE.COM '}).data.email==='sarah@example.com','email trimmed + lowercased by schema');
+  check(S.safeParse({...good,countryCode:'au'}).data.countryCode==='AU','country code upper-cased by schema');
+  check(err(S.safeParse({...good,countryCode:'ZZ'}),'countryCode'),'unknown country rejected');
+  check(err(S.safeParse({...good,referralSource:'Carrier pigeon'}),'referralSource'),'referral outside list rejected');
+  check(err(S.safeParse({...good,reason:'x'.repeat(1001)}),'reason'),'over-long reason rejected');
+
+  check(S.safeParse({...good,marketingConsent:false}).success,'joining without consent is valid');
+  check(!S.safeParse({...good,marketingConsent:'on'}).success,'string "on" is not accepted as consent');
+  check(!S.safeParse({...good,marketingConsent:1}).success,'1 is not accepted as consent');
+  check(S.safeParse({...good,marketingConsent:true}).data.marketingConsent===true,'true consent survives parse');
+
+  // ---- phone: one E.164 string, validated by libphonenumber
+  check(S.safeParse({...good,phone:''}).success,'blank phone is valid (field is optional)');
+  check(S.safeParse({...good,phone:undefined}).success,'absent phone is valid');
+  check(S.safeParse({...good,phone:'+447400123456'}).success,'valid UK mobile accepted');
+  // 07700 900xxx is Ofcom's reserved fictional range — libphonenumber knows
+  // it is not assignable, which a digit-count check never would.
+  check(err(S.safeParse({...good,phone:'+447700900123'}),'phone'),'reserved fictional UK range rejected');
+  check(S.safeParse({...good,phone:'+61400123456'}).success,'valid AU mobile accepted');
+  check(S.safeParse({...good,phone:'+2348031234567'}).success,'valid NG mobile accepted');
+  check(S.safeParse({...good,phone:'+12125550123'}).success,'valid US number accepted');
+  check(err(S.safeParse({...good,phone:'+441'}),'phone'),'too-short national number rejected');
+  check(err(S.safeParse({...good,phone:'+9999999999999'}),'phone'),'unassigned country code rejected');
+  check(err(S.safeParse({...good,phone:'abc'}),'phone'),'letters rejected');
+  check(err(S.safeParse({...good,phone:'400123456'}),'phone'),'number without country code rejected');
+  check(err(S.safeParse({...good,phone:'+44 7700 900123 ext 5'}),'phone'),'trailing junk rejected');
+
+  // normalizePhone: empty string must not reach the database as ""
+  check(V.normalizePhone('')===undefined,'empty phone normalises to undefined');
+  check(V.normalizePhone('   ')===undefined,'whitespace phone normalises to undefined');
+  check(V.normalizePhone(undefined)===undefined,'undefined phone stays undefined');
+  check(V.normalizePhone('+447400123456')==='+447400123456','valid phone passes through unchanged');
+  check(V.normalizePhone('  +447400123456  ')==='+447400123456','phone is trimmed');
+
+  // ---- country list (residence select) still intact
+  const countries=CO.getCountries();
+  check(countries.length>150,`country list resolves (${countries.length})`);
+  check(countries.every((c,i,a)=>i===0||a[i-1].name.localeCompare(c.name)<=0),'countries alphabetical by name');
+  check(new Set(countries.map(c=>c.code)).size===countries.length,'no duplicate ISO codes');
+  check(CO.getCountryName('GB')==='United Kingdom',`GB resolves to "${CO.getCountryName('GB')}"`);
+  check(CO.getCountryName('ZZ')===null,'unknown code returns null');
+  check(CO.isValidCountryCode('NG')&&!CO.isValidCountryCode('XX'),'country code validation works');
+  // dial codes now belong to libphonenumber only — guard against them creeping back
+  check(!('dialCode' in countries[0]),'countries carry no dial code (single source of truth)');
+  } // end join block
+
   console.log('\n--- PASS ---');
   ok.forEach(m=>console.log('  ok  ', m));
   if (fail.length) { console.log('\n--- FAIL ---'); fail.forEach(m=>console.log('  FAIL', m)); }

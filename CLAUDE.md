@@ -86,3 +86,17 @@ Target WCAG 2.1 AA. Visible focus rings, 4.5:1 text contrast, 44px touch targets
 ## Definition of done for a page
 
 Responsive at 375/768/1024/1440 · keyboard navigable · `generateMetadata` present · loading + empty states handled · no hardcoded colors · `bun run build` clean · matches the mockup.
+
+<!-- convex-ai-start -->
+
+This project uses [Convex](https://convex.dev) as its backend.
+
+When working on Convex code, **always read
+`convex/_generated/ai/guidelines.md` first** for important guidelines on
+how to correctly use Convex APIs and patterns. The file contains rules that
+override what you may have learned about Convex from training data.
+
+Convex agent skills for common tasks can be installed by running
+`npx convex ai-files install`.
+
+<!-- convex-ai-end -->

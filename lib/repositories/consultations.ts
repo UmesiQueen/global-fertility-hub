@@ -26,21 +26,45 @@ export async function getConsultationFaqs(): Promise<ConsultationFaq[]> {
 }
 
 /**
- * Availability from today onward. Past dates are filtered here so the
- * calendar can never offer a slot in the past, whatever the data says.
+ * Availability from now onward.
+ *
+ * Filters on the instant, not the date string — a 9am slot is gone by 10am
+ * even though "today" is still today. Days left with no future slots drop out
+ * entirely so the calendar never shows a selectable date with nothing behind
+ * it.
  */
 export async function getAvailability(
   now = new Date(),
 ): Promise<AvailabilitySlot[]> {
-  const today = now.toISOString().slice(0, 10);
   return availability
-    .filter((slot) => slot.date >= today && slot.times.length > 0)
+    .map((slot) => ({
+      ...slot,
+      starts: slot.starts.filter(
+        (start) => new Date(start).getTime() > now.getTime(),
+      ),
+    }))
+    .filter((slot) => slot.starts.length > 0)
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export async function getAvailabilityForDate(
   date: string,
+  now = new Date(),
 ): Promise<string[]> {
-  const slot = availability.find((item) => item.date === date);
-  return slot?.times ?? [];
+  const days = await getAvailability(now);
+  return days.find((item) => item.date === date)?.starts ?? [];
+}
+
+/**
+ * Confirms a slot is still genuinely on offer.
+ *
+ * The server action calls this before writing anything — a booking form left
+ * open overnight would otherwise submit a slot that has since passed.
+ */
+export async function isSlotAvailable(
+  start: string,
+  now = new Date(),
+): Promise<boolean> {
+  const days = await getAvailability(now);
+  return days.some((day) => day.starts.includes(start));
 }

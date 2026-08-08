@@ -18,12 +18,20 @@ export interface ConsultationType {
   currency: "AUD";
 }
 
-/** A bookable slot. Phase 1 is UI-only against mock availability. */
+/**
+ * A day of bookable slots.
+ *
+ * `starts` holds absolute instants with an offset, not wall-clock times, so a
+ * slot means the same moment to everyone. Storing "09:00" plus a timezone
+ * name would force every consumer to redo the offset maths, and the audience
+ * is international — this is exactly where "I booked 9am and they called at
+ * 2am" comes from.
+ */
 export interface AvailabilitySlot {
-  /** ISO 8601 date, e.g. "2026-08-16" */
+  /** Calendar date in the practitioners' timezone, e.g. "2026-08-16". */
   date: string;
-  /** Local start times, e.g. ["09:00", "11:00"] */
-  times: string[];
+  /** ISO 8601 instants, e.g. ["2026-08-16T09:00:00+08:00"]. */
+  starts: string[];
 }
 
 export interface ConsultationFaq {

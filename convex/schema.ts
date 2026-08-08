@@ -44,4 +44,55 @@ export default defineSchema({
     // For the future admin dashboard: recent signups, and acquisition mix.
     .index("by_createdAt", ["createdAt"])
     .index("by_referralSource", ["referralSource"]),
+
+  /**
+   * Consultation booking requests.
+   *
+   * A request, not a confirmed booking — Henry & Precious confirm and invoice
+   * manually. `status` tracks that, so the table never implies someone has a
+   * confirmed appointment they don't have.
+   *
+   * Same privacy posture as `members`: everyone here has self-identified as
+   * being on a fertility journey, and `note` is free text where people will
+   * describe genuinely sensitive things. Never expose these through a public
+   * query, and never put `note` in an analytics view.
+   */
+  consultationRequests: defineTable({
+    /** Which session was chosen, e.g. "con-one-on-one". */
+    consultationTypeId: v.string(),
+    consultationName: v.string(),
+    durationMinutes: v.number(),
+    priceQuoted: v.number(),
+    currency: v.string(),
+
+    /** Absolute instant of the requested slot, e.g. "2026-08-16T09:00:00+08:00". */
+    startsAt: v.string(),
+    /** The visitor's zone at the time of booking, for writing to them clearly. */
+    requesterTimezone: v.optional(v.string()),
+
+    fullName: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    /** Links back to a community member if they quoted their ID. */
+    memberId: v.optional(v.string()),
+    /** Free text. Treat as sensitive. */
+    note: v.optional(v.string()),
+
+    status: v.union(
+      v.literal("requested"),
+      v.literal("confirmed"),
+      v.literal("declined"),
+      v.literal("cancelled"),
+    ),
+
+    createdAt: v.number(),
+    confirmationEmailSentAt: v.optional(v.number()),
+    submissionIp: v.optional(v.string()),
+  })
+    // Guards against two people requesting the same slot.
+    .index("by_startsAt", ["startsAt"])
+    .index("by_email", ["email"])
+    .index("by_status", ["status"])
+    .index("by_createdAt", ["createdAt"])
+    .index("by_memberId", ["memberId"]),
 });

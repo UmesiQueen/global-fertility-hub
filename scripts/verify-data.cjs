@@ -493,6 +493,94 @@ check(pending.every(async s=>await S.getStoryBySlug(s.slug)===null),'non-approve
   check(!('dialCode' in countries[0]),'countries carry no dial code (single source of truth)');
   } // end join block
 
+  { // ---- consultations: slots, timezones, booking schema ----
+  const C=require(ROOT+'/lib/repositories/consultations.ts');
+  const F=require(ROOT+'/lib/format.ts');
+  const V=require(ROOT+'/lib/validation/consultation.ts');
+  const S=V.bookingSchema;
+  const PZ='Australia/Perth';
+
+const before=new Date('2026-07-01T00:00:00Z');
+
+// ---- availability shape
+const days=await C.getAvailability(before);
+check(days.length===10,`all 10 days available before August (${days.length})`);
+check(days.every(d=>d.starts.length>0),'no day has an empty slot list');
+check(days.every(d=>d.starts.every(s=>!Number.isNaN(new Date(s).getTime()))),'every slot parses as a date');
+check(days.every(d=>d.starts.every(s=>s.startsWith(d.date))),'every slot instant belongs to its own calendar date');
+check(days.every((d,i,a)=>i===0||a[i-1].date<=d.date),'days sorted ascending');
+const allStarts=days.flatMap(d=>d.starts);
+check(new Set(allStarts).size===allStarts.length,`no duplicate slots (${allStarts.length} total)`);
+
+// ---- past filtering happens on the instant, not the date
+const midday=new Date('2026-08-03T04:00:00Z'); // 12:00 Perth on the 3rd
+const after=await C.getAvailability(midday);
+const day3=after.find(d=>d.date==='2026-08-03');
+check(day3 && day3.starts.length===1,`same-day past slots dropped, later ones kept (${day3?day3.starts.length:0} left on 3 Aug)`);
+check(day3 && day3.starts[0].includes('T14:00'),'the surviving slot is the 2pm one');
+const evening=new Date('2026-08-03T10:00:00Z'); // 18:00 Perth
+check(!(await C.getAvailability(evening)).some(d=>d.date==='2026-08-03'),'a day with no future slots disappears entirely');
+check((await C.getAvailability(new Date('2027-01-01'))).length===0,'everything past yields an empty list, not a crash');
+
+// ---- slot availability guard used by the action
+check(await C.isSlotAvailable('2026-08-03T09:00:00+08:00',before),'a real future slot is bookable');
+check(!(await C.isSlotAvailable('2026-08-03T09:00:00+08:00',midday)),'a slot that has passed is rejected');
+check(!(await C.isSlotAvailable('2026-08-03T10:30:00+08:00',before)),'an invented time is rejected');
+check(!(await C.isSlotAvailable('not-a-date',before)),'garbage input is rejected without throwing');
+
+// ---- timezone conversion: the whole point of the page
+const slot='2026-08-03T09:00:00+08:00';
+check(F.formatTimeInZone(slot,PZ)==='9:00 am',`Perth reads 9:00 am (got "${F.formatTimeInZone(slot,PZ)}")`);
+check(F.formatTimeInZone(slot,'Europe/London')==='2:00 am',`London reads 2:00 am (got "${F.formatTimeInZone(slot,'Europe/London')}")`);
+check(F.formatTimeInZone(slot,'America/New_York')==='9:00 pm',`New York reads 9:00 pm (got "${F.formatTimeInZone(slot,'America/New_York')}")`);
+check(F.formatDateInZone(slot,'America/New_York').includes('2 Aug'),`New York is the PREVIOUS day (${F.formatDateInZone(slot,'America/New_York')})`);
+check(F.formatDateInZone(slot,PZ).includes('3 Aug'),'Perth is the 3rd');
+check(F.formatTimeInZone(slot,'Asia/Singapore')==='9:00 am','Singapore shares Perth wall-clock');
+check(F.isSameWallClock(slot,PZ,'Asia/Singapore'),'same wall clock detected -> "your time" suppressed');
+check(!F.isSameWallClock(slot,PZ,'Europe/London'),'different wall clock detected -> "your time" shown');
+check(F.isSameWallClock(slot,PZ,PZ),'identical zones are same wall clock');
+check(/AWST|GMT\+8/.test(F.formatTimeWithZone(slot,PZ)),`zone label present (${F.formatTimeWithZone(slot,PZ)})`);
+
+// a London slot crossing DST — the reason offsets can't be hardcoded
+const winter='2026-01-15T09:00:00+08:00';
+check(F.formatTimeInZone(winter,'Europe/London')==='1:00 am',`London in winter is 1:00 am, not 2:00 (got "${F.formatTimeInZone(winter,'Europe/London')}")`);
+
+// server timezone must not leak into output
+const original=process.env.TZ;
+const baseline=F.formatTimeInZone(slot,PZ)+F.formatDateInZone(slot,PZ);
+process.env.TZ='America/Chicago';
+check(F.formatTimeInZone(slot,PZ)+F.formatDateInZone(slot,PZ)===baseline,'output is unaffected by the server timezone');
+process.env.TZ=original;
+
+// ---- booking schema
+const good={consultationTypeId:'con-one-on-one',startsAt:slot,fullName:'Sarah Whitfield',email:'sarah@example.com',phone:'',memberId:'',note:'',requesterTimezone:'Europe/London'};
+const err=(r,p)=>r.success?null:r.error.issues.find(i=>i.path[0]===p)?.message;
+check(S.safeParse(good).success,'valid booking parses');
+check(err(S.safeParse({...good,consultationTypeId:''}),'consultationTypeId'),'missing session rejected');
+check(err(S.safeParse({...good,startsAt:''}),'startsAt'),'missing slot rejected');
+check(err(S.safeParse({...good,startsAt:'tomorrow-ish'}),'startsAt'),'unparseable slot rejected');
+check(err(S.safeParse({...good,email:'nope'}),'email'),'bad email rejected');
+check(err(S.safeParse({...good,fullName:'A'}),'fullName'),'one-char name rejected');
+check(S.safeParse({...good,memberId:'GFH-7K2M9'}).success,'valid member ID accepted');
+check(S.safeParse({...good,memberId:'gfh-7k2m9'}).data.memberId==='GFH-7K2M9','member ID upper-cased');
+check(err(S.safeParse({...good,memberId:'GFH-00000'}),'memberId'),'member ID with ambiguous chars rejected');
+check(err(S.safeParse({...good,memberId:'ABC123'}),'memberId'),'malformed member ID rejected');
+check(S.safeParse({...good,memberId:''}).success,'blank member ID is fine (optional)');
+check(S.safeParse({...good,phone:'+447400123456'}).success,'valid phone accepted');
+check(err(S.safeParse({...good,phone:'12'}),'phone'),'bad phone rejected');
+check(err(S.safeParse({...good,note:'x'.repeat(1001)}),'note'),'over-long note rejected');
+check(V.optional('  ')===undefined && V.optional('x')==='x','optional() normalises blanks');
+
+// ---- price integrity: the action must read from data, never the client
+const types=await C.getConsultationTypes();
+check(types.length===3,'3 session types');
+check(types.every(t=>t.price>0&&t.durationMinutes>0),'every type has a price and duration');
+check((await C.getConsultationTypeById('con-couple')).price===200,'couple session is $200 from the repository');
+check(await C.getConsultationTypeById('nope')===null,'unknown session id returns null');
+
+
+  } // end consultations block
+
   console.log('\n--- PASS ---');
   ok.forEach(m=>console.log('  ok  ', m));
   if (fail.length) { console.log('\n--- FAIL ---'); fail.forEach(m=>console.log('  FAIL', m)); }

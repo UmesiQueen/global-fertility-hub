@@ -16,6 +16,11 @@ export const siteConfig = {
   url: "https://globalfertilityhub.com",
   /** TODO(client): the real Instagram community handle. */
   communityUrl: "https://instagram.com/globalfertilityhub",
+  /**
+   * Where Henry & Precious actually are. Consultation times are quoted in
+   * this zone, with the visitor's local equivalent shown alongside.
+   */
+  practitionerTimezone: "Australia/Perth",
 } as const;
 
 /** Primary navigation — order matches the mockups. */

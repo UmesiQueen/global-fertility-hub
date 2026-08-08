@@ -80,6 +80,68 @@ export function formatPrice(consultation: ConsultationType): string {
   return `${consultation.currency} $${consultation.price}`;
 }
 
+/* ---------------------------------------------------------------------------
+   Consultation slots
+   -------------------------------------------------------------------------
+   Slots are absolute instants, so both of these are exact conversions rather
+   than string manipulation. The pair exists because the appointment happens at
+   one moment that has two correct descriptions — the one Henry & Precious put
+   in their diary, and the one on the visitor's clock.
+--------------------------------------------------------------------------- */
+
+/** "9:00 am" in a given zone. */
+export function formatTimeInZone(iso: string, timeZone: string): string {
+  return new Intl.DateTimeFormat(LOCALE, {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone,
+  }).format(new Date(iso));
+}
+
+/** "9:00 am AWST" — includes the zone so the reader can sanity-check it. */
+export function formatTimeWithZone(iso: string, timeZone: string): string {
+  return new Intl.DateTimeFormat(LOCALE, {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+    timeZone,
+  }).format(new Date(iso));
+}
+
+/** "Mon 3 Aug 2026" in a given zone. */
+export function formatDateInZone(iso: string, timeZone: string): string {
+  return new Intl.DateTimeFormat(LOCALE, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone,
+  }).format(new Date(iso));
+}
+
+/**
+ * The viewer's IANA zone. Client-only — on the server this resolves to the
+ * host's zone, which is meaningless to the reader, so callers must only use
+ * it inside an effect.
+ */
+export function getLocalTimezone(): string {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+/**
+ * True when two zones show the same wall clock for this instant.
+ *
+ * Used to suppress the "your time" line for anyone already in the
+ * practitioners' zone — repeating an identical time is just noise.
+ */
+export function isSameWallClock(
+  iso: string,
+  zoneA: string,
+  zoneB: string,
+): boolean {
+  return formatTimeInZone(iso, zoneA) === formatTimeInZone(iso, zoneB);
+}
+
 /**
  * ISO 3166-1 alpha-2 to flag emoji, by offsetting into the regional
  * indicator block. Avoids shipping ~200 flag images for a decorative chip.

@@ -18,18 +18,42 @@
 export type InlineNode =
   | { type: "text"; value: string }
   | { type: "strong"; value: string }
-  | { type: "em"; value: string };
+  | { type: "em"; value: string }
+  | { type: "link"; value: string; href: string; external: boolean };
+
+/**
+ * Schemes we're willing to put in an href.
+ *
+ * Anything else — `javascript:`, `data:`, `vbscript:` — renders as plain text
+ * instead. Story bodies will eventually be community-submitted, and a link is
+ * the easiest way to smuggle script into a page.
+ */
+function safeHref(raw: string): { href: string; external: boolean } | null {
+  const href = raw.trim();
+
+  // In-app: relative paths and same-page anchors.
+  if (href.startsWith("/") || href.startsWith("#")) {
+    return { href, external: false };
+  }
+
+  if (/^https?:\/\//i.test(href) || /^mailto:/i.test(href)) {
+    return { href, external: true };
+  }
+
+  return null;
+}
 
 export type Block =
   | { type: "heading"; level: 2 | 3; content: InlineNode[] }
   | { type: "paragraph"; content: InlineNode[] }
   | { type: "list"; items: InlineNode[][] };
 
-/** Splits a line into text / bold / italic runs. */
+/** Splits a line into text / link / bold / italic runs. */
 export function parseInline(line: string): InlineNode[] {
   const nodes: InlineNode[] = [];
-  // Bold first — otherwise the single-asterisk rule eats the ** delimiters.
-  const pattern = /\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  // Links first so their label can't be mangled by the emphasis rules, then
+  // bold before italic — otherwise the single-asterisk rule eats the **.
+  const pattern = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
 
   let lastIndex = 0;
   let match = pattern.exec(line);
@@ -39,10 +63,24 @@ export function parseInline(line: string): InlineNode[] {
       nodes.push({ type: "text", value: line.slice(lastIndex, match.index) });
     }
 
-    if (match[1] !== undefined) {
-      nodes.push({ type: "strong", value: match[1] });
-    } else if (match[2] !== undefined) {
-      nodes.push({ type: "em", value: match[2] });
+    if (match[1] !== undefined && match[2] !== undefined) {
+      const safe = safeHref(match[2]);
+      // An unsafe scheme degrades to its label rather than vanishing — the
+      // sentence still reads, it just isn't clickable.
+      nodes.push(
+        safe
+          ? {
+              type: "link",
+              value: match[1],
+              href: safe.href,
+              external: safe.external,
+            }
+          : { type: "text", value: match[1] },
+      );
+    } else if (match[3] !== undefined) {
+      nodes.push({ type: "strong", value: match[3] });
+    } else if (match[4] !== undefined) {
+      nodes.push({ type: "em", value: match[4] });
     }
 
     lastIndex = match.index + match[0].length;

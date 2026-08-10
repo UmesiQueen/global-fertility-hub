@@ -637,6 +637,78 @@ check(E.contactAckText(payload).length>50 && E.contactAckSubject().length>0,'pla
 
   } // end contact block
 
+  { // ---- legal pages ----
+  const L=require(ROOT+'/lib/data/legal.ts');
+  const MD=require(ROOT+'/lib/markdown.ts');
+  const docs=L.legalDocuments;
+
+
+check(docs.length===3,`3 legal documents (${docs.length})`);
+check(['privacy','terms','disclaimer'].every(s=>L.getLegalDocument(s)),'all three slugs resolve');
+check(L.getLegalDocument('nope')===null,'unknown slug returns null');
+check(new Set(docs.map(d=>d.slug)).size===3,'no duplicate slugs');
+check(docs.every(d=>d.title&&d.description&&d.lastUpdated),'every doc has title, description and date');
+check(docs.every(d=>/^\d{4}-\d{2}-\d{2}$/.test(d.lastUpdated)),'lastUpdated is ISO yyyy-mm-dd');
+check(docs.every(d=>d.body.length>1500),'every doc has substantial content');
+
+// ---- markdown integrity
+for(const d of docs){
+  const blocks=MD.parseMarkdown(d.body);
+  check(blocks.length>5,`${d.slug}: parses to ${blocks.length} blocks`);
+  const plain=MD.markdownToPlainText(d.body);
+  const words=d.body.replace(/[#*\-\[\]()]/g,' ').split(/\s+/).filter(w=>w.length>4 && !w.includes('/') && !w.includes(':'));
+  const lost=words.filter(w=>!plain.includes(w));
+  check(lost.length===0,`${d.slug}: no words lost in parsing${lost.length?' -> '+lost.slice(0,3):''}`);
+}
+check(!docs.some(d=>/^#\s/m.test(d.body)),'no body uses a level-1 heading (page h1 owns that)');
+
+// ---- links must all be safe and resolvable
+const internal=new Set(['/','/contact','/join','/consultations','/privacy','/terms','/disclaimer','/resources','/stories','/events','/educational-partners','/about','/discounts']);
+let linkCount=0, badLinks=[], unsafe=[];
+for(const d of docs){
+  for(const block of MD.parseMarkdown(d.body)){
+    const nodes = block.type==='list' ? block.items.flat() : block.content;
+    for(const n of nodes){
+      if(n.type!=='link') continue;
+      linkCount++;
+      if(!/^(https?:\/\/|mailto:|\/|#)/.test(n.href)) unsafe.push(d.slug+': '+n.href);
+      if(n.href.startsWith('/') && !internal.has(n.href.split('#')[0])) badLinks.push(d.slug+': '+n.href);
+    }
+  }
+}
+check(linkCount>10,`links parsed across the documents (${linkCount})`);
+check(unsafe.length===0,`no unsafe link schemes${unsafe.length?' -> '+unsafe:''}`);
+check(badLinks.length===0,`every internal link points at a real route${badLinks.length?' -> '+badLinks:''}`);
+
+// ---- the guardrails that matter for this client
+const privacy=L.getLegalDocument('privacy');
+const terms=L.getLegalDocument('terms');
+const disc=L.getLegalDocument('disclaimer');
+check(/not medical advice/i.test(disc.body),'disclaimer states nothing is medical advice');
+check(/not a clinic/i.test(terms.body),'terms state we are not a clinic');
+check(/do not rank|don't rank|not recommend/i.test(disc.body),'disclaimer states clinics are not recommendations');
+check(/support and advocacy/i.test(disc.body),'disclaimer frames consultations as support and advocacy');
+check(/emergenc/i.test(disc.body),'disclaimer covers emergencies');
+check(/take your story down|remove/i.test(terms.body),'terms give contributors the right to withdraw a story');
+check(/unsubscribe/i.test(privacy.body),'privacy explains unsubscribing');
+check(/delete everything we hold/i.test(privacy.body),'privacy explains deletion rights');
+check(/Convex/.test(privacy.body)&&/Resend/.test(privacy.body),'privacy names both real subprocessors');
+// accuracy: the policy must match what the code actually stores
+check(/member ID/i.test(privacy.body),'privacy mentions the member ID we actually issue');
+check(/IP address/i.test(privacy.body),'privacy discloses the IP address we actually store');
+check(/consent/i.test(privacy.body)&&/wording you agreed/i.test(privacy.body),'privacy describes the real consent-versioning behaviour');
+check(/don't set tracking|no tracking|don't use Google Analytics/i.test(privacy.body),'privacy states we set no tracking cookies — true as built');
+
+// ---- draft discipline
+const withTodos=docs.filter(d=>/TO CONFIRM/.test(d.body));
+check(withTodos.length===3,`all 3 documents carry open questions for the client (${withTodos.length})`);
+const liveWithTodos=docs.filter(d=>!d.draft && /TO CONFIRM/.test(d.body));
+check(liveWithTodos.length===0,`no document is marked live while unresolved questions remain${liveWithTodos.length?' -> '+liveWithTodos.map(d=>d.slug):''}`);
+check(docs.every(d=>d.draft),'all three are still flagged draft (expected until legal sign-off)');
+
+
+  } // end legal block
+
   console.log('\n--- PASS ---');
   ok.forEach(m=>console.log('  ok  ', m));
   if (fail.length) { console.log('\n--- FAIL ---'); fail.forEach(m=>console.log('  FAIL', m)); }

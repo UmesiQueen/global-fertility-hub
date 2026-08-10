@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { type Block, type InlineNode, parseMarkdown } from "@/lib/markdown";
 import { cn } from "@/lib/utils";
 
@@ -5,6 +6,22 @@ function Inline({ nodes }: { nodes: InlineNode[] }) {
   return (
     <>
       {nodes.map((node, index) => {
+        if (node.type === "link") {
+          return (
+            <Link
+              // biome-ignore lint/suspicious/noArrayIndexKey: inline runs have no stable id
+              key={index}
+              href={node.href}
+              {...(node.external
+                ? { target: "_blank", rel: "noreferrer noopener" }
+                : {})}
+              className="text-primary underline underline-offset-2 hover:text-primary/80"
+            >
+              {node.value}
+            </Link>
+          );
+        }
+
         if (node.type === "strong") {
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: inline runs have no stable id

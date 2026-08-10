@@ -1,4 +1,3 @@
-import { Search } from "lucide-react";
 import { ButtonLink } from "@/components/shared/button-link";
 import { Container } from "./container";
 import { MainNav } from "./main-nav";
@@ -14,15 +13,6 @@ export function SiteHeader() {
         <MainNav />
 
         <div className="flex items-center gap-1.5">
-          <ButtonLink
-            href="/resources"
-            variant="ghost"
-            size="icon-lg"
-            aria-label="Search resources"
-          >
-            <Search className="size-4.5" />
-          </ButtonLink>
-
           <ButtonLink href="/join" className="hidden sm:inline-flex">
             Join Community
           </ButtonLink>

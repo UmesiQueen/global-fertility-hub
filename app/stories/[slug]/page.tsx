@@ -158,7 +158,7 @@ export default async function StoryDetailPage({
               Sharing is entirely your choice, and you can stay anonymous. Every
               story is read and reviewed with care before it&apos;s published.
             </p>
-            <ButtonLink href="/contact" className="mt-5">
+            <ButtonLink href="/contact?topic=story" className="mt-5">
               Share Your Story
             </ButtonLink>
           </div>

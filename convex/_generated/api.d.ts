@@ -9,6 +9,7 @@
  */
 
 import type * as consultations from "../consultations.js";
+import type * as contact from "../contact.js";
 import type * as members from "../members.js";
 
 import type {
@@ -19,6 +20,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   consultations: typeof consultations;
+  contact: typeof contact;
   members: typeof members;
 }>;
 

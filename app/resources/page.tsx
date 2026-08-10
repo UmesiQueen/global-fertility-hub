@@ -141,7 +141,7 @@ export default async function ResourcesPage({
                 Tell us what you need and we&apos;ll look into covering it.
               </p>
               <ButtonLink
-                href="/contact"
+                href="/contact?topic=resource"
                 variant="outline"
                 size="sm"
                 className="mt-4 w-full"

@@ -192,7 +192,7 @@ export default async function ConsultationsPage() {
                 Send us a message and we&apos;ll help you work it out.
               </p>
             </div>
-            <ButtonLink href="/contact" variant="outline" size="sm">
+            <ButtonLink href="/contact?topic=consultation" variant="outline" size="sm">
               Send a Message
             </ButtonLink>
           </div>

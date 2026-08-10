@@ -95,4 +95,38 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_createdAt", ["createdAt"])
     .index("by_memberId", ["memberId"]),
+
+  /**
+   * Contact form messages.
+   *
+   * `message` is unbounded free text on a fertility site. People will write
+   * about loss, diagnoses and things they haven't told their families. Treat
+   * every row as sensitive: never surface it in an analytics view, never
+   * include it in an export that isn't access-controlled, and don't add it to
+   * any third-party tool without checking what that tool does with it.
+   */
+  contactMessages: defineTable({
+    /** Why they're writing, from the CONTACT_TOPICS list. */
+    topic: v.string(),
+    fullName: v.string(),
+    email: v.string(),
+    subject: v.optional(v.string()),
+    message: v.string(),
+
+    /** Simple triage state so nothing is silently left unanswered. */
+    status: v.union(
+      v.literal("new"),
+      v.literal("read"),
+      v.literal("replied"),
+      v.literal("archived"),
+    ),
+
+    createdAt: v.number(),
+    acknowledgementSentAt: v.optional(v.number()),
+    submissionIp: v.optional(v.string()),
+  })
+    .index("by_createdAt", ["createdAt"])
+    .index("by_status", ["status"])
+    .index("by_topic", ["topic"])
+    .index("by_email", ["email"]),
 });

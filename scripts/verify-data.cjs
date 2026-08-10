@@ -581,6 +581,62 @@ check(await C.getConsultationTypeById('nope')===null,'unknown session id returns
 
   } // end consultations block
 
+  { // ---- contact form ----
+  const V=require(ROOT+'/lib/validation/contact.ts');
+  const E=require(ROOT+'/lib/emails/contact-emails.ts');
+  const S=V.contactSchema;
+const good={topic:'general',fullName:'Sarah Whitfield',email:'sarah@example.com',subject:'',message:'I wanted to ask about your webinars.'};
+const err=(r,p)=>r.success?null:r.error.issues.find(i=>i.path[0]===p)?.message;
+
+// ---- schema
+check(S.safeParse(good).success,'valid message parses');
+check(err(S.safeParse({...good,topic:''}),'topic'),'missing topic rejected');
+check(err(S.safeParse({...good,topic:'nonsense'}),'topic'),'topic outside the list rejected');
+check(err(S.safeParse({...good,fullName:'A'}),'fullName'),'one-char name rejected');
+check(err(S.safeParse({...good,email:'nope'}),'email'),'bad email rejected');
+check(S.safeParse({...good,email:'  SARAH@EXAMPLE.COM '}).data.email==='sarah@example.com','email trimmed + lowercased');
+check(err(S.safeParse({...good,message:'hi'}),'message'),'too-short message rejected');
+check(err(S.safeParse({...good,message:'   '}),'message'),'whitespace-only message rejected');
+check(err(S.safeParse({...good,message:'x'.repeat(4001)}),'message'),'over-long message rejected');
+check(S.safeParse({...good,message:'x'.repeat(4000)}).success,'message at the exact limit is accepted');
+check(err(S.safeParse({...good,subject:'x'.repeat(151)}),'subject'),'over-long subject rejected');
+check(S.safeParse({...good,subject:''}).success,'blank subject is fine (optional)');
+check(V.optional('  ')===undefined && V.optional(' x ')==='x','optional() normalises blanks');
+
+// ---- topics: every CTA target must resolve
+check(V.CONTACT_TOPICS.length===7,`7 topics defined (${V.CONTACT_TOPICS.length})`);
+check(new Set(V.CONTACT_TOPIC_VALUES).size===V.CONTACT_TOPICS.length,'no duplicate topic values');
+check(V.CONTACT_TOPICS.every(t=>t.label&&t.value),'every topic has a value and a label');
+for (const t of ['story','resource','consultation']) {
+  check(V.CONTACT_TOPIC_VALUES.includes(t),`CTA topic "${t}" exists in the list`);
+  check(S.safeParse({...good,topic:t}).success,`"${t}" passes validation`);
+}
+check(V.normaliseTopic('story')==='story','known query param passes through');
+check(V.normaliseTopic('hacker')==='general','unknown query param falls back to general');
+check(V.normaliseTopic(undefined)==='general','missing query param falls back to general');
+check(V.normaliseTopic(null)==='general','null query param falls back to general');
+check(V.topicLabel('story')==="I'd like to share my story",`topicLabel maps correctly ("${V.topicLabel('story')}")`);
+check(V.topicLabel('nope')==='General enquiry','unknown topic label falls back');
+
+// ---- emails
+const payload={topic:'story',fullName:'Sarah Whitfield',email:'sarah@example.com',subject:'My IVF journey',message:'We tried for three years.'};
+const ack=E.contactAckHtml(payload);
+check(ack.includes('Sarah')&&!ack.includes('Whitfield'),'acknowledgement greets by first name only');
+check(/urgent or medical/i.test(ack),'acknowledgement points urgent cases at real help');
+check(/not a clinic/i.test(ack),'acknowledgement restates we are not a clinic');
+check(!ack.includes(payload.message),'acknowledgement does NOT quote the message back');
+const nasty=E.contactAckHtml({...payload,fullName:'<script>alert(1)</script> Eve'});
+check(!nasty.includes('<script>alert'),'user-supplied name is escaped in the acknowledgement');
+const subj=E.contactNotificationSubject(payload);
+check(subj.includes('share my story')&&subj.includes('My IVF journey'),`notification subject carries topic + subject ("${subj}")`);
+check(E.contactNotificationSubject({...payload,subject:undefined}).includes('Sarah Whitfield'),'notification subject falls back to the sender name');
+const note=E.contactNotificationText(payload);
+check(note.includes(payload.message)&&note.includes(payload.email),'notification carries the message and reply address');
+check(E.contactAckText(payload).length>50 && E.contactAckSubject().length>0,'plain-text acknowledgement and subject are non-empty');
+
+
+  } // end contact block
+
   console.log('\n--- PASS ---');
   ok.forEach(m=>console.log('  ok  ', m));
   if (fail.length) { console.log('\n--- FAIL ---'); fail.forEach(m=>console.log('  FAIL', m)); }

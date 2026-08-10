@@ -709,6 +709,168 @@ check(docs.every(d=>d.draft),'all three are still flagged draft (expected until 
 
   } // end legal block
 
+  { // ---- partner discounts ----
+  const D=require(ROOT+'/lib/repositories/discounts.ts');
+  const all=await D.getDiscounts();
+
+
+check(all.length===5,`5 partner offers (${all.length})`);
+check(new Set(all.map(d=>d.id)).size===all.length,'no duplicate ids');
+check(new Set(all.map(d=>d.code)).size===all.length,'every discount code is unique');
+check(all.every(d=>d.brand&&d.description&&d.code&&d.redeemUrl),'every offer has brand, description, code and URL');
+check(all.every(d=>d.percentOff>0&&d.percentOff<=100),'every percentOff is a sane percentage');
+check(all.every(d=>/^https:\/\//.test(d.redeemUrl)),'every redeem URL is https');
+check(all.every(d=>d.logo&&typeof d.logo.alt==='string'&&d.logo.alt.length>0),'every logo has alt text');
+// codes get read aloud and retyped
+check(all.every(d=>/^[A-Z0-9]+$/.test(d.code)),`every code is uppercase alphanumeric (${all.map(d=>d.code).join(', ')})`);
+check(all.every(d=>d.code.length>=4&&d.code.length<=16),'codes are a reasonable length to type');
+
+// category filtering
+const cats=await D.getDiscountCategories();
+check(cats.length>0,`categories derived (${cats.join(', ')})`);
+for(const c of cats){
+  const filtered=await D.getDiscounts(c);
+  check(filtered.length>0&&filtered.every(d=>d.category===c),`category "${c}" filters correctly (${filtered.length})`);
+}
+check((await D.getDiscounts()).length===all.length,'no filter returns everything');
+check(await D.getDiscountById('nope')===null,'unknown id returns null');
+check((await D.getDiscountById(all[0].id)).brand===all[0].brand,'lookup by id works');
+
+// disclosure: the type must support per-partner affiliate marking
+const t=fs.readFileSync(ROOT+'/types/discount.ts','utf8');
+check(/isAffiliate/.test(t),'Discount type supports a per-partner affiliate flag');
+const pageRaw=fs.readFileSync(ROOT+'/app/discounts/page.tsx','utf8');
+// JSX wraps prose across lines, so collapse whitespace before matching
+// phrases — otherwise a real sentence looks missing purely because of
+// where the formatter broke the line.
+const page=pageRaw.replace(/\s+/g,' ');
+const disclosureIndex=pageRaw.indexOf('How these partnerships work');
+const offersIndex=pageRaw.indexOf('discounts.map');
+check(disclosureIndex>0&&disclosureIndex<offersIndex,'commercial disclosure renders ABOVE the offer grid');
+check(/medical advice/i.test(page)&&/no product here is a treatment/i.test(page),'page states the offers are not medical advice and not treatments');
+check(/healthcare team/i.test(page),'page tells people to check with their clinicians');
+const card=fs.readFileSync(ROOT+'/components/cards/discount-card.tsx','utf8');
+check(/rel="[^"]*sponsored/.test(card),'outbound partner links carry rel="sponsored"');
+check(/noreferrer/.test(card)&&/noopener/.test(card),'outbound links carry noreferrer and noopener');
+check(/aria-live/.test(card),'copy-to-clipboard result is announced to screen readers');
+
+
+  } // end discounts block
+
+  { // ---- store products ----
+  const P=require(ROOT+'/lib/repositories/products.ts');
+  const T=require(ROOT+'/types/product.ts');
+  const raw=require(ROOT+'/lib/data/products.ts').products;
+
+
+// ---- shape
+check(raw.length===8,`8 products (${raw.length})`);
+check(new Set(raw.map(p=>p.slug)).size===raw.length,'no duplicate slugs');
+check(new Set(raw.map(p=>p.id)).size===raw.length,'no duplicate ids');
+check(raw.every(p=>/^[a-z0-9]+(-[a-z0-9]+)*$/.test(p.slug)),'slugs are kebab-case');
+check(raw.every(p=>p.name&&p.excerpt&&p.body&&p.vendor),'every product has name, excerpt, body and vendor');
+check(raw.every(p=>p.coverImage&&p.coverImage.alt),'every product image has alt text');
+check(raw.every(p=>T.PRODUCT_CATEGORIES.includes(p.category)),'every category is in the controlled list');
+check(raw.every(p=>['own','affiliate'].includes(p.source)),'every source is own or affiliate');
+check(raw.every(p=>p.tags.length>0),'every product has tags (relations depend on it)');
+check(raw.every(p=>/^https:\/\//.test(p.externalUrl)),'every buy link is https');
+
+// ---- pricing rules
+const own=raw.filter(p=>p.source==='own');
+const aff=raw.filter(p=>p.source==='affiliate');
+check(own.length>0&&aff.length>0,`both kinds present (${own.length} own, ${aff.length} affiliate)`);
+check(own.every(p=>p.isFree||typeof p.price==='number'),'every own product has a price or is free');
+check(aff.every(p=>p.price===undefined),'no affiliate product states a price we do not control');
+check(own.every(p=>p.isFree||p.currency),'priced products declare a currency');
+check(own.every(p=>p.vendor==='Global Fertility Hub'),'own products are sold under our own name');
+
+// ---- THE guardrail: no product may claim to affect fertility
+const BANNED=[
+ /\bcures?\b/i, /\btreats?\b/i, /\bcure\b/i,
+ /boosts? (your )?fertility/i, /improves? (your )?fertility/i,
+ /increases? (your )?(chances|odds)/i, /improves? (your )?(chances|odds)/i,
+ /helps? you (get pregnant|conceive)/i,
+ /guarantee/i, /proven to/i, /clinically proven/i,
+ /\bremedy\b/i, /\bheals?\b/i,
+];
+const claims=[];
+for(const p of raw){
+  const text=[p.name,p.excerpt,p.body].join(' ');
+  for(const re of BANNED){ if(re.test(text)) claims.push(`${p.slug}: ${re}`); }
+}
+check(claims.length===0,`no product copy makes a fertility health claim${claims.length?' -> '+claims.join(', '):''}`);
+// and the page must say so out loud
+const listRaw=fs.readFileSync(ROOT+'/app/store/page.tsx','utf8');
+const list=listRaw.replace(/\s+/g,' ');
+const detail=fs.readFileSync(ROOT+'/app/store/[slug]/page.tsx','utf8').replace(/\s+/g,' ');
+check(/(nothing|not|isn't)[^.]{0,60}a treatment/i.test(list),'store page states nothing is a treatment');
+check(/change your chances of conceiving/i.test(list),'store page rules out fertility claims explicitly');
+check(/change your chances of conceiving/i.test(detail),'product page rules out fertility claims explicitly');
+
+// ---- affiliate disclosure
+check(/How this store works/i.test(list),'store page carries a commercial disclosure');
+const discIdx=listRaw.indexOf('How this store works');
+const gridIdx=listRaw.indexOf('results.items.map');
+check(discIdx>0&&discIdx<gridIdx,'disclosure renders ABOVE the product grid');
+const card=fs.readFileSync(ROOT+'/components/cards/product-card.tsx','utf8');
+check(/Affiliate link/.test(card),'affiliate cards are labelled as such');
+check(/By Henry & Precious|By \$\{|By {product.vendor}|product.vendor/.test(card),'cards state who made the product');
+check(/sponsored/.test(detail),'affiliate buy links carry rel="sponsored"');
+check(/noreferrer/.test(detail)&&/noopener/.test(detail),'external buy links carry noreferrer and noopener');
+check(/opens in a new tab/.test(detail),'external links warn screen reader users');
+
+// ---- repository behaviour
+const all=await P.getProducts({pageSize:99});
+check(all.total===8,'listing returns everything by default');
+const ownOnly=await P.getProducts({source:'own',pageSize:99});
+check(ownOnly.items.every(p=>p.source==='own')&&ownOnly.total===own.length,`source filter works (${ownOnly.total} own)`);
+const cat=await P.getProducts({category:'emotional-wellbeing',pageSize:99});
+check(cat.total>0&&cat.items.every(p=>p.category==='emotional-wellbeing'),`category filter works (${cat.total})`);
+const search=await P.getProducts({search:'workbook',pageSize:99});
+check(search.total>0,`search works (${search.total} hits for "workbook")`);
+const none=await P.getProducts({search:'zzzz',pageSize:99});
+check(none.total===0&&none.page===1,'empty search returns a clean empty state');
+
+// price sorting must not be corrupted by unpriced affiliate items
+const low=await P.getProducts({sort:'price-low',pageSize:99});
+const priced=low.items.filter(p=>p.isFree||typeof p.price==='number');
+const unpriced=low.items.filter(p=>!p.isFree&&p.price===undefined);
+const pricedVals=priced.map(p=>p.isFree?0:p.price);
+check(pricedVals.every((v,i,a)=>i===0||a[i-1]<=v),`price-low sorts ascending (${pricedVals.join(', ')})`);
+check(low.items.slice(-unpriced.length).every(p=>p.price===undefined),'unpriced items sort to the end, not the top');
+check(low.items[0].isFree===true,'the free product comes first when sorting by price');
+const high=await P.getProducts({sort:'price-high',pageSize:99});
+check(high.items[0].price===24,`price-high starts with the most expensive (${high.items[0].price})`);
+
+// ---- detail routes
+const slugs=await P.getAllProductSlugs();
+check(slugs.length===8,'generateStaticParams covers every product');
+check((await Promise.all(slugs.map(s=>P.getProductBySlug(s)))).every(Boolean),'every slug resolves');
+check(await P.getProductBySlug('nope')===null,'unknown slug returns null');
+const counts=await P.getProductCategoryCounts();
+check(Object.values(counts).reduce((a,b)=>a+b,0)===8,'category counts sum to the catalogue');
+const sc=await P.getProductSourceCounts();
+check(sc.own+sc.affiliate===8,'source counts sum to the catalogue');
+
+// ---- relations: every product must offer a free alternative
+const noFree=[];
+for(const p of raw){
+  const res=await P.getRelatedResourcesForProduct(p);
+  if(res.length===0) noFree.push(p.slug);
+}
+check(noFree.length===0,`every product page can offer free reading on the topic${noFree.length?' -> '+noFree:''}`);
+check((await P.getFeaturedProducts(4)).length===4,'featured rail fills to 4');
+
+// ---- navigation
+const nav=fs.readFileSync(ROOT+'/lib/site-config.ts','utf8');
+check(/label: "Store", href: "\/store"/.test(nav),'Store is in the navigation');
+check((nav.match(/href: "\/store"/g)||[]).length>=2,'Store appears in both main nav and footer');
+check(/href: "\/discounts"/.test(nav),'Discounts page is still linked (kept separate)');
+check(/View Discounts/.test(listRaw),'store cross-links to discounts');
+
+
+  } // end store block
+
   console.log('\n--- PASS ---');
   ok.forEach(m=>console.log('  ok  ', m));
   if (fail.length) { console.log('\n--- FAIL ---'); fail.forEach(m=>console.log('  FAIL', m)); }

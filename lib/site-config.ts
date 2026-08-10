@@ -27,6 +27,7 @@ export const siteConfig = {
 export const mainNav: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "Resources", href: "/resources" },
+  { label: "Store", href: "/store" },
   { label: "Educational Clinic Partners", href: "/educational-partners" },
   { label: "Community Stories", href: "/stories" },
   { label: "Events", href: "/events" },
@@ -39,6 +40,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
     heading: "Explore",
     links: [
       { label: "Resources", href: "/resources" },
+      { label: "Store", href: "/store" },
       { label: "Educational Partners", href: "/educational-partners" },
       { label: "Community Stories", href: "/stories" },
       { label: "Events & Webinars", href: "/events" },

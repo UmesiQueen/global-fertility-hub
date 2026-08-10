@@ -5,3 +5,4 @@ export * from "./story";
 export * from "./event";
 export * from "./consultation";
 export * from "./discount";
+export * from "./product";

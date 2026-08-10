@@ -2,11 +2,13 @@ import { ArrowLeft, Check, ExternalLink, Info } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ProductCard, productPriceLabel } from "@/components/cards/product-card";
+import {
+  ProductCard,
+  productPriceLabel,
+} from "@/components/cards/product-card";
 import { ResourceCard } from "@/components/cards/resource-card";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { Container } from "@/components/layout/container";
-import { ButtonLink } from "@/components/shared/button-link";
 import { EntityImage } from "@/components/shared/entity-image";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
@@ -22,6 +24,7 @@ import {
   getRelatedResourcesForProduct,
 } from "@/lib/repositories/products";
 import { breadcrumbJsonLd } from "@/lib/seo";
+import type { Product } from "@/types";
 
 type Params = { slug: string };
 
@@ -36,7 +39,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product: Product | null = await getProductBySlug(slug);
 
   if (!product) return { title: "Product not found" };
 
@@ -54,7 +57,7 @@ export default async function ProductDetailPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product: Product | null = await getProductBySlug(slug);
 
   if (!product) notFound();
 
@@ -83,7 +86,7 @@ export default async function ProductDetailPage({
       <Container className="pb-12">
         <div className="grid gap-10 lg:grid-cols-[1fr_20rem] lg:gap-14">
           <div>
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl">
+            <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl">
               <EntityImage
                 image={product.coverImage}
                 sizes="(max-width: 1024px) 100vw, 700px"

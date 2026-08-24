@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    dangerouslyAllowSVG: true,
     remotePatterns: [
       {
         // Country flags for the phone input's country selector.
@@ -12,6 +13,11 @@ const nextConfig: NextConfig = {
         hostname: "purecatamphetamine.github.io",
         pathname: "/country-flag-icons/**",
       },
+      {
+        protocol: 'https',
+        hostname: '**.graphassets.com',
+      },
+
     ],
   },
 };

@@ -10,7 +10,7 @@ Commands: `bun dev` · `bun run build` · `bun run lint`
 
 ## Hard rules
 
-1. **Pages never import `lib/data` directly.** Always go through `lib/repositories/*`. This is what makes the CMS migration a one-file change per entity.
+1. **Pages never import `api/*` directly.** Always go through `lib/repositories/*`. The repositories own filtering, sorting, pagination, relatedness and the guardrails below — a page that queries Hygraph itself bypasses all of them.
 2. **Repository functions are `async`**, even when returning static data.
 3. **Server Components by default.** `"use client"` only for interactivity — filters, calendars, carousels, sheets, forms. Push the boundary as far down the tree as possible.
 4. **Filter and search state lives in the URL**, not `useState`. Shareable, back-button friendly, SEO-safe.
@@ -57,6 +57,9 @@ At the end of every phase or large chunk, propose the commit message(s) alongsid
 ## Structure
 
 ```
+api/            Hygraph — one query per model, mapped to our own types
+  client.ts     the whole transport: POST, bearer token, 1h revalidate
+  map.ts        enumIn / asset / md / date
 app/            routes only — thin, composed of section/card components
 components/
   ui/           shadcn primitives (don't hand-edit; re-run the CLI)
@@ -66,12 +69,29 @@ components/
   sections/     homepage + page-level composed sections
   shared/       cross-cutting: RelatedGrid, TrustChips, ScriptAccent, MedicalDisclaimer
 lib/
-  data/         mock content (temporary — CMS replaces this)
   repositories/ the ONLY way pages read content
   relations.ts  tag-overlap relatedness for all entities
+  availability.ts  bookable slots — booking state, not CMS content
+  legal.ts      privacy / terms / disclaimer — authored in code, not the CMS
   utils.ts      cn()
 types/          shared TS types
 ```
+
+`api/` fetches whole collections; the repositories filter, sort and paginate
+in memory. That's deliberate — the corpus is small, Next caches each query for
+an hour, and it keeps the query layer to one plain `fetch` per model.
+
+## Verification
+
+- `bun run verify:code` — offline. URL helpers, markdown, formatters, zod
+  schemas, timezone maths, legal docs, the disclosure guardrails that live in
+  page source. Runs in about a second, needs no credentials.
+- `bun run verify:hygraph` — live. Every query, plus the invariants that must
+  hold whatever editors publish: unique kebab-case slugs, tags in the
+  controlled vocabulary, alt text everywhere, no ranking field on a clinic,
+  approved stories only, no product claiming to affect fertility.
+
+Counts are reported, never asserted — "8 products" was a fact about mock data.
 
 ## Typography
 

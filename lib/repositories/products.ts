@@ -1,5 +1,5 @@
-import { products } from "@/lib/data/products";
-import { resources } from "@/lib/data/resources";
+import { fetchProducts } from "@/api/products";
+import { fetchResources } from "@/api/resources";
 import { findRelated } from "@/lib/relations";
 import type {
   Paginated,
@@ -46,7 +46,7 @@ export async function getProducts(
     pageSize = 12,
   } = query;
 
-  let items = [...products];
+  let items = await fetchProducts();
 
   if (category) items = items.filter((item) => item.category === category);
   if (source) items = items.filter((item) => item.source === source);
@@ -78,12 +78,13 @@ export async function getProducts(
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
+  const products = await fetchProducts();
   return products.find((item) => item.slug === slug) ?? null;
 }
 
 export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
   return featuredFirst(
-    products,
+    await fetchProducts(),
     (item) => Boolean(item.isFeatured),
     byNewest,
     limit,
@@ -91,12 +92,14 @@ export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
 }
 
 export async function getAllProductSlugs(): Promise<string[]> {
+  const products = await fetchProducts();
   return products.map((item) => item.slug);
 }
 
 export async function getProductCategoryCounts(): Promise<
   Record<string, number>
 > {
+  const products = await fetchProducts();
   return products.reduce<Record<string, number>>((counts, item) => {
     counts[item.category] = (counts[item.category] ?? 0) + 1;
     return counts;
@@ -106,6 +109,7 @@ export async function getProductCategoryCounts(): Promise<
 export async function getProductSourceCounts(): Promise<
   Record<ProductSource, number>
 > {
+  const products = await fetchProducts();
   return products.reduce(
     (counts, item) => {
       counts[item.source] = (counts[item.source] ?? 0) + 1;
@@ -119,7 +123,7 @@ export async function getRelatedProducts(
   product: Product,
   limit = 3,
 ): Promise<Product[]> {
-  return findRelated(product, products, limit);
+  return findRelated(product, await fetchProducts(), limit);
 }
 
 /**
@@ -133,5 +137,5 @@ export async function getRelatedResourcesForProduct(
   product: Product,
   limit = 3,
 ): Promise<Resource[]> {
-  return findRelated(product, resources, limit);
+  return findRelated(product, await fetchResources(), limit);
 }

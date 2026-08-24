@@ -167,7 +167,7 @@ export function JoinCommunityForm({ countries }: { countries: Country[] }) {
                 htmlFor="join-country"
                 className="after:content-['*'] after:text-destructive"
               >
-                Country
+                Country of residence
               </FieldLabel>
               <Select
                 name={field.name}

@@ -1,6 +1,6 @@
-import { clinics } from "@/lib/data/clinics";
-import { events } from "@/lib/data/events";
-import { resources } from "@/lib/data/resources";
+import { fetchClinics } from "@/api/clinics";
+import { fetchEvents } from "@/api/events";
+import { fetchResources } from "@/api/resources";
 import { findRelated } from "@/lib/relations";
 import type { Clinic, Event, Paginated, Resource } from "@/types";
 import { featuredFirst, matches, paginate } from "./shared";
@@ -34,7 +34,9 @@ function isUpcoming(event: Event, now: Date): boolean {
 }
 
 function isReplay(event: Event, now: Date): boolean {
-  return Boolean(event.replayUrl) || new Date(event.startsAt).getTime() <= now.getTime();
+  return (
+    Boolean(event.replayUrl) || new Date(event.startsAt).getTime() <= now.getTime()
+  );
 }
 
 export async function getUpcomingEvents(
@@ -42,7 +44,7 @@ export async function getUpcomingEvents(
 ): Promise<Paginated<Event>> {
   const { search, type, page = 1, pageSize = 12, now = new Date() } = query;
 
-  let items = events.filter((event) => isUpcoming(event, now));
+  let items = (await fetchEvents()).filter((event) => isUpcoming(event, now));
 
   if (type) items = items.filter((item) => item.type === type);
   if (search) {
@@ -63,7 +65,7 @@ export async function getReplayLibrary(
 ): Promise<Paginated<Event>> {
   const { search, type, page = 1, pageSize = 12, now = new Date() } = query;
 
-  let items = events.filter((event) => isReplay(event, now));
+  let items = (await fetchEvents()).filter((event) => isReplay(event, now));
 
   if (type) items = items.filter((item) => item.type === type);
   if (search) {
@@ -80,6 +82,7 @@ export async function getReplayLibrary(
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {
+  const events = await fetchEvents();
   return events.find((item) => item.slug === slug) ?? null;
 }
 
@@ -87,6 +90,7 @@ export async function getFeaturedEvents(
   limit = 3,
   now = new Date(),
 ): Promise<Event[]> {
+  const events = await fetchEvents();
   const upcoming = events.filter((event) => isUpcoming(event, now));
 
   // If nothing is upcoming, the homepage rail falls back to recent replays
@@ -107,6 +111,7 @@ export async function getFeaturedEvents(
 }
 
 export async function getAllEventSlugs(): Promise<string[]> {
+  const events = await fetchEvents();
   return events.map((item) => item.slug);
 }
 
@@ -119,19 +124,19 @@ export async function getRelatedEvents(
   event: Event,
   limit = 3,
 ): Promise<Event[]> {
-  return findRelated(event, events, limit);
+  return findRelated(event, await fetchEvents(), limit);
 }
 
 export async function getRelatedResourcesForEvent(
   event: Event,
   limit = 3,
 ): Promise<Resource[]> {
-  return findRelated(event, resources, limit);
+  return findRelated(event, await fetchResources(), limit);
 }
 
 export async function getRelatedClinicsForEvent(
   event: Event,
   limit = 3,
 ): Promise<Clinic[]> {
-  return findRelated(event, clinics, limit);
+  return findRelated(event, await fetchClinics(), limit);
 }

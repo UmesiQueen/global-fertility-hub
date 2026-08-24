@@ -1,6 +1,6 @@
-import { clinics } from "@/lib/data/clinics";
-import { events } from "@/lib/data/events";
-import { resources } from "@/lib/data/resources";
+import { fetchClinics } from "@/api/clinics";
+import { fetchEvents } from "@/api/events";
+import { fetchResources } from "@/api/resources";
 import { findRelated } from "@/lib/relations";
 import type {
   Clinic,
@@ -12,12 +12,7 @@ import type {
 } from "@/types";
 import { featuredFirst, paginate } from "./shared";
 
-/**
- * The only supported way for a page to read resources.
- *
- * Every function is async even though the data is static — when this is
- * swapped for a CMS client, no caller has to change.
- */
+/** The only supported way for a page to read resources. */
 
 export interface ResourceQuery {
   search?: string;
@@ -45,23 +40,17 @@ export async function getResources(
     pageSize = 12,
   } = query;
 
-  let items = [...resources];
+  let items = await fetchResources();
 
-  if (category) {
-    items = items.filter((item) => item.category === category);
-  }
-
+  if (category) items = items.filter((item) => item.category === category);
   if (formats?.length) {
     items = items.filter((item) => formats.includes(item.format));
   }
-
-  if (tag) {
-    items = items.filter((item) => item.tags.includes(tag as never));
-  }
+  if (tag) items = items.filter((item) => item.tags.includes(tag as never));
 
   if (search) {
-    // Matching title, excerpt and tags — not body. Body matches surface
-    // results whose relevance the reader can't see from the card.
+    // Title and excerpt only — matching body surfaces results whose relevance
+    // the reader can't see from the card.
     const term = search.trim().toLowerCase();
     items = items.filter(
       (item) =>
@@ -88,10 +77,12 @@ export async function getResources(
 export async function getResourceBySlug(
   slug: string,
 ): Promise<Resource | null> {
+  const resources = await fetchResources();
   return resources.find((item) => item.slug === slug) ?? null;
 }
 
 export async function getFeaturedResources(limit = 6): Promise<Resource[]> {
+  const resources = await fetchResources();
   return featuredFirst(
     resources,
     (item) => Boolean(item.isFeatured),
@@ -101,13 +92,14 @@ export async function getFeaturedResources(limit = 6): Promise<Resource[]> {
 }
 
 export async function getAllResourceSlugs(): Promise<string[]> {
+  const resources = await fetchResources();
   return resources.map((item) => item.slug);
 }
 
-/** Counts per category, for the Resources sidebar. Includes zeroes. */
 export async function getResourceCategoryCounts(): Promise<
   Record<string, number>
 > {
+  const resources = await fetchResources();
   return resources.reduce<Record<string, number>>((counts, item) => {
     counts[item.category] = (counts[item.category] ?? 0) + 1;
     return counts;
@@ -117,6 +109,7 @@ export async function getResourceCategoryCounts(): Promise<
 export async function getResourceFormatCounts(): Promise<
   Record<ResourceFormat, number>
 > {
+  const resources = await fetchResources();
   return resources.reduce(
     (counts, item) => {
       counts[item.format] = (counts[item.format] ?? 0) + 1;
@@ -130,19 +123,19 @@ export async function getRelatedResources(
   resource: Resource,
   limit = 3,
 ): Promise<Resource[]> {
-  return findRelated(resource, resources, limit);
+  return findRelated(resource, await fetchResources(), limit);
 }
 
 export async function getRelatedClinicsForResource(
   resource: Resource,
   limit = 3,
 ): Promise<Clinic[]> {
-  return findRelated(resource, clinics, limit);
+  return findRelated(resource, await fetchClinics(), limit);
 }
 
 export async function getRelatedEventsForResource(
   resource: Resource,
   limit = 3,
 ): Promise<Event[]> {
-  return findRelated(resource, events, limit);
+  return findRelated(resource, await fetchEvents(), limit);
 }

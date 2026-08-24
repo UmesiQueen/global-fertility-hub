@@ -1,14 +1,8 @@
-import { clinics } from "@/lib/data/clinics";
-import { events } from "@/lib/data/events";
-import { resources } from "@/lib/data/resources";
+import { fetchClinics } from "@/api/clinics";
+import { fetchEvents } from "@/api/events";
+import { fetchResources } from "@/api/resources";
 import { findRelated } from "@/lib/relations";
-import type {
-  Clinic,
-  Event,
-  Paginated,
-  Resource,
-  Treatment,
-} from "@/types";
+import type { Clinic, Event, Paginated, Resource, Treatment } from "@/types";
 import { featuredFirst, matches, paginate } from "./shared";
 
 /**
@@ -46,7 +40,7 @@ export async function getClinics(
     pageSize = 12,
   } = query;
 
-  let items = [...clinics];
+  let items = await fetchClinics();
 
   if (country) items = items.filter((item) => item.country === country);
   if (city) items = items.filter((item) => item.city === city);
@@ -80,12 +74,13 @@ export async function getClinics(
 }
 
 export async function getClinicBySlug(slug: string): Promise<Clinic | null> {
+  const clinics = await fetchClinics();
   return clinics.find((item) => item.slug === slug) ?? null;
 }
 
 export async function getFeaturedClinics(limit = 6): Promise<Clinic[]> {
   return featuredFirst(
-    clinics,
+    await fetchClinics(),
     (item) => Boolean(item.isFeatured),
     (a, b) => b.joinedAt.localeCompare(a.joinedAt),
     limit,
@@ -93,6 +88,7 @@ export async function getFeaturedClinics(limit = 6): Promise<Clinic[]> {
 }
 
 export async function getAllClinicSlugs(): Promise<string[]> {
+  const clinics = await fetchClinics();
   return clinics.map((item) => item.slug);
 }
 
@@ -110,7 +106,7 @@ export async function getClinicFilterOptions(): Promise<{
   const specialties = new Set<string>();
   const languages = new Set<string>();
 
-  for (const clinic of clinics) {
+  for (const clinic of await fetchClinics()) {
     countries.add(clinic.country);
     cities.add(clinic.city);
     for (const t of clinic.treatments) treatments.add(t);
@@ -134,19 +130,19 @@ export async function getRelatedClinics(
   clinic: Clinic,
   limit = 3,
 ): Promise<Clinic[]> {
-  return findRelated(clinic, clinics, limit);
+  return findRelated(clinic, await fetchClinics(), limit);
 }
 
 export async function getRelatedResourcesForClinic(
   clinic: Clinic,
   limit = 3,
 ): Promise<Resource[]> {
-  return findRelated(clinic, resources, limit);
+  return findRelated(clinic, await fetchResources(), limit);
 }
 
 export async function getRelatedEventsForClinic(
   clinic: Clinic,
   limit = 3,
 ): Promise<Event[]> {
-  return findRelated(clinic, events, limit);
+  return findRelated(clinic, await fetchEvents(), limit);
 }

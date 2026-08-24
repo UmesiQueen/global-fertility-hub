@@ -245,6 +245,86 @@ components/
 
 ---
 
+## 8b. Join Community (`/join`) — decided 2026-08-06
+
+The one part of the site that stores personal data.
+
+**Flow:** CTA → form (name, email, country, phone*, how they heard about Henry & Precious, why they're joining*) → success screen showing their member ID and the Instagram community link → welcome email repeating both.
+
+**Stack:** Convex for storage, Resend for the welcome email. Member IDs look like `GFH-7K2M9` — random, not sequential, using an alphabet without `0/O/1/I/L/U` so they survive being read aloud or retyped.
+
+**Consent is separate from joining.** The brief said joining puts members on the mailing list. That isn't valid consent under GDPR or the Australian Spam Act — it has to be a freely given, affirmative act, and it can't be a condition of the thing they actually came for. So the checkbox is unticked, optional, and someone can join the community without joining the list. `consentVersion` is stored alongside the decision so a record of "they agreed" is always tied to the wording they read.
+
+**Privacy posture.** Everyone in this table has self-identified as being on a fertility journey — close to health data by inference even though we never ask a medical question. Collect the minimum, never expose a member record through a public query, and keep `submissionIp` purgeable.
+
+**Still needed from the client:** the real Instagram community URL, a verified Resend sending domain, and the Privacy Policy copy (the form links to `/privacy`, which doesn't exist yet).
+
+**Admin dashboard — deferred, not forgotten.** `convex/members.ts` already exposes `list` and `stats`, and the table is indexed by `createdAt` and `referralSource` for exactly this. Both are unauthenticated today and must go behind Convex auth before any dashboard ships.
+
+## 8c. Phase 7 — Hygraph CMS migration (decided 2026-08-12)
+
+The migration the repository layer was built for. Rule 1 in `CLAUDE.md` — pages never import `lib/data`, only `lib/repositories` — exists so this is a contained change. **Nothing in `app/` or `components/` should need to move.**
+
+### What Hygraph is
+
+A GraphQL-native headless CMS. Content models are defined in their web UI, not in this repo, and Hygraph generates a GraphQL API from them. Three concepts matter here:
+
+- **Content stages.** Every entry exists in `DRAFT` and `PUBLISHED` at once. Editing changes the draft; publishing copies it across. The API token decides which stage you see. This replaces our `status: "approved"` story gate — enforced by Hygraph rather than by a repository filter that could be forgotten.
+- **Permanent Auth Tokens.** Bearer tokens scoped per model and per stage. Server-side only. Public API access is disabled by default on new projects, which is the posture we want.
+- **Two endpoints.** A regular read/write one, and a read-only high-performance CDN endpoint. We read from the CDN.
+
+### What moves
+
+| Content | Destination | Why |
+|---|---|---|
+| Resources, Stories, Events, Clinics, Products | **Hygraph** | Edited constantly by the client |
+| Consultation types, availability, FAQs | **Hygraph** | Prices and slots change |
+| Discounts | **Hygraph** | Codes expire |
+| Members, consultation requests, contact messages | **Convex — unchanged** | Personal data submitted by the *public*, not authored by editors |
+| Legal pages | **Stays in code** | A privacy policy edited casually in a CMS is a real risk. Changes should go through review and a commit |
+| Site config, nav, country list | **Stays in code** | Structure, not content |
+
+The dividing line: Hygraph is where *editors write*; Convex is where *the public submits*.
+
+### Steps
+
+1. ✅ **Model the schema in Hygraph.** Transcribed from `docs/hygraph-schema.md`, which maps our existing `types/` one-to-one.
+2. ✅ **Build the query layer** in `api/`. `client.ts` is the whole transport — one POST with the bearer token and `next: { revalidate: 3600 }`. `map.ts` holds four shared mappers. Then one file per model: a single query constant and a single `fetchX(): Promise<X[]>`.
+3. ✅ **Rewrite the repository bodies.** Every exported signature stayed identical, so no page changed.
+4. ✅ **Delete `lib/data`.** `legal.ts` moved to `lib/legal.ts` and availability to `lib/availability.ts`; the six mock content files are gone.
+5. ✅ **Split verification** into `verify:code` (offline logic) and `verify:hygraph` (live content invariants).
+6. **Content entry.** The client writes real content in Hygraph — no seed script, since every mock record was placeholder anyway.
+7. **Deferred: preview mode.** Draft-stage token behind Next draft mode.
+8. **Deferred: webhook revalidation.** Currently the site refreshes hourly on its own; a webhook would make publishing instant.
+
+### Why the query layer is this small
+
+The repositories already do filtering, sorting, pagination, counts and relatedness in memory over arrays. So `api/` only ever needs to hand them an array. One query per model, cached by Next for an hour — no `where` builders, no connection/aggregate counts, no card/full field splits, no draft stage. If the corpus grows past a few hundred records, push filtering into GraphQL then; not before.
+
+The `status: "approved"` story gate survives as a defensive filter in the repository, but Hygraph's publish step is now the actual review.
+
+### Content-shape decisions
+
+- **Rich text.** Hygraph's Rich Text field returns several formats including markdown. Requesting markdown keeps our existing `Prose` renderer and its safe-link handling working unchanged. Taking the JSON AST gives more structural control but needs a new renderer. **Try markdown first.**
+- **Images.** Hygraph hosts and transforms assets; add their domain to `next.config.ts` `remotePatterns`. `EntityImage`'s placeholder fallback stays useful for entries without a cover.
+- **Relations at scale.** `lib/relations.ts` computes tag overlap in memory across the whole dataset. At ~50 records that's free; against an API we either fetch everything or precompute. Fine now — **the thing to revisit past a few hundred resources.**
+
+### Consequences to handle
+
+- Hygraph becomes a **named subprocessor** and must be added to the privacy policy's "Who else sees it" section.
+- Their compliance posture (SOC 2 Type 2, ISO 27001, GDPR) should be recorded alongside Convex and Resend.
+- **Verify current pricing and limits before committing** — API request allowance, editor seats (Henry, Precious, plus developer), asset storage.
+
+### Resolved
+
+- **Availability stays out of Hygraph.** It's booking state, not editorial content — it changes when a slot is taken, not when someone writes something. It now lives in `lib/availability.ts` until a real booking provider replaces it. Consultation *types* and *FAQs* did move to Hygraph, since prices and copy are editorial.
+- **Legal pages stay in code** (`lib/legal.ts`). They need lawyer sign-off, not editor convenience, and all three are still flagged `draft`.
+
+### Outstanding
+
+- Add Hygraph to the privacy policy's subprocessor list (that section is currently removed — needs restoring alongside Convex and Resend).
+- `bun add libphonenumber-js` — currently only a transitive dependency.
+
 ## 9. Deferred to phase 2 (post-sign-off)
 
 Auth & user accounts · saved resources/clinics/stories · personal dashboard · event reminders · discussion forums · AI recommendations · moderated clinic reviews · multi-language · partner portal · CMS/admin dashboard · analytics · newsletter automation · story & resource submission workflows · Stripe payments for consultations · real calendar integration.

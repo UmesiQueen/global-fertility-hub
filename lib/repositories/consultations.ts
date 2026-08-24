@@ -1,28 +1,35 @@
 import {
-  availability,
-  consultationFaqs,
-  consultationTypes,
-} from "@/lib/data/consultations";
+  fetchConsultationFaqs,
+  fetchConsultationTypes,
+} from "@/api/consultations";
+import { availability } from "@/lib/availability";
 import type {
   AvailabilitySlot,
   ConsultationFaq,
   ConsultationType,
 } from "@/types";
 
-/** The only supported way for a page to read consultation content. */
+/**
+ * The only supported way for a page to read consultation content.
+ *
+ * Session types and FAQs come from Hygraph. Availability deliberately does
+ * not — it's booking state, not editorial content, and belongs with the
+ * calendar rather than in a CMS.
+ */
 
 export async function getConsultationTypes(): Promise<ConsultationType[]> {
-  return consultationTypes;
+  return fetchConsultationTypes();
 }
 
 export async function getConsultationTypeById(
   id: string,
 ): Promise<ConsultationType | null> {
-  return consultationTypes.find((item) => item.id === id) ?? null;
+  const types = await fetchConsultationTypes();
+  return types.find((item) => item.id === id) ?? null;
 }
 
 export async function getConsultationFaqs(): Promise<ConsultationFaq[]> {
-  return consultationFaqs;
+  return fetchConsultationFaqs();
 }
 
 /**

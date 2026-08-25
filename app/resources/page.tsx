@@ -60,17 +60,22 @@ export default async function ResourcesPage({
   const params = await searchParams;
 
   const search = readParam(params, "search");
-  const category = readParam(params, "category") as ResourceCategory | undefined;
+  const category = readParam(params, "category") as
+    ResourceCategory | undefined;
   const formats = readParamList(params, "format") as ResourceFormat[];
   const sort = readParam(params, "sort") as
-    | "newest"
-    | "oldest"
-    | "reading-time"
-    | undefined;
+    "newest" | "oldest" | "reading-time" | undefined;
   const page = readPage(params);
 
   const [results, categoryCounts, formatCounts] = await Promise.all([
-    getResources({ search, category, formats, sort, page, pageSize: PAGE_SIZE }),
+    getResources({
+      search,
+      category,
+      formats,
+      sort,
+      page,
+      pageSize: PAGE_SIZE,
+    }),
     getResourceCategoryCounts(),
     getResourceFormatCounts(),
   ]);

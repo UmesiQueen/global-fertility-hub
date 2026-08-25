@@ -16,7 +16,16 @@ export async function hygraphFetch<T>(query: string): Promise<T> {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify({ query }),
-    next: { revalidate: 3600 },
+    next: {
+      // Dev reads through every time. Next's Data Cache lives on the server,
+      // so a cached response survives browser refreshes, incognito windows and
+      // dev-server restarts alike — which makes an editor's change look like it
+      // simply didn't save. Not a trade worth making while authoring content.
+      revalidate: process.env.NODE_ENV === "production" ? 3600 : 0,
+      // Lets a Hygraph publish webhook call revalidateTag("hygraph") later and
+      // drop every query at once, instead of waiting out the hour.
+      tags: ["hygraph"],
+    },
   });
 
   const json = await response.json();

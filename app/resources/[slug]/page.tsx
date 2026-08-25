@@ -126,7 +126,7 @@ export default async function ResourceDetailPage({
             </div>
           </div>
 
-          <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-3xl">
+          <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-3xl">
             <EntityImage
               image={resource.coverImage}
               sizes="(max-width: 1024px) 100vw, 1200px"
@@ -144,11 +144,7 @@ export default async function ResourceDetailPage({
               <p className="mt-1 text-sm text-muted-foreground">
                 Print it or keep it on your phone for appointments.
               </p>
-              <ButtonLink
-                href={resource.downloadUrl}
-                className="mt-4"
-                external
-              >
+              <ButtonLink href={resource.downloadUrl} className="mt-4" external>
                 <Download aria-hidden="true" className="size-4" />
                 Download
               </ButtonLink>

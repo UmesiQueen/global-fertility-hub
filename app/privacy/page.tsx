@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LegalPage, legalMetadata } from "@/components/layout/legal-page";
-import { getLegalDocument } from "@/lib/data/legal";
+import { getLegalDocument } from "@/lib/legal";
 
 const document = getLegalDocument("privacy");
 

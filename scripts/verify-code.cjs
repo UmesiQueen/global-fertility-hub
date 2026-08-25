@@ -79,6 +79,27 @@ const check = (cond, msg) => (cond ? ok : fail).push(msg);
   check(none.total===0 && none.totalPages===1 && none.page===1,'empty result set is a clean page 1 of 1');
   } // end pagination block
 
+  { // ---- featured rails ----
+  const { featuredFirst } = require(ROOT+'/lib/repositories/shared.ts');
+  const item=(id,f)=>({id,isFeatured:f,n:Number(id)});
+  const byId=(a,b)=>a.n-b.n;
+  const run=(items,limit=6)=>featuredFirst(items,i=>Boolean(i.isFeatured),byId,limit).map(i=>i.id);
+
+  // The bug this replaced: one flagged out of two used to return both.
+  check(JSON.stringify(run([item('1',true),item('2',false)]))==='["1"]','one featured out of two returns only the featured one');
+  check(JSON.stringify(run([item('1',false),item('2',true)]))==='["2"]','unticking Featured actually removes a card');
+  check(run([item('1',true),item('2',true),item('3',false)]).length===2,'only flagged records appear, however many are unflagged');
+
+  // Fallback keeps a fresh site from rendering an empty band.
+  check(JSON.stringify(run([item('1',false),item('2',false)]))==='["1","2"]','nothing flagged falls back to the whole (sorted) list');
+  check(run([],6).length===0,'an empty collection returns nothing, so the section self-suppresses');
+
+  // The cap still holds, and ordering is the caller's comparator.
+  check(run([1,2,3,4,5,6,7,8].map(n=>item(String(n),true)),6).length===6,'more featured than the limit is capped');
+  check(JSON.stringify(run([item('3',true),item('1',true),item('2',true)]))==='["1","2","3"]','featured records keep the comparator ordering');
+  check(run([item('1',false),item('2',false),item('3',false)],2).length===2,'the fallback respects the limit too');
+  } // end featured block
+
   { // ---- markdown ----
   const MD=require(ROOT+'/lib/markdown.ts');
   check(MD.parseMarkdown('').length===0,'empty body yields no blocks (no crash)');

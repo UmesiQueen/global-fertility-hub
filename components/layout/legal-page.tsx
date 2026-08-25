@@ -5,8 +5,8 @@ import { Container } from "@/components/layout/container";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Prose } from "@/components/shared/prose";
 import { formatDate } from "@/lib/format";
-import type { LegalDocument } from "@/lib/data/legal";
-import { legalDocuments } from "@/lib/data/legal";
+import type { LegalDocument } from "@/lib/legal";
+import { legalDocuments } from "@/lib/legal";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 /**
@@ -53,7 +53,7 @@ export function LegalPage({ document }: { document: LegalDocument }) {
             Deliberately loud, and deliberately at the top.
             A draft legal page that looks finished is worse than no page at
             all — someone could rely on it. Removed by setting `draft: false`
-            in lib/data/legal.ts once a lawyer has signed off.
+            in lib/legal.ts once a lawyer has signed off.
           */}
           {document.draft ? (
             <div

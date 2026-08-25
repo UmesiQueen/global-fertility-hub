@@ -2,8 +2,8 @@ import type { Resource } from "@/types";
 import { hygraphFetch } from "./client";
 import { asset, date, enumIn, md } from "./map";
 
-const QUERY = `{
-  resources(first: 500, orderBy: publishedAt_DESC) {
+const QUERY = `query Resources {
+  resources(first: 100) {
     id
     slug
     title

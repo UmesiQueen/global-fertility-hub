@@ -3,7 +3,7 @@ import { hygraphFetch } from "./client";
 
 /** Session types and FAQs. Availability stays in code — see docs/hygraph-schema.md §6. */
 
-const TYPES_QUERY = `{
+const TYPES_QUERY = `query ConsultationTypes {
   consultationTypes(first: 20) {
     id
     name
@@ -29,7 +29,7 @@ export async function fetchConsultationTypes(): Promise<ConsultationType[]> {
   }));
 }
 
-const FAQS_QUERY = `{
+const FAQS_QUERY = `query ConsultationFaqs {
   consultationFaqs(first: 50) {
     question
     answer

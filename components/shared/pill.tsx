@@ -12,7 +12,7 @@ const TONES = {
   muted: "bg-muted text-muted-foreground",
   script: "bg-script/12 text-script",
   overlay: "bg-background/90 text-primary backdrop-blur-sm",
-  new: "bg-success/12 text-success",
+  new: "bg-success/20 text-success",
 } as const;
 
 export type PillTone = keyof typeof TONES;

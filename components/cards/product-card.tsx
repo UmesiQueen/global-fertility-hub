@@ -30,7 +30,7 @@ const FORMAT_ICONS: Record<
 export function productPriceLabel(product: Product): string | null {
   if (product.isFree) return "Free";
   if (product.price === undefined) return null;
-  return `${product.currency ?? "AUD"} $${product.price}`;
+  return `${product.currency?.toUpperCase() ?? "AUD"} $${product.price}`;
 }
 
 export function ProductCard({
@@ -51,13 +51,17 @@ export function ProductCard({
         className,
       )}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+      <div className="relative aspect-4/3 w-full overflow-hidden">
         <EntityImage
           image={product.coverImage}
           className="transition-transform duration-300 group-hover:scale-[1.03]"
         />
 
-        <Pill tone="overlay" icon={FormatIcon} className="absolute top-3 left-3">
+        <Pill
+          tone="overlay"
+          icon={FormatIcon}
+          className="absolute top-3 left-3"
+        >
           {titleCase(product.format)}
         </Pill>
 

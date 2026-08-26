@@ -215,50 +215,6 @@ export const clinics: Clinic[] = [
     joinedAt: "2026-04-28",
   },
   {
-    id: "cli-006",
-    slug: "pacific-coast-fertility",
-    name: "Pacific Coast Fertility",
-    isEducationalPartner: true,
-    logo: img("Pacific Coast Fertility logo"),
-    coverImage: img("A light-filled clinic atrium with seating."),
-    intro:
-      "A Los Angeles practice with an established LGBTQ+ family-building programme.",
-    country: "United States",
-    countryCode: "US",
-    city: "Los Angeles",
-    treatments: [
-      "ivf",
-      "icsi",
-      "iui",
-      "sperm-donation",
-      "egg-donation",
-      "lgbtq-family-building",
-    ],
-    specialties: ["LGBTQ+ family building", "Donor programmes"],
-    languages: ["English", "Spanish", "Korean"],
-    services: [
-      "Reciprocal IVF",
-      "Donor sperm and egg programmes",
-      "IUI",
-      "Counselling",
-    ],
-    team: [
-      { name: "Dr Rachel Kimura", role: "Medical Director" },
-      { name: "Dr Elias Moreno", role: "Fertility Specialist" },
-    ],
-    partnerBenefits: [
-      {
-        title: "Inclusive intake process",
-        description:
-          "Forms and consultations designed for all family structures rather than adapted from a default.",
-      },
-    ],
-    website: "https://example.com/pacific-coast",
-    tags: ["lgbtq", "donor-conception", "ivf"],
-    isFeatured: true,
-    joinedAt: "2026-04-14",
-  },
-  {
     id: "cli-007",
     slug: "maple-grove-reproductive-care",
     name: "Maple Grove Reproductive Care",

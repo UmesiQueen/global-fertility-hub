@@ -43,7 +43,6 @@ Create all nine before touching models. Each has a description of its own, then 
 | `endometriosis` | Endometriosis | Endometriosis and its effect on fertility. |
 | `pregnancy_loss` | Pregnancy Loss | Miscarriage, ectopic pregnancy, recurrent loss, and grief. Handle gently. |
 | `donor_conception` | Donor Conception | Donor eggs, sperm or embryos, and talking to children about it. |
-| `lgbtq` | LGBTQ+ | Family building for same-sex couples, single parents and trans people. |
 | `fertility_preservation` | Fertility Preservation | Egg, sperm and embryo freezing, including before cancer treatment. |
 | `international_ivf` | International IVF | Travelling abroad for treatment — cost, law, and practicalities. |
 | `nutrition` | Nutrition & Lifestyle | Food, supplements, exercise and everyday habits. |
@@ -99,7 +98,6 @@ Create all nine before touching models. Each has a description of its own, then 
 | `genetic_testing` | Genetic Testing | Genetic screening and counselling. |
 | `fertility_preservation` | Fertility Preservation | Preserving fertility, often before medical treatment. |
 | `recurrent_miscarriage` | Recurrent Miscarriage | Investigation and care after repeated loss. |
-| `lgbtq_family_building` | LGBTQ+ Family Building | Reciprocal IVF and services for same-sex and trans parents. |
 | `pgt_a` | PGT-A | Genetic testing of embryos before transfer. |
 
 ### `EventType`
@@ -161,7 +159,6 @@ Create all nine before touching models. Each has a description of its own, then 
 | `pcos` | PCOS | Living with PCOS while trying to conceive. |
 | `endometriosis` | Endometriosis | Living with endometriosis while trying to conceive. |
 | `success_stories` | Success Stories | Ends with a pregnancy or a baby. Use only when that's genuinely the subject. |
-| `lgbtq` | LGBTQ+ | Same-sex, single or trans parenthood. |
 | `donor_conception` | Donor Conception | Conceiving with donor eggs, sperm or embryos. |
 | `international_ivf` | International IVF | Travelling to another country for treatment. |
 

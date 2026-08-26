@@ -119,28 +119,6 @@ export const events: Event[] = [
     ],
     registrationUrl: "https://example.com/register/ivf-overseas",
   },
-  {
-    id: "evt-006",
-    slug: "building-a-family-as-an-lgbtq-couple",
-    title: "Building a Family as an LGBTQ+ Couple",
-    type: "panel-discussion",
-    tags: ["lgbtq", "donor-conception"],
-    image: img("Panellists in conversation on a bright stage."),
-    description:
-      "Reciprocal IVF, donor selection and the legal groundwork, discussed by clinicians and parents.",
-    startsAt: "2026-10-22T17:00:00-07:00",
-    timezone: "America/Los_Angeles",
-    durationMinutes: 90,
-    speakers: [
-      {
-        name: "Dr Rachel Kimura",
-        role: "Medical Director",
-        organisation: "Pacific Coast Fertility",
-      },
-    ],
-    registrationUrl: "https://example.com/register/lgbtq-family-building",
-  },
-
   // ------------------------------------------------------------ replay library
   {
     id: "evt-007",

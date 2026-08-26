@@ -25,7 +25,6 @@ export const STORY_CATEGORIES = [
   "PCOS",
   "Endometriosis",
   "Success Stories",
-  "LGBTQ+",
   "Donor Conception",
   "International IVF",
 ] as const;

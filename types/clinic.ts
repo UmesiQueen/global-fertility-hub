@@ -19,7 +19,6 @@ export type Treatment =
   | "genetic-testing"
   | "fertility-preservation"
   | "recurrent-miscarriage"
-  | "lgbtq-family-building"
   | "pgt-a";
 
 export interface ClinicTeamMember {

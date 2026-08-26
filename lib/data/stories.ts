@@ -261,43 +261,6 @@ We had surgery, then IVF. We're one cycle in with one to go.
 The average time to diagnosis is still measured in years, and that is a failure of the system rather than a reflection of you. If you're not being heard, ask again, and ask someone else. I wish I'd done it five years sooner.`,
   },
   {
-    id: "sto-008",
-    slug: "two-mums-one-dream",
-    title: "Two Mums, One Dream",
-    category: "LGBTQ+",
-    tags: ["lgbtq", "donor-conception", "success-stories"],
-    coverImage: img("Two women laughing together in a sunlit kitchen."),
-    preview:
-      "Our journey through reciprocal IVF, and the questions nobody had prepared us for.",
-    author: { name: "Rachel & Hannah", country: "United States" },
-    publishedAt: "2026-04-10",
-    readingTime: 8,
-    status: "approved",
-    body: `We did reciprocal IVF — Hannah's eggs, my body. Our daughter has a biological connection to both of us, which mattered enormously to us and turned out to matter not at all to anyone else.
-
-## Choosing a clinic
-
-This was the part where the differences showed. At the first clinic we visited, every form had "husband" printed on it and the consultant asked twice which of us was "the mother".
-
-The clinic we went with had intake forms designed for all family structures rather than adapted from a default. It sounds like a small thing. It isn't.
-
-## The donor decision
-
-Choosing a sperm donor is a strange experience that no amount of reading really prepares you for. We went with an identity-release donor, so our daughter can access identifying information when she turns eighteen.
-
-That decision took us months and several arguments. What settled it was thinking about what she might want at twenty-five rather than what was comfortable for us at thirty-two.
-
-## The legal side
-
-Do not skip this. The rules on parenthood for same-sex couples vary hugely, including within countries, and the situation you assume you're in may not be the one the law recognises.
-
-We did a second-parent adoption despite both being on the birth certificate, because our lawyer explained how differently that certificate might be read if we travelled.
-
-## Now
-
-She's two, she's exhausting, and she has two mothers who spent four years and rather a lot of money getting to her.`,
-  },
-  {
     id: "sto-009",
     slug: "choosing-donor-sperm-our-path-to-parenthood",
     title: "Choosing Donor Sperm: Our Path to Parenthood",

@@ -16,6 +16,22 @@ import type { Clinic, Event, Resource, Story } from "@/types";
 
 const url = (path: string) => `${siteConfig.url}${path}`;
 
+/**
+ * A date field, or nothing at all.
+ *
+ * Draft entries read through preview have no `publishedAt` until they are first
+ * published, and an event being drafted may not have its `startsAt` filled in.
+ * Structured data that is absent is fine; structured data that is wrong is not,
+ * and a Date built from "" throws on `toISOString()` — which is a 500 for the
+ * page rather than a missing meta tag.
+ */
+const when = (iso: string | undefined): Date | null => {
+  if (!iso) return null;
+
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
 export function organisationJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -45,7 +61,7 @@ export function resourceJsonLd(resource: Resource) {
     "@type": "Article",
     headline: resource.title,
     description: resource.excerpt,
-    datePublished: resource.publishedAt,
+    ...(resource.publishedAt ? { datePublished: resource.publishedAt } : {}),
     author: { "@type": "Person", name: resource.author.name },
     publisher: { "@type": "Organization", name: siteConfig.name },
     mainEntityOfPage: url(`/resources/${resource.slug}`),
@@ -61,7 +77,7 @@ export function storyJsonLd(story: Story) {
     "@type": "Article",
     headline: story.title,
     description: story.preview,
-    datePublished: story.publishedAt,
+    ...(story.publishedAt ? { datePublished: story.publishedAt } : {}),
     author: { "@type": "Person", name: story.author.name },
     publisher: { "@type": "Organization", name: siteConfig.name },
     mainEntityOfPage: url(`/stories/${story.slug}`),
@@ -70,17 +86,18 @@ export function storyJsonLd(story: Story) {
 }
 
 export function eventJsonLd(event: Event) {
-  const endsAt = new Date(
-    new Date(event.startsAt).getTime() + event.durationMinutes * 60_000,
-  ).toISOString();
+  const startsAt = when(event.startsAt);
+  const endsAt = startsAt
+    ? new Date(startsAt.getTime() + event.durationMinutes * 60_000)
+    : null;
 
   return {
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.title,
     description: event.description,
-    startDate: event.startsAt,
-    endDate: endsAt,
+    ...(startsAt ? { startDate: startsAt.toISOString() } : {}),
+    ...(endsAt ? { endDate: endsAt.toISOString() } : {}),
     eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
     eventStatus: "https://schema.org/EventScheduled",
     location: {

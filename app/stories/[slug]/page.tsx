@@ -123,10 +123,16 @@ export default async function StoryDetailPage({
                   ) : null}
                 </p>
                 <p className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <time dateTime={story.publishedAt}>
-                    {formatDate(story.publishedAt)}
-                  </time>
-                  <span aria-hidden="true">·</span>
+                  {/* A draft has no publish date until it is first published.
+                      Omitted with its separator rather than rendered empty. */}
+                  {story.publishedAt ? (
+                    <>
+                      <time dateTime={story.publishedAt}>
+                        {formatDate(story.publishedAt)}
+                      </time>
+                      <span aria-hidden="true">·</span>
+                    </>
+                  ) : null}
                   <Clock aria-hidden="true" className="size-3" />
                   {formatReadingTime(story.readingTime)}
                 </p>

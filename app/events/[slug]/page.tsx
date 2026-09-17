@@ -260,36 +260,43 @@ export default async function EventDetailPage({
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <div className="rounded-2xl border border-border/70 bg-card p-5">
               <dl className="flex flex-col gap-4 text-sm">
-                <div className="flex items-start gap-2.5">
-                  <CalendarDays
-                    aria-hidden="true"
-                    className="mt-0.5 size-4 shrink-0 text-primary"
-                  />
-                  <div>
-                    <dt className="text-xs text-muted-foreground">Date</dt>
-                    <dd className="font-medium text-foreground">
-                      {formatEventDate(event)}
-                    </dd>
+                {/* A draft event may not have its date or timezone filled in
+                    yet. Empty Date and Time rows read as broken, so the pair is
+                    omitted until there is something to show. */}
+                {event.startsAt ? (
+                  <>
+                  <div className="flex items-start gap-2.5">
+                    <CalendarDays
+                      aria-hidden="true"
+                      className="mt-0.5 size-4 shrink-0 text-primary"
+                    />
+                    <div>
+                      <dt className="text-xs text-muted-foreground">Date</dt>
+                      <dd className="font-medium text-foreground">
+                        {formatEventDate(event)}
+                      </dd>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-start gap-2.5">
-                  <Clock
-                    aria-hidden="true"
-                    className="mt-0.5 size-4 shrink-0 text-primary"
-                  />
-                  <div>
-                    <dt className="text-xs text-muted-foreground">Time</dt>
-                    {/* Shown in the event's own timezone — the same time the
-                        host advertised, not the reader's local conversion. */}
-                    <dd className="font-medium text-foreground">
-                      {formatEventTime(event)}
-                    </dd>
-                    <dd className="text-xs text-muted-foreground">
-                      {formatDuration(event.durationMinutes)}
-                    </dd>
+                  <div className="flex items-start gap-2.5">
+                    <Clock
+                      aria-hidden="true"
+                      className="mt-0.5 size-4 shrink-0 text-primary"
+                    />
+                    <div>
+                      <dt className="text-xs text-muted-foreground">Time</dt>
+                      {/* Shown in the event's own timezone — the same time the
+                          host advertised, not the reader's local conversion. */}
+                      <dd className="font-medium text-foreground">
+                        {formatEventTime(event)}
+                      </dd>
+                      <dd className="text-xs text-muted-foreground">
+                        {formatDuration(event.durationMinutes)}
+                      </dd>
+                    </div>
                   </div>
-                </div>
+                  </>
+                ) : null}
               </dl>
 
               {hasReplay ? (

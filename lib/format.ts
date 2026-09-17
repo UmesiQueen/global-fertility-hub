@@ -7,28 +7,69 @@ import type { ConsultationType, Event } from "@/types";
  * Nothing reads the viewer's locale or clock, because differing server and
  * client output is the classic source of hydration mismatches — and a date
  * that flickers on load looks broken on a site people are reading carefully.
+ *
+ * Every formatter returns "" rather than throwing on a date it cannot read.
+ * `Intl.DateTimeFormat#format` throws `RangeError: Invalid time value` on an
+ * invalid Date, and its constructor throws on an invalid IANA timezone — and a
+ * throw inside a Server Component is a 500 for the whole page. Published
+ * content always has its dates, because Hygraph sets `publishedAt` at publish
+ * time and nobody publishes an event without a start. A draft read through
+ * preview has neither guarantee: `publishedAt` is null until first publish, and
+ * `startsAt` and `timezone` are whatever the editor has typed so far. An
+ * unfinished draft must not be able to take a page down.
+ *
+ * "" is the backstop, not the design. Callers that would rather omit the
+ * element than render an empty one check the source value themselves.
  */
 
 const LOCALE = "en-AU";
 
+/** The Date, or null if it isn't one we can format. */
+function at(value: string): Date | null {
+  if (!value) return null;
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+/** Formats, or returns "" if either the date or the options are unusable. */
+function render(
+  date: Date | null,
+  options: Intl.DateTimeFormatOptions,
+): string {
+  if (!date) return "";
+
+  try {
+    return new Intl.DateTimeFormat(LOCALE, options).format(date);
+  } catch {
+    // An empty or misspelled timeZone throws from the constructor rather than
+    // the format call — same outcome for us, same treatment.
+    return "";
+  }
+}
+
 /** "12 June 2026" */
 export function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  if (!iso) return "";
+
+  return render(at(`${iso.slice(0, 10)}T00:00:00Z`), {
     day: "numeric",
     month: "long",
     year: "numeric",
     timeZone: "UTC",
-  }).format(new Date(`${iso.slice(0, 10)}T00:00:00Z`));
+  });
 }
 
 /** "12 Jun 2026" — for tight card footers. */
 export function formatDateShort(iso: string): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  if (!iso) return "";
+
+  return render(at(`${iso.slice(0, 10)}T00:00:00Z`), {
     day: "numeric",
     month: "short",
     year: "numeric",
     timeZone: "UTC",
-  }).format(new Date(`${iso.slice(0, 10)}T00:00:00Z`));
+  });
 }
 
 /**
@@ -39,23 +80,23 @@ export function formatDateShort(iso: string): string {
  * clinic advertised a time and the two must agree.
  */
 export function formatEventDate(event: Event): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  return render(at(event.startsAt), {
     weekday: "short",
     day: "numeric",
     month: "short",
     year: "numeric",
     timeZone: event.timezone,
-  }).format(new Date(event.startsAt));
+  });
 }
 
 /** "6:00 PM AWST" */
 export function formatEventTime(event: Event): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  return render(at(event.startsAt), {
     hour: "numeric",
     minute: "2-digit",
     timeZoneName: "short",
     timeZone: event.timezone,
-  }).format(new Date(event.startsAt));
+  });
 }
 
 /** "60 min" / "1h 30m" */
@@ -67,10 +108,7 @@ export function formatDuration(minutes: number): string {
 }
 
 /** "8 min read" — videos and webinars are watched, not read. */
-export function formatReadingTime(
-  minutes: number,
-  format?: string,
-): string {
+export function formatReadingTime(minutes: number, format?: string): string {
   const watched = format === "video" || format === "webinar";
   return watched ? `${minutes} min watch` : `${minutes} min read`;
 }
@@ -91,32 +129,32 @@ export function formatPrice(consultation: ConsultationType): string {
 
 /** "9:00 am" in a given zone. */
 export function formatTimeInZone(iso: string, timeZone: string): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  return render(at(iso), {
     hour: "numeric",
     minute: "2-digit",
     timeZone,
-  }).format(new Date(iso));
+  });
 }
 
 /** "9:00 am AWST" — includes the zone so the reader can sanity-check it. */
 export function formatTimeWithZone(iso: string, timeZone: string): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  return render(at(iso), {
     hour: "numeric",
     minute: "2-digit",
     timeZoneName: "short",
     timeZone,
-  }).format(new Date(iso));
+  });
 }
 
 /** "Mon 3 Aug 2026" in a given zone. */
 export function formatDateInZone(iso: string, timeZone: string): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  return render(at(iso), {
     weekday: "short",
     day: "numeric",
     month: "short",
     year: "numeric",
     timeZone,
-  }).format(new Date(iso));
+  });
 }
 
 /**
@@ -139,7 +177,13 @@ export function isSameWallClock(
   zoneA: string,
   zoneB: string,
 ): boolean {
-  return formatTimeInZone(iso, zoneA) === formatTimeInZone(iso, zoneB);
+  const a = formatTimeInZone(iso, zoneA);
+
+  // Two unformattable times are not "the same wall clock" — without this, an
+  // unreadable date would suppress the second line by claiming both zones agree.
+  if (!a) return false;
+
+  return a === formatTimeInZone(iso, zoneB);
 }
 
 /**

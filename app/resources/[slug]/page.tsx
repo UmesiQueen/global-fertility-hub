@@ -116,9 +116,12 @@ export default async function ResourceDetailPage({
                   </span>
                 ) : null}
               </span>
-              <time dateTime={resource.publishedAt}>
-                {formatDate(resource.publishedAt)}
-              </time>
+              {/* Absent on a draft — omitted rather than rendered empty. */}
+              {resource.publishedAt ? (
+                <time dateTime={resource.publishedAt}>
+                  {formatDate(resource.publishedAt)}
+                </time>
+              ) : null}
               <span className="inline-flex items-center gap-1.5">
                 <Clock aria-hidden="true" className="size-4" />
                 {formatReadingTime(resource.readingTime, resource.format)}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ImageAsset } from "@/types";
 
 /** Hygraph enum IDs use underscores; our types use hyphens. */

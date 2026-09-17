@@ -13,10 +13,10 @@
  */
 
 export { hygraphFetch } from "./client";
-export { fetchResources } from "./resources";
-export { fetchStories } from "./stories";
 export { fetchClinics } from "./clinics";
+export { fetchConsultationFaqs, fetchConsultationTypes } from "./consultations";
+export { fetchDiscounts } from "./discounts";
 export { fetchEvents } from "./events";
 export { fetchProducts } from "./products";
-export { fetchDiscounts } from "./discounts";
-export { fetchConsultationTypes, fetchConsultationFaqs } from "./consultations";
+export { fetchResources } from "./resources";
+export { fetchStories } from "./stories";

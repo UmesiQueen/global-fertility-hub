@@ -1,6 +1,6 @@
+import type { Discount } from "@/types";
 import { hygraphFetch } from "./client";
 import { asset } from "./map";
-import type { Discount } from "@/types";
 
 const QUERY = `query Discounts($stage: Stage!) {
   discounts(stage: $stage, first: 100) {
@@ -17,7 +17,7 @@ const QUERY = `query Discounts($stage: Stage!) {
 }`;
 
 export async function fetchDiscounts(): Promise<Discount[]> {
-  const data = await hygraphFetch<{ discounts: any[] }>(QUERY);
+  const data = await hygraphFetch<{ discounts: Discount[] }>(QUERY);
 
   return data.discounts.map((d) => ({
     id: d.id,

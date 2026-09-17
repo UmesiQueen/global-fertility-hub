@@ -87,7 +87,7 @@ export default async function EventDetailPage({
   ]);
 
   const hasReplay = Boolean(event.replayUrl);
-  const isPast = new Date(event.startsAt).getTime() <= Date.now();
+  const isPast = new Date(event.startsAt) <= new Date();
 
   const crumbs = [
     { label: "Home", href: "/" },

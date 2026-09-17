@@ -21,7 +21,7 @@ const QUERY = `query Stories($stage: Stage!) {
 }`;
 
 export async function fetchStories(): Promise<Story[]> {
-  const data = await hygraphFetch<{ stories: any[] }>(QUERY);
+  const data = await hygraphFetch<{ stories: Story[] }>(QUERY);
 
   // On the published stage, publishing *is* the review — nothing this token can
   // see got there without a human approving it. On the draft stage that

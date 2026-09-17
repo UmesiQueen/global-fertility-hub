@@ -29,7 +29,7 @@ const QUERY = `query Clinics($stage: Stage!) {
 }`;
 
 export async function fetchClinics(): Promise<Clinic[]> {
-  const data = await hygraphFetch<{ clinics: any[] }>(QUERY);
+  const data = await hygraphFetch<{ clinics: Clinic[] }>(QUERY);
 
   return data.clinics.map((c) => ({
     id: c.id,

@@ -27,7 +27,7 @@ const QUERY = `query Products($stage: Stage!) {
 }`;
 
 export async function fetchProducts(): Promise<Product[]> {
-  const data = await hygraphFetch<{ products: any[] }>(QUERY);
+  const data = await hygraphFetch<{ products: Product[] }>(QUERY);
 
   return data.products.map((p) => ({
     id: p.id,

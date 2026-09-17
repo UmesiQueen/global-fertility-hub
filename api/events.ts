@@ -25,7 +25,7 @@ const QUERY = `query Events($stage: Stage!) {
 }`;
 
 export async function fetchEvents(): Promise<Event[]> {
-  const data = await hygraphFetch<{ events: any[] }>(QUERY);
+  const data = await hygraphFetch<{ events: Event[] }>(QUERY);
 
   return data.events.map((e) => ({
     id: e.id,

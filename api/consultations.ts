@@ -16,7 +16,7 @@ const TYPES_QUERY = `query ConsultationTypes($stage: Stage!) {
 }`;
 
 export async function fetchConsultationTypes(): Promise<ConsultationType[]> {
-  const data = await hygraphFetch<{ consultationTypes: any[] }>(TYPES_QUERY);
+  const data = await hygraphFetch<{ consultationTypes: ConsultationType[] }>(TYPES_QUERY);
 
   return data.consultationTypes.map((c) => ({
     id: c.id,

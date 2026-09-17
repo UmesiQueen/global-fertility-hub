@@ -1,14 +1,6 @@
 import { Eye } from "lucide-react";
 import { isDraftEnabled } from "@/lib/preview";
 
-/**
- * Shown on every page while draft mode is on.
- *
- * Two jobs: tell whoever is looking that this is unpublished content — a
- * preview link can be forwarded, and a draft story or an unfinished clinic
- * page read as live would be genuinely misleading here — and give them a way
- * back out, since the draft cookie otherwise follows them around the site.
- */
 export async function PreviewBanner() {
   if (!(await isDraftEnabled())) return null;
 
@@ -18,8 +10,9 @@ export async function PreviewBanner() {
         <p className="flex items-center gap-2">
           <Eye aria-hidden="true" className="size-4 shrink-0" />
           <span>
-            <strong className="font-medium">Draft preview.</strong> This page is
-            showing unpublished content and is not visible to readers.
+            <strong className="font-medium">Draft preview.</strong> You are
+            reading the draft version of this content. Anything you have not
+            published yet appears here and nowhere else.
           </span>
         </p>
 

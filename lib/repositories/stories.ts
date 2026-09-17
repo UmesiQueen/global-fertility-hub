@@ -2,6 +2,7 @@ import { fetchClinics } from "@/api/clinics";
 import { fetchEvents } from "@/api/events";
 import { fetchResources } from "@/api/resources";
 import { fetchStories } from "@/api/stories";
+import { isDraftEnabled } from "@/lib/preview";
 import { findRelated } from "@/lib/relations";
 import type { Clinic, Event, Paginated, Resource, Story } from "@/types";
 import { featuredFirst, matches, paginate } from "./shared";
@@ -13,9 +14,20 @@ import { featuredFirst, matches, paginate } from "./shared";
  * are reviewed before publication, and an unreviewed story reaching the site
  * because a page forgot to filter is the kind of failure this project cannot
  * afford. Hygraph's publishing step is that review, so this is belt and braces.
+ *
+ * Draft preview is the one exception, and it has to be: a story is previewed
+ * precisely so someone can review it, and a preview that filters out the
+ * unreviewed story shows a 404 to the person doing the reviewing. Draft mode is
+ * only ever on behind HYGRAPH_PREVIEW_SECRET, the response is `no-store`, and
+ * the page carries a banner saying what it is — so nothing unreviewed is
+ * reachable by a reader who wasn't handed the preview link.
  */
-const published = async () =>
-  (await fetchStories()).filter((story) => story.status === "approved");
+const published = async () => {
+  const stories = await fetchStories();
+  if (await isDraftEnabled()) return stories;
+
+  return stories.filter((story) => story.status === "approved");
+};
 
 /** The nine category chips from the brief, in display order. */
 export const STORY_CATEGORIES = [

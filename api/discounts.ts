@@ -2,8 +2,8 @@ import { hygraphFetch } from "./client";
 import { asset } from "./map";
 import type { Discount } from "@/types";
 
-const QUERY = `query Discounts {
-  discounts(first: 100) {
+const QUERY = `query Discounts($stage: Stage!) {
+  discounts(stage: $stage, first: 100) {
     id
     brand
     description

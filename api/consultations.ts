@@ -3,8 +3,8 @@ import { hygraphFetch } from "./client";
 
 /** Session types and FAQs. Availability stays in code — see docs/hygraph-schema.md §6. */
 
-const TYPES_QUERY = `query ConsultationTypes {
-  consultationTypes(first: 20) {
+const TYPES_QUERY = `query ConsultationTypes($stage: Stage!) {
+  consultationTypes(stage: $stage, first: 20) {
     id
     name
     description
@@ -29,8 +29,8 @@ export async function fetchConsultationTypes(): Promise<ConsultationType[]> {
   }));
 }
 
-const FAQS_QUERY = `query ConsultationFaqs {
-  consultationFaqs(first: 50) {
+const FAQS_QUERY = `query ConsultationFaqs($stage: Stage!) {
+  consultationFaqs(stage: $stage, first: 50) {
     question
     answer
   }

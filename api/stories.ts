@@ -1,9 +1,10 @@
+import { isDraftEnabled } from "@/lib/preview";
 import type { Story } from "@/types";
 import { hygraphFetch } from "./client";
 import { asset, date, enumIn, md } from "./map";
 
-const QUERY = `query Stories {
-  stories(first: 100) {
+const QUERY = `query Stories($stage: Stage!) {
+  stories(stage: $stage, first: 100) {
     id
     slug
     title
@@ -22,6 +23,12 @@ const QUERY = `query Stories {
 export async function fetchStories(): Promise<Story[]> {
   const data = await hygraphFetch<{ stories: any[] }>(QUERY);
 
+  // On the published stage, publishing *is* the review — nothing this token can
+  // see got there without a human approving it. On the draft stage that
+  // guarantee is gone, so drafts are reported as what they are: not yet
+  // reviewed. The repository decides what to do with that.
+  const draft = await isDraftEnabled();
+
   return data.stories.map((s) => ({
     id: s.id,
     slug: s.slug,
@@ -37,8 +44,7 @@ export async function fetchStories(): Promise<Story[]> {
     readingTime: s.readingTime ?? 1,
     publishedAt: date(s.publishedAt),
     coverImage: asset(s.coverImage, s.title),
-    // Anything this token can see is published, and publishing is the review.
-    status: "approved",
+    status: draft ? "pending" : "approved",
     isFeatured: s.isFeatured ?? undefined,
   }));
 }

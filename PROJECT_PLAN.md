@@ -148,7 +148,7 @@ types/
 **Cross-linking is the core of this product.** The brief repeats "related resources / related clinics / related webinars / similar stories" on nearly every detail page. Every entity therefore carries a shared `tags: FertilityTopic[]` field, and relatedness is computed by tag overlap in one place (`lib/relations.ts`) rather than hand-maintained per entity.
 
 `FertilityTopic` is the shared vocabulary, drawn from the story filters in the brief:
-`ivf · iui · male-fertility · pcos · endometriosis · pregnancy-loss · donor-conception · lgbtq · fertility-preservation · international-ivf · nutrition · mental-health · success-stories`
+`ivf · iui · male-fertility · pcos · endometriosis · pregnancy-loss · donor-conception · fertility-preservation · international-ivf · nutrition · mental-health · success-stories`
 
 **Entity sketch:**
 

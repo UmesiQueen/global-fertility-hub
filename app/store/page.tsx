@@ -53,17 +53,6 @@ const SORT_OPTIONS = [
   { value: "price-high", label: "Price: high to low" },
 ];
 
-/**
- * Store.
- *
- * We take no payment — every product links out to wherever it's actually
- * sold. That keeps tax, refunds and fulfilment with the people equipped to
- * handle them, and it's why there's no cart here.
- *
- * No `Product` or `Offer` JSON-LD. We don't sell these, prices for affiliate
- * items aren't ours to state, and marking them up would put our name against
- * numbers we don't control.
- */
 export default async function StorePage({
   searchParams,
 }: {

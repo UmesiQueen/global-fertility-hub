@@ -2,8 +2,8 @@ import type { Clinic } from "@/types";
 import { hygraphFetch } from "./client";
 import { asset, date, enumIn } from "./map";
 
-const QUERY = `query Clinics {
-  clinics(first: 100) {
+const QUERY = `query Clinics($stage: Stage!) {
+  clinics(stage: $stage, first: 100) {
     id
     slug
     name

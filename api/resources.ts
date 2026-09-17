@@ -2,8 +2,8 @@ import type { Resource } from "@/types";
 import { hygraphFetch } from "./client";
 import { asset, date, enumIn, md } from "./map";
 
-const QUERY = `query Resources {
-  resources(first: 100) {
+const QUERY = `query Resources($stage: Stage!) {
+  resources(stage: $stage, first: 100) {
     id
     slug
     title
@@ -24,7 +24,7 @@ const QUERY = `query Resources {
 }`;
 
 export async function fetchResources(): Promise<Resource[]> {
-  const data = await hygraphFetch<{ resources: any[] }>(QUERY);
+  const data = await hygraphFetch<{ resources: Resource[] }>(QUERY);
 
   return data.resources.map((r) => ({
     id: r.id,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -319,19 +320,23 @@ export function ConsultationBookingForm({
                         );
 
                       return (
-                        <button
+                        <label
                           key={start}
-                          type="button"
-                          role="radio"
-                          aria-checked={checked}
-                          onClick={() => field.onChange(start)}
                           className={cn(
-                            "flex min-h-11 flex-col items-center justify-center rounded-xl border px-3.5 py-1.5 transition-colors",
+                            "flex min-h-11 cursor-pointer flex-col items-center justify-center rounded-xl border px-3.5 py-1.5 transition-colors",
                             checked
                               ? "border-primary bg-primary text-primary-foreground"
                               : "border-border bg-card hover:border-primary/40",
                           )}
                         >
+                          <input
+                            type="radio"
+                            value={start}
+                            checked={checked}
+                            onChange={() => field.onChange(start)}
+                            className="sr-only"
+                            aria-label={formatTimeInZone(start, practitionerTimezone)}
+                          />
                           <span className="text-sm font-medium">
                             {formatTimeInZone(start, practitionerTimezone)}
                           </span>
@@ -348,7 +353,7 @@ export function ConsultationBookingForm({
                               {formatTimeInZone(start, localTimezone)} your time
                             </span>
                           ) : null}
-                        </button>
+                        </label>
                       );
                     })
                   ) : (

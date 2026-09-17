@@ -2,8 +2,8 @@ import type { Event } from "@/types";
 import { hygraphFetch } from "./client";
 import { asset, enumIn } from "./map";
 
-const QUERY = `query Events {
-  events(first: 100) {
+const QUERY = `query Events($stage: Stage!) {
+  events(stage: $stage, first: 100) {
     id
     slug
     title

@@ -32,7 +32,7 @@ export function DiscountCard({
   return (
     <article
       className={cn(
-        "group relative flex flex-col rounded-2xl border border-border/70 bg-card p-5 transition-shadow hover:shadow-lg hover:shadow-primary/8",
+        "group relative flex flex-col rounded-2xl border border-border/70 bg-card p-5 transition-shadow shadow-sm hover:shadow-lg hover:shadow-primary/8",
         className,
       )}
     >

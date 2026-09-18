@@ -32,7 +32,7 @@ export function EventCard({
   return (
     <article
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border border-border/70 bg-card transition-shadow hover:shadow-lg hover:shadow-primary/8",
+        "group relative flex flex-col overflow-hidden rounded-2xl border border-border/70 bg-card transition-shadow shadow-sm hover:shadow-lg hover:shadow-primary/8",
         className,
       )}
     >
@@ -89,7 +89,10 @@ export function EventCard({
             <>
               <div className="flex items-center gap-1.5">
                 <dt className="sr-only">Date</dt>
-                <CalendarDays aria-hidden="true" className="size-3.5 shrink-0" />
+                <CalendarDays
+                  aria-hidden="true"
+                  className="size-3.5 shrink-0"
+                />
                 <dd>{formatEventDate(event)}</dd>
               </div>
               <div className="flex items-center gap-1.5">

@@ -1,7 +1,14 @@
+import Image from "next/image";
 import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/shared/button-link";
 import { ScriptAccent } from "@/components/shared/script-accent";
 import { cn } from "@/lib/utils";
+
+const FADE_OUT_LETTERING = {
+  maskImage: "linear-gradient(to right, #000 0%, #000 55%, transparent 72%)",
+  WebkitMaskImage:
+    "linear-gradient(to right, #000 0%, #000 55%, transparent 72%)",
+};
 
 export function JoinCommunity({ className }: { className?: string }) {
   return (
@@ -10,7 +17,17 @@ export function JoinCommunity({ className }: { className?: string }) {
       className={cn("pb-4 md:pb-8", className)}
     >
       <Container>
-        <div className="rounded-3xl bg-surface px-6 py-14 text-center md:px-12 md:py-16">
+        <div className="relative isolate overflow-hidden rounded-3xl bg-hero-background border border-border px-6 py-14 text-center md:px-12 md:py-16">
+          <Image
+            src="/join.png"
+            alt=""
+            aria-hidden="true"
+            fill
+            sizes="(min-width: 1280px) 1216px, 100vw"
+            className="-z-10 object-cover opacity-[0.4]"
+            style={FADE_OUT_LETTERING}
+          />
+
           <h2
             id="join-community"
             className="font-heading text-2xl font-bold tracking-tight text-balance text-foreground md:text-3xl"

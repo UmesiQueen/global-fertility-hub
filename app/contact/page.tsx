@@ -78,6 +78,10 @@ export default async function ContactPage({
           <ScriptAccent>We&apos;d love to hear from you.</ScriptAccent>
         }
         description="Whether you want to share your story, suggest a topic, ask about a session or just say hello — we read every message."
+        image={{
+          src: "/contact.png",
+          alt: "A laptop showing a Get in Touch page on a marble table, beside a vase of gypsophila, a notebook, a heart mug and a phone.",
+        }}
       />
 
       <Container className="py-12 md:py-16">

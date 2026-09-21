@@ -92,6 +92,10 @@ export default async function EducationalPartnersPage({
         eyebrow={<Pill>Trusted · Transparent · Educational</Pill>}
         title="Educational Clinic Partners"
         description="We partner with fertility clinics worldwide that share our commitment to education, transparency and informed decision-making."
+        image={{
+          src: "/clinic.png",
+          alt: "A bright, calm fertility clinic reception with soft seating and a glowing \u2018Fertility Care\u2019 sign above the desk.",
+        }}
       >
         <TrustChips
           chips={[

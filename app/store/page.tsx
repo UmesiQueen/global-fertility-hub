@@ -102,6 +102,10 @@ export default async function StorePage({
         title="The Store"
         scriptLine={<ScriptAccent>Made with you in mind.</ScriptAccent>}
         description="Guides, workbooks and audio we made ourselves — plus a few things our community keeps recommending to each other."
+        image={{
+          src: "/store.png",
+          alt: "A fertility journey guide, planning workbooks, headphones and a phone playing a guided meditation, beside a heart mug on a marble table.",
+        }}
       >
         <SearchBar
           label="Search the store"

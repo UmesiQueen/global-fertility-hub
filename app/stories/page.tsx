@@ -55,6 +55,10 @@ export default async function StoriesPage({
         title="Community Stories"
         scriptLine={<ScriptAccent>You are not alone.</ScriptAccent>}
         description="Real journeys. Real experiences. Shared to inspire, support and remind you that others understand."
+        image={{
+          src: "/stories.png",
+          alt: "A framed card reading \u2018Your story could be the hope someone needs today\u2019, beside a heart mug and a vase of gypsophila on a side table.",
+        }}
       >
         <TrustChips
           chips={[

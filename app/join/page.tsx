@@ -49,6 +49,10 @@ export default function JoinPage() {
         title="Join the Community"
         scriptLine={<ScriptAccent>Stronger together.</ScriptAccent>}
         description="Wherever you are on your journey, there's a place for you here. Tell us a little about yourself and we'll get you connected."
+        image={{
+          src: "/join.png",
+          alt: "An illustration of five people sitting in a circle on the floor, talking together, with community icons above them.",
+        }}
       />
 
       <Container className="py-12 md:py-16">

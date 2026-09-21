@@ -14,17 +14,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-/**
- * Homepage — the nine sections from PROJECT_PLAN.md §5.
- * Sections 1 and 2 (hero, feature panel) live in HomeHero; 9 is the footer.
- *
- * A Server Component: every section fetches its own content, so nothing is
- * prop-drilled from here and each section can be moved or reused on another
- * page without rewiring.
- *
- * Section backgrounds alternate plain / surface deliberately — the tinted
- * bands are what separate them without needing rules between every one.
- */
 export default function Home() {
   return (
     <>

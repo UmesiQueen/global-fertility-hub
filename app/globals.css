@@ -14,6 +14,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
+  --color-hero-background: var(--hero-background);
+
   --font-sans: var(--font-inter);
   --font-heading: var(--font-space-grotesk);
   --font-script: var(--font-caveat);
@@ -71,6 +73,8 @@
   /* Warm off-white rather than pure white — the brief asks for warmth. */
   --background: oklch(0.994 0.003 95);
   --foreground: oklch(0.22 0.03 285);
+  
+  --hero-background: oklch(97.638% 0.02073 79.04);
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.03 285);

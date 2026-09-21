@@ -100,6 +100,10 @@ export default async function ResourcesPage({
       <PageHero
         title="Resources"
         description="Trusted fertility education to help you learn, understand and make informed decisions."
+        image={{
+          src: "/resources.png",
+          alt: "A stack of books, a small vase of greenery and a mug on a sunlit marble table.",
+        }}
       >
         <SearchBar
           label="Search resources"

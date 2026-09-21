@@ -43,10 +43,10 @@ export function WhyWeExist({ className }: { className?: string }) {
     >
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl lg:order-last">
+          <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl lg:order-last">
             <EntityImage
               image={{
-                src: "",
+                src: "/store.png",
                 alt: "Henry and Precious sitting together at home, smiling.",
               }}
               sizes="(max-width: 1024px) 100vw, 50vw"

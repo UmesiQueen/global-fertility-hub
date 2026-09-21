@@ -2,39 +2,29 @@ import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { Container } from "@/components/layout/container";
 import { EntityImage } from "@/components/shared/entity-image";
 import { ScriptAccent } from "@/components/shared/script-accent";
+import { heroFadeLeft, heroFadeTopBottom } from "@/lib/hero-fade";
 
-/**
- * About hero — Henry & Precious's story.
- *
- * Carries `id="henry-and-precious"` because the footer links to
- * `/about#henry-and-precious`. This block is where they're introduced, so the
- * anchor belongs here rather than on an invented separate section.
- *
- * COPY WARNING: the paragraphs below describe a real couple's pregnancy loss
- * and treatment history. Every word must be confirmed by Henry & Precious
- * themselves before launch — not paraphrased, not softened, not embellished
- * by anyone else.
- */
 export function AboutHero() {
   return (
     <section
       id="henry-and-precious"
-      className="relative overflow-hidden bg-surface"
+      className="relative overflow-hidden bg-hero-background"
     >
-      {/* Photo bleeds off the right edge from lg, matching the mockup. */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[55%] lg:block">
-        <EntityImage
-          image={{
-            src: "",
-            alt: "Henry and Precious standing together at home, smiling.",
-          }}
-          sizes="55vw"
-          priority
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-surface via-surface/70 to-transparent"
-        />
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[55%] lg:block"
+        style={heroFadeTopBottom()}
+      >
+        <div className="absolute inset-0" style={heroFadeLeft()}>
+          <EntityImage
+            image={{
+              src: "/about.png",
+              alt: "Henry and Precious standing together at home, smiling.",
+            }}
+            className="object-right"
+            sizes="55vw"
+            priority
+          />
+        </div>
       </div>
 
       <Container className="relative z-10 pt-8 pb-12 md:pb-16">
@@ -75,10 +65,10 @@ export function AboutHero() {
 
           {/* Contained photo below the copy on smaller screens, where the
               bleeding layout would push the couple out of frame. */}
-          <div className="relative mt-8 aspect-[3/2] w-full overflow-hidden rounded-2xl lg:hidden">
+          <div className="relative mt-8 aspect-3/2 w-full overflow-hidden rounded-2xl lg:hidden">
             <EntityImage
               image={{
-                src: "",
+                src: "/about.png",
                 alt: "Henry and Precious standing together at home, smiling.",
               }}
               sizes="100vw"

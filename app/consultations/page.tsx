@@ -8,6 +8,7 @@ import { EntityImage } from "@/components/shared/entity-image";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
 import { ScriptAccent } from "@/components/shared/script-accent";
+import { heroFadeLeft, heroFadeTopBottom } from "@/lib/hero-fade";
 import {
   getAvailability,
   getConsultationFaqs,
@@ -65,20 +66,23 @@ export default async function ConsultationsPage() {
     <>
       <JsonLd data={breadcrumbJsonLd(CRUMBS)} />
 
-      <section className="relative overflow-hidden bg-surface">
-        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] lg:block">
-          <EntityImage
-            image={{
-              src: "",
-              alt: "Henry and Precious sitting together at a table, smiling.",
-            }}
-            sizes="52vw"
-            priority
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-r from-surface via-surface/70 to-transparent"
-          />
+      <section className="relative overflow-hidden bg-hero-background">
+        {/* Photo bleeds off the right edge from lg. Its edges fade into the
+            section — see lib/hero-fade.ts to adjust. */}
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] lg:block"
+          style={heroFadeTopBottom()}
+        >
+          <div className="absolute inset-0" style={heroFadeLeft()}>
+            <EntityImage
+              image={{
+                src: "/consultation.png",
+                alt: "A smiling couple sitting across a table from a client, talking warmly, with a laptop, notebook and mugs in front of them.",
+              }}
+              sizes="52vw"
+              priority
+            />
+          </div>
         </div>
 
         <Container className="relative z-10 pt-8 pb-12 md:pb-14">
@@ -120,11 +124,11 @@ export default async function ConsultationsPage() {
               ))}
             </ul>
 
-            <div className="relative mt-8 aspect-[3/2] w-full overflow-hidden rounded-2xl lg:hidden">
+            <div className="relative mt-8 aspect-3/2 w-full overflow-hidden rounded-2xl lg:hidden">
               <EntityImage
                 image={{
-                  src: "",
-                  alt: "Henry and Precious sitting together at a table, smiling.",
+                  src: "/consultation.png",
+                  alt: "A smiling couple sitting across a table from a client, talking warmly, with a laptop, notebook and mugs in front of them.",
                 }}
                 sizes="100vw"
               />

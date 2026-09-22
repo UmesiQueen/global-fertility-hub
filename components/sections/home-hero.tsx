@@ -17,7 +17,7 @@ const HERO_IMAGE = {
 
 export function HomeHero() {
   return (
-    <section className="relative overflow-hidden md:bg-background lg:bg-hero-wash lg:min-h-screen">
+    <section className="relative overflow-hidden md:bg-background lg:bg-hero-background lg:min-h-screen">
       <div className="absolute inset-0 hidden lg:block">
         <Image
           src={HERO_IMAGE.src}
@@ -29,7 +29,7 @@ export function HomeHero() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-3/5 bg-linear-to-r from-background via-background/75 to-transparent"
+          className="absolute inset-y-0 left-0 w-3/5 bg-linear-to-r from-hero-background via-hero-background/75 to-transparent"
         />
       </div>
       <Container className="relative z-10 pt-12 md:pt-16 lg:pt-20 lg:pb-24 space-y-20">

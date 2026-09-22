@@ -56,7 +56,6 @@
   --color-surface-foreground: var(--surface-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
-  --color-hero-wash: var(--hero-wash);
 
   --container-8xl: 90rem;
 
@@ -100,7 +99,6 @@
   --surface-foreground: oklch(0.22 0.03 285);
 
   --script: oklch(0.685 0.132 15);
-  --hero-wash: oklch(0.968 0.014 55);
 
   --destructive: oklch(0.577 0.245 27.325);
   --success: oklch(0.62 0.13 155);

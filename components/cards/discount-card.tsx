@@ -6,14 +6,6 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { Discount } from "@/types";
 
-/**
- * A partner offer.
- *
- * Client component only because of the copy-to-clipboard button. Codes get
- * mistyped — `GLOBAL10` and `GL0BAL10` look identical in most UI fonts — and
- * a failed code at checkout usually means a lost sale for the partner and a
- * frustrated member for us.
- */
 export function DiscountCard({
   discount,
   className,

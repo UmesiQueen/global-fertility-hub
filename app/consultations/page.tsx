@@ -45,16 +45,6 @@ const HOW_WE_HELP = [
   "And more — tailored to your journey",
 ];
 
-/**
- * Consultations.
- *
- * The page most at risk of reading as clinical care, so the framing is stated
- * three times: in the hero, beside the session picker, and in the FAQs. That
- * repetition is deliberate — don't trim it as redundant.
- *
- * No `Service` or `MedicalBusiness` JSON-LD here. Both would present these as
- * clinical services in search results, which is precisely what they are not.
- */
 export default async function ConsultationsPage() {
   const [consultationTypes, availability, faqs] = await Promise.all([
     getConsultationTypes(),
@@ -67,8 +57,6 @@ export default async function ConsultationsPage() {
       <JsonLd data={breadcrumbJsonLd(CRUMBS)} />
 
       <section className="relative overflow-hidden bg-hero-background">
-        {/* Photo bleeds off the right edge from lg. Its edges fade into the
-            section — see lib/hero-fade.ts to adjust. */}
         <div
           className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] lg:block"
           style={heroFadeTopBottom()}

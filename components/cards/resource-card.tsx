@@ -33,20 +33,22 @@ export function ResourceCard({
         className,
       )}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+      <div className="relative aspect-4/3 w-full overflow-hidden">
         <EntityImage
           image={resource.coverImage}
           className="transition-transform duration-300 group-hover:scale-[1.03]"
         />
-        <Pill tone="overlay" icon={FormatIcon} className="absolute top-3 left-3">
+        <Pill
+          tone="overlay"
+          icon={FormatIcon}
+          className="absolute top-3 left-3"
+        >
           {titleCase(resource.format)}
         </Pill>
       </div>
 
       <div className="flex flex-1 flex-col p-4">
         <h3 className="font-heading text-base leading-snug font-semibold text-foreground">
-          {/* Stretched link — the whole card is the target, but only this
-              text is the accessible name, so there's one link per card. */}
           <Link
             href={`/resources/${resource.slug}`}
             className="rounded-sm after:absolute after:inset-0 after:content-['']"

@@ -39,13 +39,6 @@ const SORT_OPTIONS = [
   { value: "name", label: "Name (A–Z)" },
 ];
 
-/**
- * Educational Clinic Partners directory.
- *
- * Note the sort options: recency and alphabetical only. There is deliberately
- * no "top rated" or "best match" — the brief is explicit that this platform
- * never ranks clinics, and the absence is the feature.
- */
 export default async function EducationalPartnersPage({
   searchParams,
 }: {

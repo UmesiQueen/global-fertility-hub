@@ -51,18 +51,6 @@ const WHY = [
   },
 ];
 
-/**
- * Partner discounts.
- *
- * The commercial disclosure sits above the offers, not below them. Disclosure
- * rules in the US, Australia and the UK all require a material connection to
- * be clear and close to the endorsement — a note underneath the thing someone
- * has already clicked doesn't meet that bar, and this audience deserves better
- * than the minimum anyway.
- *
- * No `Product` or `Offer` JSON-LD: these are third-party offers we neither
- * sell nor control, and marking them up as our products would be wrong.
- */
 export default async function DiscountsPage() {
   const discounts = await getDiscounts();
 

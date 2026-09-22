@@ -14,12 +14,8 @@ export const siteConfig = {
   description:
     "Trusted education, real stories and a global community here to support you through every step of your fertility journey.",
   url: "https://globalfertilityhub.com",
-  /** TODO(client): the real Instagram community handle. */
-  communityUrl: "https://instagram.com/globalfertilityhub",
-  /**
-   * Where Henry & Precious actually are. Consultation times are quoted in
-   * this zone, with the visitor's local equivalent shown alongside.
-   */
+  communityUrl: "https://instagram.com/henry_and_precious",
+  email: "precious.and.henry@gmail.com",
   practitionerTimezone: "Australia/Perth",
 } as const;
 
@@ -67,8 +63,8 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
 ];
 
 export const socialLinks: { label: string; href: string }[] = [
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "Facebook", href: "https://facebook.com" },
-  { label: "YouTube", href: "https://youtube.com" },
-  { label: "TikTok", href: "https://tiktok.com" },
+  { label: "Instagram", href: "https://instagram.com/henry_and_precious" },
+  { label: "Facebook", href: "https://facebook.com/share/1VNyZEvYwP/?mibextid=wwXIfr" },
+  { label: "YouTube", href: "https://youtube.com/@henryandprecious" },
+  { label: "TikTok", href: "https://tiktok.com/@henry_and_precious" },
 ];

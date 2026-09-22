@@ -140,7 +140,7 @@ export default async function StoryDetailPage({
             </div>
           </div>
 
-          <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-3xl">
+          <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-3xl">
             <EntityImage
               image={story.coverImage}
               sizes="(max-width: 1024px) 100vw, 1200px"

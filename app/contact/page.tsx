@@ -40,7 +40,6 @@ const SOCIAL_ICONS: Record<
   TikTok: TikTokIcon,
 };
 
-/** Routes people to a better destination than a general enquiry. */
 const SHORTCUTS = [
   {
     icon: Users,
@@ -183,13 +182,14 @@ export default async function ContactPage({
               </p>
             </div>
 
-            {/*
-              TODO(client): a published address adds trust and is required by
-              some jurisdictions for commercial email. Confirm what Henry &
-              Precious want public before enabling.
-            */}
-            <div className="hidden">
+            <div className="flex items-center">
               <Mail aria-hidden="true" className="size-4" />
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="ml-2 text-xs text-muted-foreground"
+              >
+                {siteConfig.email}
+              </a>
             </div>
           </aside>
         </div>

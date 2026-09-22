@@ -6,13 +6,6 @@ import { formatDateShort, formatReadingTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Story } from "@/types";
 
-/**
- * A community story card.
- *
- * `author.name` may legitimately be "Anonymous" — that's a choice the
- * contributor made, so it's rendered plainly rather than hidden or replaced
- * with a placeholder.
- */
 export function StoryCard({
   story,
   className,
@@ -27,7 +20,7 @@ export function StoryCard({
         className,
       )}
     >
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
+      <div className="relative aspect-16/10 w-full overflow-hidden">
         <EntityImage
           image={story.coverImage}
           className="transition-transform duration-300 group-hover:scale-[1.03]"

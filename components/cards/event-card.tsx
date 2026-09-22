@@ -11,13 +11,6 @@ import {
 import { cn } from "@/lib/utils";
 import type { Event } from "@/types";
 
-/**
- * Event card, in one of two modes.
- *
- * `replay` swaps the date/time block for a duration and play affordance —
- * a past event's start time is noise, but how long the recording runs is
- * exactly what someone deciding whether to watch wants to know.
- */
 export function EventCard({
   event,
   variant = "upcoming",
@@ -36,7 +29,7 @@ export function EventCard({
         className,
       )}
     >
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
+      <div className="relative aspect-16/10 w-full overflow-hidden">
         <EntityImage
           image={event.image}
           className="transition-transform duration-300 group-hover:scale-[1.03]"

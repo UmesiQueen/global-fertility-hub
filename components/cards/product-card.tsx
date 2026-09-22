@@ -73,11 +73,6 @@ export function ProductCard({
       </div>
 
       <div className="flex flex-1 flex-col p-4">
-        {/*
-          Whose product this is, stated before the name.
-          Someone should know they're looking at a recommendation rather than
-          something Henry & Precious made before they read anything else.
-        */}
         <p className="text-[0.6875rem] font-medium tracking-wide text-muted-foreground uppercase">
           {isAffiliate ? `By ${product.vendor}` : "By Henry & Precious"}
         </p>

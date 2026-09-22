@@ -39,11 +39,11 @@ export function WhyWeExist({ className }: { className?: string }) {
   return (
     <section
       aria-labelledby="why-we-exist"
-      className={cn("py-16 md:py-20", className)}
+      className={cn("py-16 md:py-24", className)}
     >
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl lg:order-last">
+          <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl border border-border lg:order-last">
             <EntityImage
               image={{
                 src: "/store.png",

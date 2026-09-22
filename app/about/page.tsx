@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { Container } from "@/components/layout/container";
 import { AboutHero } from "@/components/sections/about-hero";
 import { JoinCommunity } from "@/components/sections/join-community";
 import { MissionVisionPromise } from "@/components/sections/mission-vision-promise";
 import { OurStoryTimeline } from "@/components/sections/our-story-timeline";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
-import { Container } from "@/components/layout/container";
 import { breadcrumbJsonLd, organisationJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -25,16 +25,6 @@ const CRUMBS = [
   { label: "About", href: "/about" },
 ];
 
-/**
- * About.
- *
- * Covers the five things the brief asks for: Our Story, Mission, Vision,
- * Henry & Precious, and Values (rendered as "Our Promise").
- *
- * The closing CTA reuses the homepage's JoinCommunity section rather than a
- * bespoke band — the message is identical, and one component means the
- * community invitation reads the same wherever someone meets it.
- */
 export default function AboutPage() {
   return (
     <>

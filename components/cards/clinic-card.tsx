@@ -6,14 +6,6 @@ import { countryFlag, titleCase } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Clinic } from "@/types";
 
-/**
- * An Educational Clinic Partner card.
- *
- * There is no rating, no star row and no "recommended" treatment here, and
- * none should be added — partners are showcased, never ranked. The only badge
- * is "Educational Partner", which describes the relationship rather than
- * endorsing the clinic.
- */
 export function ClinicCard({
   clinic,
   className,
@@ -30,7 +22,7 @@ export function ClinicCard({
         className,
       )}
     >
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
+      <div className="relative aspect-16/10 w-full overflow-hidden">
         <EntityImage
           image={clinic.coverImage}
           className="transition-transform duration-300 group-hover:scale-[1.03]"

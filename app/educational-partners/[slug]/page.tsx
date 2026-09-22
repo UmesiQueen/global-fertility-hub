@@ -1,8 +1,8 @@
 import {
   ArrowLeft,
   ExternalLink,
-  GraduationCap,
   Globe,
+  GraduationCap,
   Languages,
   Mail,
   MapPin,
@@ -56,14 +56,6 @@ export async function generateMetadata({
   };
 }
 
-/**
- * An Educational Clinic Partner profile.
- *
- * The page presents information the partner supplies — services, team,
- * languages, what they contribute educationally. It carries no rating, no
- * review section and no comparison against other partners, and the disclaimer
- * at the foot states the relationship explicitly.
- */
 export default async function ClinicProfilePage({
   params,
 }: {
@@ -96,7 +88,7 @@ export default async function ClinicProfilePage({
       </Container>
 
       <Container className="pb-10">
-        <div className="relative aspect-[21/9] w-full overflow-hidden rounded-3xl">
+        <div className="relative aspect-21/9 w-full overflow-hidden rounded-3xl">
           <EntityImage
             image={clinic.coverImage}
             sizes="(max-width: 1024px) 100vw, 1200px"

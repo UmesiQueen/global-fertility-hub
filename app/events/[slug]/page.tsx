@@ -106,7 +106,7 @@ export default async function EventDetailPage({
       <Container className="pb-10">
         <div className="grid gap-10 lg:grid-cols-[1fr_20rem]">
           <div>
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl">
+            <div className="relative aspect-video w-full overflow-hidden rounded-3xl">
               <EntityImage
                 image={event.image}
                 sizes="(max-width: 1024px) 100vw, 800px"

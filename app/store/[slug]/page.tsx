@@ -206,8 +206,6 @@ export default async function ProductDetailPage({
         </div>
       </Container>
 
-      {/* Free reading on the same subject, offered on every product page —
-          nobody should have to buy something to get help from this site. */}
       <div className="bg-surface">
         <RelatedGrid
           headingId="product-related-resources"

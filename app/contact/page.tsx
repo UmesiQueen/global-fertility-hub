@@ -78,7 +78,7 @@ export default async function ContactPage({
         }
         description="Whether you want to share your story, suggest a topic, ask about a session or just say hello — we read every message."
         image={{
-          src: "/contact.png",
+          src: "/contact.webp",
           alt: "A laptop showing a Get in Touch page on a marble table, beside a vase of gypsophila, a notebook, a heart mug and a phone.",
         }}
       />

@@ -63,7 +63,7 @@ export default async function DiscountsPage() {
         scriptLine={<ScriptAccent>Partner Discounts</ScriptAccent>}
         description="Special offers from brands and services we trust. Because your journey matters, we've partnered with people who want to support it."
         image={{
-          src: "/discount.png",
+          src: "/discount.webp",
           alt: "A canvas tote bag embroidered \u2018Supporting your journey every step of the way\u2019, beside a heart mug and a \u2018Stronger Together\u2019 card.",
         }}
       >

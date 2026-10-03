@@ -46,7 +46,7 @@ export function WhyWeExist({ className }: { className?: string }) {
           <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl border border-border lg:order-last">
             <EntityImage
               image={{
-                src: "/store.png",
+                src: "/store.webp",
                 alt: "Henry and Precious sitting together at home, smiling.",
               }}
               sizes="(max-width: 1024px) 100vw, 50vw"

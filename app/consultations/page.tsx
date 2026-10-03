@@ -64,7 +64,7 @@ export default async function ConsultationsPage() {
           <div className="absolute inset-0" style={heroFadeLeft()}>
             <EntityImage
               image={{
-                src: "/consultation.png",
+                src: "/consultation.webp",
                 alt: "A smiling couple sitting across a table from a client, talking warmly, with a laptop, notebook and mugs in front of them.",
               }}
               sizes="52vw"
@@ -115,7 +115,7 @@ export default async function ConsultationsPage() {
             <div className="relative mt-8 aspect-3/2 w-full overflow-hidden rounded-2xl lg:hidden">
               <EntityImage
                 image={{
-                  src: "/consultation.png",
+                  src: "/consultation.webp",
                   alt: "A smiling couple sitting across a table from a client, talking warmly, with a laptop, notebook and mugs in front of them.",
                 }}
                 sizes="100vw"

@@ -38,9 +38,6 @@ export const metadata: Metadata = {
     siteName: "Global Fertility Hub",
     locale: "en_AU",
   },
-  icons: {
-    icon: "/favicon.svg",
-  },
 };
 
 export default function RootLayout({

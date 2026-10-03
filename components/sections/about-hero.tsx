@@ -17,7 +17,7 @@ export function AboutHero() {
         <div className="absolute inset-0" style={heroFadeLeft()}>
           <EntityImage
             image={{
-              src: "/about.png",
+              src: "/about.webp",
               alt: "Henry and Precious standing together at home, smiling.",
             }}
             className="object-right"
@@ -68,7 +68,7 @@ export function AboutHero() {
           <div className="relative mt-8 aspect-3/2 w-full overflow-hidden rounded-2xl lg:hidden">
             <EntityImage
               image={{
-                src: "/about.png",
+                src: "/about.webp",
                 alt: "Henry and Precious standing together at home, smiling.",
               }}
               sizes="100vw"

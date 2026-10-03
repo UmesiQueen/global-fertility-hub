@@ -11,7 +11,7 @@ import { TrustChips } from "@/components/shared/trust-chips";
 import { cn } from "@/lib/utils";
 
 const HERO_IMAGE = {
-  src: "/hero.png",
+  src: "/hero.webp",
   alt: "A couple sitting close together on a sofa, foreheads touching, smiling with their eyes closed.",
 };
 

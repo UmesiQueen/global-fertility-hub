@@ -101,7 +101,7 @@ export default async function ResourcesPage({
         title="Resources"
         description="Trusted fertility education to help you learn, understand and make informed decisions."
         image={{
-          src: "/resources.png",
+          src: "/resources.webp",
           alt: "A stack of books, a small vase of greenery and a mug on a sunlit marble table.",
         }}
       >

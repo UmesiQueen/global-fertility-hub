@@ -70,7 +70,7 @@ export default async function EventsPage({
         title="Events & Webinars"
         description="Learn from fertility experts, hear inspiring stories and join educational conversations from anywhere in the world."
         image={{
-          src: "/events.png",
+          src: "/events.webp",
           alt: "A laptop on a desk showing a Global Fertility Hub webinar invitation, beside a stack of fertility books and a mug.",
         }}
       >

@@ -19,7 +19,7 @@ export function JoinCommunity({ className }: { className?: string }) {
       <Container>
         <div className="relative isolate overflow-hidden rounded-3xl bg-hero-background border border-border px-6 py-14 text-center md:px-12 md:py-16">
           <Image
-            src="/join.png"
+            src="/join.webp"
             alt=""
             aria-hidden="true"
             fill

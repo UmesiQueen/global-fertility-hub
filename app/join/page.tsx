@@ -50,7 +50,7 @@ export default function JoinPage() {
         scriptLine={<ScriptAccent>Stronger together.</ScriptAccent>}
         description="Wherever you are on your journey, there's a place for you here. Tell us a little about yourself and we'll get you connected."
         image={{
-          src: "/join.png",
+          src: "/join.webp",
           alt: "An illustration of five people sitting in a circle on the floor, talking together, with community icons above them.",
         }}
       />

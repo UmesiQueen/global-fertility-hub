@@ -47,3 +47,4 @@ skills-lock.json
 AGENTS.md
 # Uncompressed source images (kept locally, not deployed)
 /_original-images/
+/Claude outputs/

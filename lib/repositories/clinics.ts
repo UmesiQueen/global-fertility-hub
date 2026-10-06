@@ -1,9 +1,10 @@
 import { fetchClinics } from "@/api/clinics";
 import { fetchEvents } from "@/api/events";
 import { fetchResources } from "@/api/resources";
+import { type ClinicQuery, queryClinics } from "@/lib/listing/clinics";
 import { findRelated } from "@/lib/relations";
 import type { Clinic, Event, Paginated, Resource, Treatment } from "@/types";
-import { featuredFirst, matches, paginate } from "./shared";
+import { featuredFirst } from "./shared";
 
 /**
  * The only supported way for a page to read Educational Clinic Partners.
@@ -13,64 +14,17 @@ import { featuredFirst, matches, paginate } from "./shared";
  * comes from the client brief and lives here so no page can bypass it.
  */
 
-export interface ClinicQuery {
-  search?: string;
-  country?: string;
-  city?: string;
-  treatment?: Treatment;
-  specialty?: string;
-  language?: string;
-  sort?: "recently-added" | "name";
-  page?: number;
-  pageSize?: number;
-}
+export type { ClinicQuery };
 
 export async function getClinics(
   query: ClinicQuery = {},
 ): Promise<Paginated<Clinic>> {
-  const {
-    search,
-    country,
-    city,
-    treatment,
-    specialty,
-    language,
-    sort = "recently-added",
-    page = 1,
-    pageSize = 12,
-  } = query;
+  return queryClinics(await fetchClinics(), query);
+}
 
-  let items = await fetchClinics();
-
-  if (country) items = items.filter((item) => item.country === country);
-  if (city) items = items.filter((item) => item.city === city);
-  if (treatment) {
-    items = items.filter((item) => item.treatments.includes(treatment));
-  }
-  if (specialty) {
-    items = items.filter((item) => item.specialties.includes(specialty));
-  }
-  if (language) {
-    items = items.filter((item) => item.languages.includes(language));
-  }
-
-  if (search) {
-    items = items.filter(
-      (item) =>
-        matches(item.name, search) ||
-        matches(item.city, search) ||
-        matches(item.country, search) ||
-        item.specialties.some((s) => matches(s, search)),
-    );
-  }
-
-  if (sort === "name") {
-    items.sort((a, b) => a.name.localeCompare(b.name));
-  } else {
-    items.sort((a, b) => b.joinedAt.localeCompare(a.joinedAt));
-  }
-
-  return paginate(items, page, pageSize);
+/** Every partner, for listings that filter in the browser. */
+export async function getAllClinics(): Promise<Clinic[]> {
+  return fetchClinics();
 }
 
 export async function getClinicBySlug(slug: string): Promise<Clinic | null> {

@@ -1,80 +1,27 @@
 import { fetchProducts } from "@/api/products";
 import { fetchResources } from "@/api/resources";
+import {
+  byNewestProduct as byNewest,
+  type ProductQuery,
+  queryProducts,
+} from "@/lib/listing/products";
 import { findRelated } from "@/lib/relations";
-import type {
-  Paginated,
-  Product,
-  ProductCategory,
-  ProductSource,
-  Resource,
-} from "@/types";
-import { featuredFirst, matches, paginate } from "./shared";
+import type { Paginated, Product, ProductSource, Resource } from "@/types";
+import { featuredFirst } from "./shared";
 
 /** The only supported way for a page to read store products. */
 
-export interface ProductQuery {
-  search?: string;
-  category?: ProductCategory;
-  source?: ProductSource;
-  sort?: "newest" | "price-low" | "price-high";
-  page?: number;
-  pageSize?: number;
-}
-
-const byNewest = (a: Product, b: Product) =>
-  b.publishedAt.localeCompare(a.publishedAt);
-
-/**
- * Free counts as zero, and affiliate products have no price we control.
- * Sorting those to the end keeps "cheapest first" meaningful rather than
- * filling the top of the list with items that have no price at all.
- */
-function priceFor(product: Product): number | null {
-  if (product.isFree) return 0;
-  return product.price ?? null;
-}
+export type { ProductQuery };
 
 export async function getProducts(
   query: ProductQuery = {},
 ): Promise<Paginated<Product>> {
-  const {
-    search,
-    category,
-    source,
-    sort = "newest",
-    page = 1,
-    pageSize = 12,
-  } = query;
+  return queryProducts(await fetchProducts(), query);
+}
 
-  let items = await fetchProducts();
-
-  if (category) items = items.filter((item) => item.category === category);
-  if (source) items = items.filter((item) => item.source === source);
-
-  if (search) {
-    items = items.filter(
-      (item) =>
-        matches(item.name, search) ||
-        matches(item.excerpt, search) ||
-        matches(item.vendor, search),
-    );
-  }
-
-  if (sort === "price-low" || sort === "price-high") {
-    const direction = sort === "price-low" ? 1 : -1;
-    items.sort((a, b) => {
-      const priceA = priceFor(a);
-      const priceB = priceFor(b);
-      if (priceA === null && priceB === null) return byNewest(a, b);
-      if (priceA === null) return 1;
-      if (priceB === null) return -1;
-      return (priceA - priceB) * direction;
-    });
-  } else {
-    items.sort(byNewest);
-  }
-
-  return paginate(items, page, pageSize);
+/** Every product, for listings that filter in the browser. */
+export async function getAllProducts(): Promise<Product[]> {
+  return fetchProducts();
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {

@@ -53,7 +53,13 @@ export function parseInline(line: string): InlineNode[] {
   const nodes: InlineNode[] = [];
   // Links first so their label can't be mangled by the emphasis rules, then
   // bold before italic — otherwise the single-asterisk rule eats the **.
-  const pattern = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  //
+  // The link rule is deliberately forgiving about what sits inside the parens:
+  // Hygraph's markdown export can pad the URL with spaces, wrap it in <…>, or
+  // append a title (`[label](url "title")`). A strict `(url)` match let those
+  // fall through as raw `[label](url)` text on the page.
+  const pattern =
+    /\[([^\]]+)\]\(\s*<?([^\s)>]+)>?(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
 
   let lastIndex = 0;
   let match = pattern.exec(line);
@@ -71,7 +77,7 @@ export function parseInline(line: string): InlineNode[] {
         safe
           ? {
               type: "link",
-              value: match[1],
+              value: match[1].replace(/\*\*?([^*]+)\*\*?/g, "$1"),
               href: safe.href,
               external: safe.external,
             }

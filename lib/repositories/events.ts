@@ -1,9 +1,18 @@
 import { fetchClinics } from "@/api/clinics";
 import { fetchEvents } from "@/api/events";
 import { fetchResources } from "@/api/resources";
+import {
+  byStartAsc,
+  byStartDesc,
+  type EventQuery,
+  isReplay,
+  isUpcoming,
+  queryReplayLibrary,
+  queryUpcomingEvents,
+} from "@/lib/listing/events";
 import { findRelated } from "@/lib/relations";
 import type { Clinic, Event, Paginated, Resource } from "@/types";
-import { featuredFirst, matches, paginate } from "./shared";
+import { featuredFirst } from "./shared";
 
 /**
  * The only supported way for a page to read events.
@@ -17,68 +26,23 @@ import { featuredFirst, matches, paginate } from "./shared";
  * on the machine clock.
  */
 
-export interface EventQuery {
-  search?: string;
-  type?: Event["type"];
-  page?: number;
-  pageSize?: number;
-  now?: Date;
-}
-
-const byStartAsc = (a: Event, b: Event) => a.startsAt.localeCompare(b.startsAt);
-const byStartDesc = (a: Event, b: Event) =>
-  b.startsAt.localeCompare(a.startsAt);
-
-function isUpcoming(event: Event, now: Date): boolean {
-  return !event.replayUrl && new Date(event.startsAt).getTime() > now.getTime();
-}
-
-function isReplay(event: Event, now: Date): boolean {
-  return (
-    Boolean(event.replayUrl) || new Date(event.startsAt).getTime() <= now.getTime()
-  );
-}
+export type { EventQuery };
 
 export async function getUpcomingEvents(
   query: EventQuery = {},
 ): Promise<Paginated<Event>> {
-  const { search, type, page = 1, pageSize = 12, now = new Date() } = query;
-
-  let items = (await fetchEvents()).filter((event) => isUpcoming(event, now));
-
-  if (type) items = items.filter((item) => item.type === type);
-  if (search) {
-    items = items.filter(
-      (item) =>
-        matches(item.title, search) ||
-        matches(item.description, search) ||
-        item.speakers.some((s) => matches(s.name, search)),
-    );
-  }
-
-  items.sort(byStartAsc);
-  return paginate(items, page, pageSize);
+  return queryUpcomingEvents(await fetchEvents(), query);
 }
 
 export async function getReplayLibrary(
   query: EventQuery = {},
 ): Promise<Paginated<Event>> {
-  const { search, type, page = 1, pageSize = 12, now = new Date() } = query;
+  return queryReplayLibrary(await fetchEvents(), query);
+}
 
-  let items = (await fetchEvents()).filter((event) => isReplay(event, now));
-
-  if (type) items = items.filter((item) => item.type === type);
-  if (search) {
-    items = items.filter(
-      (item) =>
-        matches(item.title, search) ||
-        matches(item.description, search) ||
-        item.speakers.some((s) => matches(s.name, search)),
-    );
-  }
-
-  items.sort(byStartDesc);
-  return paginate(items, page, pageSize);
+/** Every event, for listings that split and filter in the browser. */
+export async function getAllEvents(): Promise<Event[]> {
+  return fetchEvents();
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {

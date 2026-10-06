@@ -2,7 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useId } from "react";
+import { Suspense, useId } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  * Client-only because `onChange` navigation has no no-JS equivalent without
  * wrapping each one in its own form.
  */
-export function SelectFilter({
+function SelectFilterControl({
   label,
   paramKey,
   options,
@@ -62,6 +62,45 @@ export function SelectFilter({
             ? "border-primary/50 font-medium text-foreground"
             : "border-border text-muted-foreground",
         )}
+      >
+        <option value="">{allLabel}</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+      />
+    </div>
+  );
+}
+
+type SelectFilterProps = Parameters<typeof SelectFilterControl>[0];
+
+/** See SortSelect: own Suspense boundary so static pages can prerender. */
+export function SelectFilter(props: SelectFilterProps) {
+  return (
+    <Suspense fallback={<SelectFilterFallback {...props} />}>
+      <SelectFilterControl {...props} />
+    </Suspense>
+  );
+}
+
+function SelectFilterFallback({
+  label,
+  options,
+  allLabel,
+  className,
+}: SelectFilterProps) {
+  return (
+    <div className={cn("relative", className)}>
+      <select
+        aria-label={label}
+        defaultValue=""
+        className="h-11 w-full appearance-none rounded-xl border border-border bg-card pr-9 pl-3.5 text-sm text-muted-foreground"
       >
         <option value="">{allLabel}</option>
         {options.map((option) => (

@@ -1,77 +1,34 @@
 import { fetchClinics } from "@/api/clinics";
 import { fetchEvents } from "@/api/events";
 import { fetchResources } from "@/api/resources";
+import {
+  byNewestResource as byNewest,
+  queryResources,
+  type ResourceQuery,
+} from "@/lib/listing/resources";
 import { findRelated } from "@/lib/relations";
 import type {
   Clinic,
   Event,
   Paginated,
   Resource,
-  ResourceCategory,
   ResourceFormat,
 } from "@/types";
-import { featuredFirst, paginate } from "./shared";
+import { featuredFirst } from "./shared";
 
 /** The only supported way for a page to read resources. */
 
-export interface ResourceQuery {
-  search?: string;
-  category?: ResourceCategory;
-  formats?: ResourceFormat[];
-  tag?: string;
-  sort?: "newest" | "oldest" | "reading-time";
-  page?: number;
-  pageSize?: number;
-}
-
-const byNewest = (a: Resource, b: Resource) =>
-  b.publishedAt.localeCompare(a.publishedAt);
+export type { ResourceQuery };
 
 export async function getResources(
   query: ResourceQuery = {},
 ): Promise<Paginated<Resource>> {
-  const {
-    search,
-    category,
-    formats,
-    tag,
-    sort = "newest",
-    page = 1,
-    pageSize = 12,
-  } = query;
+  return queryResources(await fetchResources(), query);
+}
 
-  let items = await fetchResources();
-
-  if (category) items = items.filter((item) => item.category === category);
-  if (formats?.length) {
-    items = items.filter((item) => formats.includes(item.format));
-  }
-  if (tag) items = items.filter((item) => item.tags.includes(tag as never));
-
-  if (search) {
-    // Title and excerpt only — matching body surfaces results whose relevance
-    // the reader can't see from the card.
-    const term = search.trim().toLowerCase();
-    items = items.filter(
-      (item) =>
-        item.title.toLowerCase().includes(term) ||
-        item.excerpt.toLowerCase().includes(term) ||
-        item.tags.some((t) => t.includes(term)),
-    );
-  }
-
-  switch (sort) {
-    case "oldest":
-      items.sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
-      break;
-    case "reading-time":
-      items.sort((a, b) => a.readingTime - b.readingTime);
-      break;
-    default:
-      items.sort(byNewest);
-  }
-
-  return paginate(items, page, pageSize);
+/** Every resource, for listings that filter in the browser. */
+export async function getAllResources(): Promise<Resource[]> {
+  return fetchResources();
 }
 
 export async function getResourceBySlug(

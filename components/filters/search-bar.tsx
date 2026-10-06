@@ -2,7 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { Suspense, useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  * `router.replace` rather than `push` — pushing every keystroke would bury the
  * previous page under a dozen history entries and make Back unusable.
  */
-export function SearchBar({
+function SearchBarControl({
   placeholder = "Search…",
   label,
   paramKey = "search",
@@ -91,6 +91,38 @@ export function SearchBar({
           <span className="sr-only">Clear search</span>
         </button>
       ) : null}
+    </div>
+  );
+}
+
+type SearchBarProps = Parameters<typeof SearchBarControl>[0];
+
+/** See SortSelect: own Suspense boundary so static pages can prerender. */
+export function SearchBar(props: SearchBarProps) {
+  return (
+    <Suspense fallback={<SearchBarFallback {...props} />}>
+      <SearchBarControl {...props} />
+    </Suspense>
+  );
+}
+
+function SearchBarFallback({
+  placeholder = "Search…",
+  label,
+  className,
+}: SearchBarProps) {
+  return (
+    <div className={cn("relative", className)}>
+      <Search
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground"
+      />
+      <input
+        type="search"
+        aria-label={label}
+        placeholder={placeholder}
+        className="h-11 w-full rounded-xl border border-border bg-card pr-10 pl-10 text-sm text-foreground placeholder:text-muted-foreground"
+      />
     </div>
   );
 }

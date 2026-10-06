@@ -2,10 +2,11 @@ import { fetchClinics } from "@/api/clinics";
 import { fetchEvents } from "@/api/events";
 import { fetchResources } from "@/api/resources";
 import { fetchStories } from "@/api/stories";
+import { queryStories, type StoryQuery } from "@/lib/listing/stories";
 import { isDraftEnabled } from "@/lib/preview";
 import { findRelated } from "@/lib/relations";
 import type { Clinic, Event, Paginated, Resource, Story } from "@/types";
-import { featuredFirst, matches, paginate } from "./shared";
+import { featuredFirst } from "./shared";
 
 /**
  * The only supported way for a page to read community stories.
@@ -41,39 +42,17 @@ export const STORY_CATEGORIES = [
   "International IVF",
 ] as const;
 
-export interface StoryQuery {
-  search?: string;
-  category?: string;
-  sort?: "newest" | "oldest";
-  page?: number;
-  pageSize?: number;
-}
+export type { StoryQuery };
 
 export async function getStories(
   query: StoryQuery = {},
 ): Promise<Paginated<Story>> {
-  const { search, category, sort = "newest", page = 1, pageSize = 12 } = query;
+  return queryStories(await published(), query);
+}
 
-  let items = await published();
-
-  if (category) items = items.filter((item) => item.category === category);
-
-  if (search) {
-    items = items.filter(
-      (item) =>
-        matches(item.title, search) ||
-        matches(item.preview, search) ||
-        matches(item.category, search),
-    );
-  }
-
-  items.sort((a, b) =>
-    sort === "oldest"
-      ? a.publishedAt.localeCompare(b.publishedAt)
-      : b.publishedAt.localeCompare(a.publishedAt),
-  );
-
-  return paginate(items, page, pageSize);
+/** Every approved story, for listings that filter in the browser. */
+export async function getAllStories(): Promise<Story[]> {
+  return published();
 }
 
 export async function getStoryBySlug(slug: string): Promise<Story | null> {

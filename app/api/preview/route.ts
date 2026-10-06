@@ -40,17 +40,30 @@ function problem(status: number, detail: string): Response {
 }
 
 /**
+ * How long a preview session lasts. Draft mode bypasses every cache, so each
+ * page an editor opens while it's on is a full server render. Next's own
+ * cookie lasts until the browser closes, which means an editor who previews
+ * once and then browses the site keeps paying that cost all day. An hour
+ * covers an editing session; after it, clicking Preview in Hygraph again
+ * turns it back on.
+ */
+const PREVIEW_MAX_AGE_SECONDS = 60 * 60;
+
+/**
+ * Re-issues Next's draft cookie with an expiry, and — on HTTPS — with
+ * SameSite=None.
+ *
  * Next sets the draft cookie SameSite=Lax. Hygraph Studio shows the preview in
  * an iframe on hygraph.com, which makes every request to us cross-site — and a
  * Lax cookie is never sent cross-site, so the page would load with draft mode
  * silently off and 404 on anything unpublished.
  *
- * Browsers only accept SameSite=None together with Secure, so this is applied
- * on HTTPS only. Over http://localhost the Lax default stays, which still works
- * for previewing outside the iframe — setting None there would have the browser
- * reject the cookie outright and break local preview entirely.
+ * Browsers only accept SameSite=None together with Secure, so that part is
+ * applied on HTTPS only. Over http://localhost the Lax default stays, which
+ * still works for previewing outside the iframe — setting None there would
+ * have the browser reject the cookie outright and break local preview.
  */
-async function allowCookieInIframe(): Promise<void> {
+async function scopePreviewCookie(secure: boolean): Promise<void> {
   const store = await cookies();
   const bypass = store.get(DRAFT_COOKIE);
   if (!bypass) return;
@@ -60,8 +73,10 @@ async function allowCookieInIframe(): Promise<void> {
     value: bypass.value,
     httpOnly: true,
     path: "/",
-    secure: true,
-    sameSite: "none",
+    maxAge: PREVIEW_MAX_AGE_SECONDS,
+    ...(secure
+      ? { secure: true, sameSite: "none" as const }
+      : { sameSite: "lax" as const }),
   });
 }
 
@@ -94,7 +109,7 @@ export async function GET(request: Request): Promise<Response> {
 
   (await draftMode()).enable();
 
-  if (url.protocol === "https:") await allowCookieInIframe();
+  await scopePreviewCookie(url.protocol === "https:");
 
   // Throws NEXT_REDIRECT, which Next turns into a 307 — so nothing below runs
   // and this must stay outside a try/catch.

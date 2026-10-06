@@ -2,14 +2,14 @@
 
 import { ArrowUpDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useId } from "react";
+import { Suspense, useId } from "react";
 
 /**
  * Sort control. Same navigate-on-change approach as SelectFilter, but sorting
  * doesn't change the result set, so it keeps the current page rather than
  * resetting to 1.
  */
-export function SortSelect({
+function SortSelectControl({
   options,
   paramKey = "sort",
   label = "Sort by",
@@ -48,6 +48,43 @@ export function SortSelect({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className="h-9 rounded-lg border border-border bg-card px-2.5 text-sm text-foreground transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/25 focus-visible:outline-none"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+type SortSelectProps = Parameters<typeof SortSelectControl>[0];
+
+/**
+ * Reading the URL suspends while a static page is prerendered, so the control
+ * gets its own boundary. The fallback is the same select showing the default
+ * order — which is exactly what a reader arriving without a query string sees.
+ */
+export function SortSelect(props: SortSelectProps) {
+  return (
+    <Suspense fallback={<SortSelectFallback {...props} />}>
+      <SortSelectControl {...props} />
+    </Suspense>
+  );
+}
+
+function SortSelectFallback({ options, label = "Sort by" }: SortSelectProps) {
+  return (
+    <div className="flex shrink-0 items-center gap-2">
+      <ArrowUpDown
+        aria-hidden="true"
+        className="size-4 shrink-0 text-muted-foreground"
+      />
+      <select
+        aria-label={label}
+        defaultValue={options[0]?.value}
+        className="h-9 rounded-lg border border-border bg-card px-2.5 text-sm text-foreground"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

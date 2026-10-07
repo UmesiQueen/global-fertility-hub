@@ -25,7 +25,7 @@ export function HomeHero() {
           fill
           sizes="100vw"
           priority
-          className="object-contain object-right"
+          className="object-cover object-right"
         />
         <div
           aria-hidden="true"

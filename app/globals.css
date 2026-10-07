@@ -80,7 +80,7 @@
   --background: oklch(0.994 0.003 95);
   --foreground: oklch(0.22 0.03 285);
   
-  --hero-background: oklch(97.638% 0.02073 79.04);
+  --hero-background: #EEE8E6;
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.03 285);

@@ -1,165 +1,286 @@
-/**
- * A deliberately small markdown parser.
- *
- * Content bodies use a narrow subset — headings, paragraphs, bullet lists and
- * inline emphasis — so this returns a typed block tree rather than an HTML
- * string. Two reasons that matters:
- *
- * 1. No `dangerouslySetInnerHTML`. Story bodies will eventually be
- *    community-submitted, and rendering user text as raw HTML on a health
- *    site is not a risk worth taking for the sake of italics.
- * 2. No dependency. A full markdown pipeline is a lot of bundle for five
- *    syntaxes, and this is replaced by the CMS's rich text anyway.
- *
- * Anything unrecognised falls through as plain paragraph text rather than
- * being dropped — content should never silently disappear.
- */
-
-export type InlineNode =
-  | { type: "text"; value: string }
-  | { type: "strong"; value: string }
-  | { type: "em"; value: string }
-  | { type: "link"; value: string; href: string; external: boolean };
+import type { Element, ElementContent, Root as HastRoot, Text } from "hast";
+import type { Nodes as MdastNodes } from "mdast";
+import { defaultSchema, type Options as SanitizeSchema } from "rehype-sanitize";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import { unified } from "unified";
+import { SKIP, visit } from "unist-util-visit";
 
 /**
- * Schemes we're willing to put in an href.
+ * Article and story bodies arrive from Hygraph as markdown and are rendered by
+ * react-markdown (see components/shared/prose.tsx). This module holds the
+ * pieces that are ours rather than the library's:
  *
- * Anything else — `javascript:`, `data:`, `vbscript:` — renders as plain text
- * instead. Story bodies will eventually be community-submitted, and a link is
- * the easiest way to smuggle script into a page.
+ * - the sanitize schema — which raw HTML from the editor is allowed through
+ * - the embed allow-lists — which iframes and videos may play
+ * - the citations plugin — `[3]` links to the reference that starts with `[3]`
+ * - plain-text extraction for meta descriptions
+ *
+ * Nothing is rendered with `dangerouslySetInnerHTML`: react-markdown builds
+ * React elements, and raw HTML only survives if the schema below allows it.
+ * Story bodies will eventually be community-submitted, so that matters.
  */
-function safeHref(raw: string): { href: string; external: boolean } | null {
-  const href = raw.trim();
 
-  // In-app: relative paths and same-page anchors.
-  if (href.startsWith("/") || href.startsWith("#")) {
-    return { href, external: false };
+/* -------------------------------------------------------------------------- */
+/* Raw HTML                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * GitHub's sanitize rules, plus the few tags Hygraph's editor writes as HTML
+ * because markdown has no syntax for them: underline, and video / iframe
+ * embeds. Scripts, styles, event handlers and `javascript:` URLs stay out.
+ */
+export const sanitizeSchema: SanitizeSchema = {
+  ...defaultSchema,
+  tagNames: [
+    ...(defaultSchema.tagNames ?? []),
+    "u",
+    "iframe",
+    "video",
+    "source",
+  ],
+  attributes: {
+    ...defaultSchema.attributes,
+    iframe: ["src", "title", "allow", "allowFullScreen"],
+    video: ["src", "poster", "controls"],
+    source: ["src", "type"],
+  },
+};
+
+/** Players an editor may embed. Anything else is dropped, not shown as code. */
+const EMBED_HOSTS = new Set([
+  "www.youtube.com",
+  "youtube.com",
+  "www.youtube-nocookie.com",
+  "player.vimeo.com",
+  "www.loom.com",
+]);
+
+function hostOf(src: unknown): string | null {
+  if (typeof src !== "string") return null;
+  try {
+    const url = new URL(src);
+    return url.protocol === "https:" ? url.hostname : null;
+  } catch {
+    return null;
   }
+}
 
-  if (/^https?:\/\//i.test(href) || /^mailto:/i.test(href)) {
-    return { href, external: true };
+export function isAllowedEmbed(src: unknown): boolean {
+  const host = hostOf(src);
+  return host !== null && EMBED_HOSTS.has(host);
+}
+
+/** Hygraph's asset CDN — the only source for inline video files. */
+export function isHygraphAsset(src: unknown): boolean {
+  const host = hostOf(src);
+  return host?.endsWith(".graphassets.com") ?? false;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Citations                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/** `[3]` or `[1, 3]` in running text. */
+const CITATION = /\[(\d{1,3}(?:\s*,\s*\d{1,3})*)\]/g;
+
+/** A reference entry: a paragraph or list item that starts `[3] …`. */
+const ENTRY = /^\s*\[(\d{1,3})\]\s*/;
+
+/** Below the sticky header (h-18) with breathing room, for every jump target. */
+const JUMP_OFFSET = "scroll-mt-24";
+
+const element = (
+  tagName: string,
+  properties: Element["properties"],
+  children: ElementContent[],
+): Element => ({ type: "element", tagName, properties, children });
+
+const text = (value: string): Text => ({ type: "text", value });
+
+/** hast wants class lists as arrays. */
+const cls = (classes: string) => classes.split(" ");
+
+function firstText(node: Element): Text | null {
+  for (const child of node.children) {
+    if (child.type === "text") return child.value.trim() ? child : null;
+    if (child.type === "element") return firstText(child);
   }
-
   return null;
 }
 
-export type Block =
-  | { type: "heading"; level: 2 | 3; content: InlineNode[] }
-  | { type: "paragraph"; content: InlineNode[] }
-  | { type: "list"; items: InlineNode[][] };
+/**
+ * One paragraph holding several references on separate lines (Shift+Enter
+ * between them) becomes one paragraph per reference, so each gets its own
+ * jump target.
+ */
+function splitEntryLines(tree: HastRoot) {
+  visit(tree, "element", (node, index, parent) => {
+    if (node.tagName !== "p" || !parent || index === undefined) return;
+    if (!node.children.some((c) => c.type === "element" && c.tagName === "br"))
+      return;
 
-/** Splits a line into text / link / bold / italic runs. */
-export function parseInline(line: string): InlineNode[] {
-  const nodes: InlineNode[] = [];
-  // Links first so their label can't be mangled by the emphasis rules, then
-  // bold before italic — otherwise the single-asterisk rule eats the **.
-  //
-  // The link rule is deliberately forgiving about what sits inside the parens:
-  // Hygraph's markdown export can pad the URL with spaces, wrap it in <…>, or
-  // append a title (`[label](url "title")`). A strict `(url)` match let those
-  // fall through as raw `[label](url)` text on the page.
-  const pattern =
-    /\[([^\]]+)\]\(\s*<?([^\s)>]+)>?(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
-
-  let lastIndex = 0;
-  let match = pattern.exec(line);
-
-  while (match !== null) {
-    if (match.index > lastIndex) {
-      nodes.push({ type: "text", value: line.slice(lastIndex, match.index) });
+    const lines: ElementContent[][] = [[]];
+    for (const child of node.children) {
+      if (child.type === "element" && child.tagName === "br") lines.push([]);
+      else lines[lines.length - 1].push(child);
     }
 
-    if (match[1] !== undefined && match[2] !== undefined) {
-      const safe = safeHref(match[2]);
-      // An unsafe scheme degrades to its label rather than vanishing — the
-      // sentence still reads, it just isn't clickable.
-      nodes.push(
-        safe
-          ? {
-              type: "link",
-              value: match[1].replace(/\*\*?([^*]+)\*\*?/g, "$1"),
-              href: safe.href,
-              external: safe.external,
-            }
-          : { type: "text", value: match[1] },
-      );
-    } else if (match[3] !== undefined) {
-      nodes.push({ type: "strong", value: match[3] });
-    } else if (match[4] !== undefined) {
-      nodes.push({ type: "em", value: match[4] });
-    }
+    const paragraphs = lines.map((children) => element("p", {}, children));
+    if (!paragraphs.every((p) => ENTRY.test(firstText(p)?.value ?? ""))) return;
 
-    lastIndex = match.index + match[0].length;
-    match = pattern.exec(line);
-  }
-
-  if (lastIndex < line.length) {
-    nodes.push({ type: "text", value: line.slice(lastIndex) });
-  }
-
-  return nodes.length ? nodes : [{ type: "text", value: line }];
-}
-
-export function parseMarkdown(source: string): Block[] {
-  const blocks: Block[] = [];
-  // Normalise line endings — content pasted from Word arrives with CRLF and
-  // the blank-line split silently fails without this.
-  const chunks = source.replace(/\r\n/g, "\n").trim().split(/\n{2,}/);
-
-  for (const chunk of chunks) {
-    const lines = chunk
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean);
-
-    if (!lines.length) continue;
-
-    const heading = lines[0].match(/^(#{2,3})\s+(.*)$/);
-    if (heading) {
-      blocks.push({
-        type: "heading",
-        level: heading[1].length === 2 ? 2 : 3,
-        content: parseInline(heading[2]),
-      });
-
-      // A heading chunk may carry trailing prose on the following lines.
-      const rest = lines.slice(1);
-      if (rest.length) {
-        blocks.push({ type: "paragraph", content: parseInline(rest.join(" ")) });
-      }
-      continue;
-    }
-
-    if (lines.every((line) => /^[-*]\s+/.test(line))) {
-      blocks.push({
-        type: "list",
-        items: lines.map((line) => parseInline(line.replace(/^[-*]\s+/, ""))),
-      });
-      continue;
-    }
-
-    blocks.push({ type: "paragraph", content: parseInline(lines.join(" ")) });
-  }
-
-  return blocks;
+    parent.children.splice(index, 1, ...paragraphs);
+    return [SKIP, index + paragraphs.length];
+  });
 }
 
 /**
- * Plain text, for meta descriptions and previews — strips syntax without
- * needing the caller to walk the block tree.
+ * Turns `[n]` citations into superscript links to the entry that starts with
+ * `[n]`, and gives each entry a ↩ link back to where it was first cited.
+ *
+ * - A citation whose number has no entry stays as plain `[7]` text, so a
+ *   typo never becomes a link to nowhere.
+ * - Only the first citation and first entry of each number get an id, so
+ *   ids stay unique and ↩ has one place to return to.
+ * - Runs after sanitizing, so these ids aren't rewritten to `user-content-…`.
+ */
+export function rehypeCitations() {
+  return (tree: HastRoot) => {
+    splitEntryLines(tree);
+
+    // 1. Find the entries. A loose list item wraps its text in a <p>; SKIP
+    //    stops that <p> being counted again.
+    const entries = new Map<string, Element>();
+    const labelled: [string, Element][] = [];
+    visit(tree, "element", (node) => {
+      if (node.tagName !== "p" && node.tagName !== "li") return;
+      const lead = firstText(node);
+      const match = lead?.value.match(ENTRY);
+      if (!lead || !match) return;
+
+      // The "[3]" is taken out of the text now and put back as a label in
+      // step 3, so step 2 doesn't mistake it for a citation.
+      const number = match[1];
+      lead.value = lead.value.slice(match[0].length);
+      labelled.push([number, node]);
+      if (!entries.has(number)) entries.set(number, node);
+      return SKIP;
+    });
+
+    if (!entries.size) return;
+
+    // 2. Link the citations in running text.
+    const cited = new Set<string>();
+    visit(tree, "text", (node, index, parent) => {
+      if (!parent || index === undefined || parent.type !== "element") return;
+      if (["a", "code", "pre"].includes(parent.tagName)) return;
+
+      const pieces: ElementContent[] = [];
+      let last = 0;
+      for (const match of node.value.matchAll(CITATION)) {
+        const numbers = match[1].split(",").map((n) => n.trim());
+        if (!numbers.some((n) => entries.has(n))) continue;
+
+        if (match.index > last) pieces.push(text(node.value.slice(last, match.index)));
+        const links: ElementContent[] = [];
+        numbers.forEach((n, i) => {
+          if (i > 0) links.push(text(","));
+          if (!entries.has(n)) {
+            links.push(text(n));
+            return;
+          }
+          const first = !cited.has(n);
+          cited.add(n);
+          links.push(
+            element(
+              "a",
+              {
+                href: `#ref-${n}`,
+                id: first ? `cite-${n}` : undefined,
+                ariaLabel: `Reference ${n}`,
+                className: cls(`${JUMP_OFFSET} rounded-sm text-primary no-underline hover:underline`),
+              },
+              [text(n)],
+            ),
+          );
+        });
+        pieces.push(element("sup", { className: cls("ml-0.5 text-[0.7em] font-semibold") }, links));
+        last = match.index + match[0].length;
+      }
+
+      if (!pieces.length) return;
+      if (last < node.value.length) pieces.push(text(node.value.slice(last)));
+      parent.children.splice(index, 1, ...pieces);
+      return [SKIP, index + pieces.length];
+    });
+
+    // 3. Label every entry, then make the first of each number a jump
+    //    target with a way back.
+    for (const [number, node] of labelled) {
+      node.children.unshift(
+        element("span", { className: cls("font-medium text-foreground tabular-nums") }, [
+          text(`[${number}]`),
+        ]),
+        text(" "),
+      );
+    }
+
+    for (const [number, node] of entries) {
+      node.properties = {
+        ...node.properties,
+        id: `ref-${number}`,
+        // Briefly picked out when a citation jumps here.
+        className: cls(`${JUMP_OFFSET} -mx-2 rounded-lg px-2 py-1 text-sm transition-colors duration-700 target:bg-accent`),
+      };
+      if (!cited.has(number)) continue;
+
+      const lastChild = node.children.at(-1);
+      const host =
+        lastChild?.type === "element" && lastChild.tagName === "p" ? lastChild : node;
+      host.children.push(
+        text(" "),
+        element(
+          "a",
+          {
+            href: `#cite-${number}`,
+            ariaLabel: `Back to where reference ${number} is cited`,
+            className: cls("text-primary no-underline hover:underline"),
+          },
+          [text("↩")],
+        ),
+      );
+    }
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* Plain text                                                                  */
+/* -------------------------------------------------------------------------- */
+
+const BLOCKS = new Set(["paragraph", "heading", "listItem", "tableCell", "blockquote"]);
+
+/**
+ * Plain text, for meta descriptions and previews — formatting, raw HTML and
+ * citations stripped, cut on a word boundary.
  */
 export function markdownToPlainText(source: string, maxLength?: number): string {
-  const text = parseMarkdown(source)
-    .flatMap((block) =>
-      block.type === "list"
-        ? block.items.map((item) => item.map((node) => node.value).join(""))
-        : [block.content.map((node) => node.value).join("")],
-    )
-    .join(" ")
+  const tree = unified().use(remarkParse).use(remarkGfm).parse(source);
+
+  const parts: string[] = [];
+  visit(tree, (node: MdastNodes) => {
+    if (BLOCKS.has(node.type)) parts.push(" ");
+    else if (node.type === "text" || node.type === "inlineCode") parts.push(node.value);
+    else if (node.type === "break") parts.push(" ");
+  });
+
+  const plain = parts
+    .join("")
+    .replace(CITATION, "")
     .replace(/\s+/g, " ")
+    // A dropped citation leaves "potential ." — close the gap.
+    .replace(/\s+([.,;:!?])/g, "$1")
     .trim();
 
-  if (!maxLength || text.length <= maxLength) return text;
-  // Trim on a word boundary so descriptions don't end mid-word.
-  return `${text.slice(0, text.lastIndexOf(" ", maxLength))}…`;
+  if (!maxLength || plain.length <= maxLength) return plain;
+  return `${plain.slice(0, plain.lastIndexOf(" ", maxLength))}…`;
 }

@@ -11,6 +11,13 @@
 --------------------------------------------------------------------------- */
 
 @theme inline {
+  /*
+   * One shape for every CMS image — cards and detail pages alike — so an
+   * editor uploads at 16:9 and it is never cropped anywhere. Change it here
+   * and every frame follows; tell the content team if you do.
+   */
+  --aspect-content: 16 / 9;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 

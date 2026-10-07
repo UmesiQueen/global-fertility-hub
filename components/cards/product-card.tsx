@@ -51,7 +51,7 @@ export function ProductCard({
         className,
       )}
     >
-      <div className="relative aspect-4/3 w-full overflow-hidden">
+      <div className="relative aspect-content w-full overflow-hidden">
         <EntityImage
           image={product.coverImage}
           className="transition-transform duration-300 group-hover:scale-[1.03]"

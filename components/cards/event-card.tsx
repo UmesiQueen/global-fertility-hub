@@ -29,7 +29,7 @@ export function EventCard({
         className,
       )}
     >
-      <div className="relative aspect-16/10 w-full overflow-hidden">
+      <div className="relative aspect-content w-full overflow-hidden">
         <EntityImage
           image={event.image}
           className="transition-transform duration-300 group-hover:scale-[1.03]"

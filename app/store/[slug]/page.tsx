@@ -86,7 +86,7 @@ export default async function ProductDetailPage({
       <Container className="pb-12">
         <div className="grid gap-10 lg:grid-cols-[1fr_20rem] lg:gap-14">
           <div>
-            <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl">
+            <div className="relative aspect-content w-full overflow-hidden rounded-3xl">
               <EntityImage
                 image={product.coverImage}
                 sizes="(max-width: 1024px) 100vw, 700px"

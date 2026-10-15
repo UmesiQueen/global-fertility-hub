@@ -42,6 +42,7 @@ export default async function EventsPage() {
         }}
       >
         <TrustChips
+        className="xl:grid-cols-2"
           chips={[
             {
               icon: "shield",

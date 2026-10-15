@@ -12,7 +12,7 @@ import { PartnersListing, PartnersResults } from "./partners-listing";
 const PATHNAME = "/educational-partners";
 
 export const metadata: Metadata = {
-  title: "Educational Clinic Partners",
+  title: "Clinic Directory",
   description:
     "Fertility clinics worldwide that share our commitment to education, transparency and informed decision-making. We showcase partners — we don't rank or recommend them.",
   alternates: { canonical: PATHNAME },
@@ -31,7 +31,7 @@ export default async function EducationalPartnersPage() {
     <>
       <PageHero
         eyebrow={<Pill>Trusted · Transparent · Educational</Pill>}
-        title="Educational Clinic Partners"
+        title="Clinics in our community"
         description="We partner with fertility clinics worldwide that share our commitment to education, transparency and informed decision-making."
         image={{
           src: "/clinic.webp",
@@ -39,6 +39,7 @@ export default async function EducationalPartnersPage() {
         }}
       >
         <TrustChips
+          className="xl:grid-cols-2"
           chips={[
             {
               icon: "shield",

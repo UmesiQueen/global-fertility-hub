@@ -12,7 +12,7 @@ export const siteConfig = {
   name: "Global Fertility Hub",
   tagline: "Learn. Connect. Feel Supported.",
   description:
-    "Trusted education, real stories and a global community here to support you through every step of your fertility journey.",
+    "Real stories, shared experiences, and a global community here to support you through every step of your fertility journey.",
   url: "https://globalfertilityhub.com",
   communityUrl: "https://instagram.com/henry_and_precious",
   email: "precious.and.henry@gmail.com",
@@ -22,12 +22,13 @@ export const siteConfig = {
 /** Primary navigation — order matches the mockups. */
 export const mainNav: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Resources", href: "/resources" },
+  { label: "Collections", href: "/resources" },
   { label: "Store", href: "/store" },
-  { label: "Educational Clinic Partners", href: "/educational-partners" },
+  { label: "Clinic Directory", href: "/educational-partners" },
   { label: "Community Stories", href: "/stories" },
   { label: "Events", href: "/events" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 /** Secondary routes reachable from the footer and in-page CTAs. */
@@ -35,9 +36,9 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
   {
     heading: "Explore",
     links: [
-      { label: "Resources", href: "/resources" },
+      { label: "Collections", href: "/resources" },
       { label: "Store", href: "/store" },
-      { label: "Educational Partners", href: "/educational-partners" },
+      { label: "Clinic Directory", href: "/educational-partners" },
       { label: "Community Stories", href: "/stories" },
       { label: "Events & Webinars", href: "/events" },
       { label: "Partner Discounts", href: "/discounts" },
@@ -47,7 +48,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
     heading: "About",
     links: [
       { label: "Meet Henry & Precious", href: "/about" },
-      { label: "Book a Consultation", href: "/consultations" },
+      { label: "Schedule a Call", href: "/consultations" },
       { label: "Join the Community", href: "/join" },
       { label: "Contact", href: "/contact" },
     ],

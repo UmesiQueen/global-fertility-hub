@@ -57,7 +57,7 @@ export function ClinicCard({
         </p>
 
         <div className="mt-4 flex items-center justify-between gap-3 border-t border-border/70 pt-3">
-          <Pill icon={GraduationCap}>Educational Partner</Pill>
+          <Pill icon={GraduationCap}>Clinic Partner</Pill>
           <span
             aria-hidden="true"
             className="inline-flex items-center gap-1 text-xs font-semibold text-primary"

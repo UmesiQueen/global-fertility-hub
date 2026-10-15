@@ -55,11 +55,12 @@ export function AboutHero() {
             </p>
             <p>
               After facing loss, uncertainty and many unanswered questions, we
-              realised how hard it is to find clear, trustworthy information and
+              realised how hard it is to find clear, helpful information and
               real support when you need it most.
             </p>
-            <p className="font-medium text-foreground">
-              Global Fertility Hub was born from that experience.
+            <p>
+              <span className="text-foreground/80 font-semibold">Global Fertility Hub</span> 
+              {" "}was born from that experience.
             </p>
           </div>
 

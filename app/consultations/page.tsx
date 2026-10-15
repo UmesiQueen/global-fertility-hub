@@ -1,4 +1,4 @@
-import { Heart, Lock, Mail, ShieldCheck, Sparkles } from "lucide-react";
+import { Heart, Lock, Mail, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import { ConsultationBookingForm } from "@/components/forms/consultation-booking-form";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
@@ -32,7 +32,6 @@ const CRUMBS = [
 const TRUST = [
   { icon: Heart, title: "Personal &", subtitle: "Empathetic Support" },
   { icon: Lock, title: "Confidential", subtitle: "& Respectful" },
-  { icon: Sparkles, title: "Evidence-informed", subtitle: "Guidance" },
   { icon: ShieldCheck, title: "We've Been", subtitle: "Through It" },
 ];
 
@@ -94,7 +93,7 @@ export default async function ConsultationsPage() {
               help you feel informed, empowered and less alone.
             </p>
 
-            <ul className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <ul className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-3">
               {TRUST.map((item) => (
                 <li key={item.subtitle} className="flex items-center gap-2.5">
                   <span

@@ -43,13 +43,13 @@ export function HomeHero() {
             Stronger Together.
           </ScriptAccent>
           <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
-            Trusted education, real stories and a global community here to
-            support you through every step.
+           Real stories, shared experiences, and a global community here to 
+           support you through every step of your fertility journey.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href="/resources" size="lg">
               <BookOpen aria-hidden="true" className="size-4" />
-              Explore Resources
+              Explore Collections
             </ButtonLink>
             <ButtonLink href="/join" variant="outline" size="lg">
               <Users aria-hidden="true" className="size-4" />
@@ -78,18 +78,18 @@ export function HomeHero() {
 const FEATURES: FeatureCardProps[] = [
   {
     icon: BookOpen,
-    title: "Educational Resources",
+    title: "Our Collections",
     description:
-      "Guides, articles and videos to help you make informed decisions.",
+      "Carefully curated articles and videos on topics to keep you enlightened.",
     href: "/resources",
-    linkLabel: "Explore Resources",
+    linkLabel: "Explore Collections",
   },
   {
     icon: Building2,
-    title: "Educational Clinic Partners",
-    description: "Discover clinics that share our commitment to education.",
+    title: "Clinic Directory",
+    description: "Discover clinics that share our commitment to best practices.",
     href: "/educational-partners",
-    linkLabel: "Browse Partners",
+    linkLabel: "Browse Clinics",
   },
   {
     icon: Heart,
@@ -143,7 +143,7 @@ function BottomWave() {
     >
       <defs>
         <linearGradient id="wave-gradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--color-surface)" />
+          <stop offset="0%" stopColor="var(--color-background)" />
           <stop offset="100%" stopColor="var(--color-background)" />
         </linearGradient>
       </defs>

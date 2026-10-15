@@ -88,7 +88,7 @@ export default function JoinPage() {
             </ul>
 
             <p className="mt-8 rounded-xl bg-surface p-4 text-xs leading-relaxed text-muted-foreground">
-              Global Fertility Hub is an educational platform, not a clinic.
+              Global Fertility Hub is a support platform, not a clinic.
               Joining the community isn&apos;t medical care, and nothing we
               share is medical advice.
             </p>

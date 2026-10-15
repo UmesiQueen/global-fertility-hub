@@ -35,7 +35,7 @@ export const STORY_CATEGORIES = [
   "IVF",
   "Male Fertility",
   "Pregnancy Loss",
-  "PCOS",
+  "PMOS",
   "Endometriosis",
   "Success Stories",
   "Donor Conception",

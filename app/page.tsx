@@ -8,9 +8,9 @@ import { UpcomingEvents } from "@/components/sections/upcoming-events";
 import { WhyWeExist } from "@/components/sections/why-we-exist";
 
 export const metadata: Metadata = {
-  title: "Global Fertility Hub — Trusted Fertility Education & Support",
+  title: "Global Fertility Hub — Fertility Support &  Community",
   description:
-    "Trusted education, real stories and a global community here to support you through every step of your fertility journey.",
+    "Real stories, shared experiences, and a global community here to support you through every step of your fertility journey.",
   alternates: { canonical: "/" },
 };
 

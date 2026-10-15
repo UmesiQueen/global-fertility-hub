@@ -5,23 +5,16 @@ import { EntityImage } from "@/components/shared/entity-image";
 import { ScriptAccent } from "@/components/shared/script-accent";
 import { cn } from "@/lib/utils";
 
-/**
- * Homepage section 7 — the mission block.
- *
- * Copy here is close to the brief's own language about why the platform
- * exists. It is the clearest statement on the site that this is education and
- * support rather than care, so changes need client sign-off.
- */
 const TRUST_INDICATORS = [
   {
     icon: ShieldCheck,
-    title: "Educational, not clinical",
+    title: "Support, not clinical",
     description: "We inform and support. Your care stays with your clinicians.",
   },
   {
     icon: Sparkles,
-    title: "Evidence-based information",
-    description: "Reviewed content, written in plain English.",
+    title: "Research-based information",
+    description: "Curated content, explained simply.",
   },
   {
     icon: Users,
@@ -71,7 +64,7 @@ export function WhyWeExist({ className }: { className?: string }) {
             </p>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
               After facing loss, uncertainty and many unanswered questions, we
-              realised how hard it is to find clear, trustworthy information and
+              realised how hard it is to find clear, helpful information and
               real support when you need it most.
             </p>
 

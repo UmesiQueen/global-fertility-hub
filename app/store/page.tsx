@@ -18,7 +18,7 @@ const PATHNAME = "/store";
 export const metadata: Metadata = {
   title: "Store",
   description:
-    "Guides, workbooks and audio made by Henry and Precious, plus a few things our community keeps recommending.",
+    "Workbooks and audio made by Henry and Precious, plus a few things our community keeps recommending.",
   alternates: { canonical: PATHNAME },
 };
 
@@ -48,7 +48,7 @@ export default async function StorePage() {
       <PageHero
         title="The Store"
         scriptLine={<ScriptAccent>Made with you in mind.</ScriptAccent>}
-        description="Guides, workbooks and audio we made ourselves — plus a few things our community keeps recommending to each other."
+        description="Materials we made ourselves — plus community recommendations."
         image={{
           src: "/store.webp",
           alt: "A fertility journey guide, planning workbooks, headphones and a phone playing a guided meditation, beside a heart mug on a marble table.",

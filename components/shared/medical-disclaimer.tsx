@@ -1,15 +1,6 @@
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/**
- * The product's legal posture, made visible.
- *
- * Per the client brief: Global Fertility Hub is not a clinic and does not
- * provide medical advice. This component belongs on the footer, every
- * resource and story detail page, and the consultations page.
- *
- * Do not reword the default copy without client sign-off.
- */
 export function MedicalDisclaimer({
   className,
   variant = "inline",
@@ -21,7 +12,7 @@ export function MedicalDisclaimer({
 }) {
   const copy = children ?? (
     <>
-      Global Fertility Hub is an educational platform, not a clinic. Nothing on
+      Global Fertility Hub is a support platform, not a clinic. Nothing on
       this site is medical advice. Always speak with a qualified healthcare
       professional about your own care.
     </>

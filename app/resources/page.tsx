@@ -15,7 +15,7 @@ const PATHNAME = "/resources";
 export const metadata: Metadata = {
   title: "Resources",
   description:
-    "Trusted fertility education to help you learn, understand and make informed decisions — articles, guides, videos and downloads.",
+    "Curated fertility topics to help you learn, understand and make informed decisions — articles, videos and downloads.",
   alternates: { canonical: PATHNAME },
 };
 
@@ -36,16 +36,16 @@ export default async function ResourcesPage() {
   return (
     <>
       <PageHero
-        title="Resources"
-        description="Trusted fertility education to help you learn, understand and make informed decisions."
+        title="Collections"
+        description="Curated fertility topics to help you learn and understand your journey."
         image={{
           src: "/resources.webp",
           alt: "A stack of books, a small vase of greenery and a mug on a sunlit marble table.",
         }}
       >
         <SearchBar
-          label="Search resources"
-          placeholder="Search resources, topics or keywords…"
+          label="Search collections"
+          placeholder="Search collections, topics or keywords…"
           className="max-w-md"
         />
       </PageHero>

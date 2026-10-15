@@ -153,7 +153,7 @@ export function StoreResults({
               },
               {
                 value: "affiliate",
-                label: "Recommended by us",
+                label: "Recommended",
                 count: sourceCounts.affiliate,
               },
             ]}
@@ -228,8 +228,8 @@ export function StoreResults({
           )}
 
           <MedicalDisclaimer variant="card" className="mt-12">
-            Nothing in this store is a treatment, and no product here will
-            change your chances of conceiving. These are guides, tools and
+            Nothing in this store is a treatment, and no product here is sure to
+            change your chances of conceiving. These are workbooks, tools and
             comforts. Please talk to your healthcare team before starting
             anything new.
           </MedicalDisclaimer>

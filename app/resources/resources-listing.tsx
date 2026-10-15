@@ -31,7 +31,6 @@ const PAGE_SIZE = 12;
 const FORMATS: ResourceFormat[] = [
   "article",
   "video",
-  "guide",
   "download",
   "webinar",
 ];
@@ -152,8 +151,8 @@ export function ResourcesResults({
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p aria-live="polite" className="text-sm text-muted-foreground">
               {results.total > 0
-                ? `Showing ${from}–${to} of ${results.total} resources`
-                : "No resources found"}
+                ? `Showing ${from}–${to} of ${results.total} collections`
+                : "No results found"}
             </p>
             <SortSelect options={SORT_OPTIONS} />
           </div>
@@ -186,7 +185,7 @@ export function ResourcesResults({
           ) : (
             <EmptyState
               className="mt-6"
-              title="No resources match those filters"
+              title="No results match those filters"
               description="Try removing a filter or searching for something broader."
               action={
                 <ButtonLink href={PATHNAME} variant="outline">

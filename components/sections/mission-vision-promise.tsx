@@ -1,17 +1,9 @@
 import { Check, HeartHandshake, ShieldCheck, Users } from "lucide-react";
 import { Container } from "@/components/layout/container";
 
-/**
- * Mission, Vision and Promise.
- *
- * "Our Promise" is the site's values list, and the first item —
- * "Educational, not a clinic" — is the single most important sentence on the
- * page. It is the product's legal posture stated plainly, and it leads the
- * list on purpose. Don't reorder it or soften it without client sign-off.
- */
 const PROMISES = [
-  "Educational, not a clinic",
-  "Evidence-based information",
+  "Support, not a clinic",
+  "Research-based information",
   "Real stories from real people",
   "A safe, respectful community",
   "Always here to support you",
@@ -61,7 +53,7 @@ export function MissionVisionPromise() {
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 To become the world&apos;s most trusted fertility hub —
-                connecting, educating and supporting people everywhere on their
+                connecting and supporting people everywhere on their
                 path to parenthood and beyond.
               </p>
             </div>

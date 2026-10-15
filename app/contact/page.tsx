@@ -12,10 +12,10 @@ import {
   TikTokIcon,
   YouTubeIcon,
 } from "@/components/shared/social-icons";
-import { breadcrumbJsonLd, organisationJsonLd } from "@/lib/seo";
-import { siteConfig, socialLinks } from "@/lib/site-config";
 import type { RawSearchParams } from "@/lib/search-params";
 import { readParam } from "@/lib/search-params";
+import { breadcrumbJsonLd, organisationJsonLd } from "@/lib/seo";
+import { siteConfig, socialLinks } from "@/lib/site-config";
 import { normaliseTopic } from "@/lib/validation/contact";
 
 export const metadata: Metadata = {
@@ -95,7 +95,7 @@ export default async function ContactPage({
                 If you need help urgently
               </h2>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                We&apos;re an educational platform, not a clinic, and we
+                We&apos;re a support platform, not a clinic, and we
                 can&apos;t help with anything medical or urgent. If something is
                 wrong with your health right now, please contact your doctor or
                 your local emergency service.
@@ -172,9 +172,9 @@ export default async function ContactPage({
             </div>
 
             <div className="rounded-2xl bg-script/8 p-5">
-              <Heart aria-hidden="true" className="size-5 text-script" />
-              <p className="mt-2 text-sm leading-relaxed text-foreground">
-                Your message stays between us.
+              <p className="text-sm leading-relaxed text-foreground inline-flex items-base gap-1">
+                <span>Your message stays between us.</span>
+                <Heart aria-hidden="true" className="size-5 text-script" />
               </p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 We never share what you write with clinics, partners or anyone
@@ -183,10 +183,10 @@ export default async function ContactPage({
             </div>
 
             <div className="flex items-center">
-              <Mail aria-hidden="true" className="size-4" />
+              <Mail aria-hidden="true" className="size-5" />
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="ml-2 text-xs text-muted-foreground"
+                className="ml-2 text-sm text-muted-foreground"
               >
                 {siteConfig.email}
               </a>

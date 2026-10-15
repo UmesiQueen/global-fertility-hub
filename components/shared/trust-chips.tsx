@@ -16,11 +16,6 @@ const ICONS = {
 
 export const DEFAULT_TRUST_CHIPS: TrustChip[] = [
   {
-    icon: "shield",
-    title: "Trusted Education",
-    description: "Expert-reviewed information",
-  },
-  {
     icon: "heart",
     title: "Real Stories",
     description: "From people who understand",

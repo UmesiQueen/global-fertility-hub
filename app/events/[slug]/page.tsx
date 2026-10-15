@@ -369,11 +369,11 @@ export default async function EventDetailPage({
       <div className="bg-surface">
         <RelatedGrid
           headingId="event-related-partners"
-          title="Educational Clinic Partners"
+          title="Clinic Directory"
           description="Partners whose educational focus covers this topic. We don't rank or recommend clinics."
           count={relatedClinics.length}
           action={{
-            label: "Browse All Partners",
+            label: "Browse All Clinics",
             href: "/educational-partners",
           }}
         >

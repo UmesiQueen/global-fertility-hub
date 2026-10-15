@@ -55,10 +55,6 @@ export function NewsletterSignup({ className }: { className?: string }) {
           </Button>
         </form>
       </div>
-
-      <p className="mt-4 text-xs text-muted-foreground">
-        We&apos;ll only email you about events. Unsubscribe any time.
-      </p>
     </section>
   );
 }

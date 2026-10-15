@@ -4,13 +4,6 @@ import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
 import { SectionHeader } from "@/components/shared/section-header";
 import { getFeaturedClinics } from "@/lib/repositories/clinics";
 
-/**
- * Homepage section 4 — Educational Clinic Partners.
- *
- * The description and the disclaimer beneath the grid both exist to make the
- * framing unmistakable: these are educational partnerships, not
- * recommendations. Don't reword either without client sign-off.
- */
 export async function FeaturedPartners() {
   const clinics = await getFeaturedClinics(6);
 
@@ -24,10 +17,10 @@ export async function FeaturedPartners() {
       <Container>
         <SectionHeader
           id="featured-partners"
-          title="Educational Clinic Partners"
+          title="Clinic Directory"
           description="We partner with fertility clinics worldwide that share our commitment to education, transparency and informed decision-making."
           action={{
-            label: "Browse All Partners",
+            label: "Browse All Clinics",
             href: "/educational-partners",
           }}
         />

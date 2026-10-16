@@ -7,7 +7,6 @@ import { SearchBar } from "@/components/filters/search-bar";
 import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/shared/button-link";
 import { EmptyState } from "@/components/shared/empty-state";
-import { NewsletterSignup } from "@/components/shared/newsletter-signup";
 import { Pagination } from "@/components/shared/pagination";
 import {
   queryReplayLibrary,
@@ -168,8 +167,6 @@ export function EventsResults({
           }
         />
       )}
-
-      <NewsletterSignup className="mt-14" />
     </Container>
   );
 }

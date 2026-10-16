@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SearchBar } from "@/components/filters/search-bar";
 import { PageHero } from "@/components/layout/page-hero";
+import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
 import { withoutBody } from "@/lib/listing/trim";
 import {
   getAllResources,
@@ -53,6 +54,12 @@ export default async function ResourcesPage() {
       <Suspense fallback={<ResourcesResults {...listing} params={{}} />}>
         <ResourcesListing {...listing} />
       </Suspense>
+
+      <JoinCommunityCTA
+        title="Can't Find What You're Looking For?"
+        description="Tell us what you'd like to understand better. Many of our collections started as a question someone in our community asked."
+        ctaButton={{ href: "/contact?topic=resource", label: "Suggest a Topic" }}
+      />
     </>
   );
 }

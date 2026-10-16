@@ -2,11 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, ArrowRight, Check, Copy, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { Country as PhoneCountry } from "react-phone-number-input";
-import Link from "next/link";
-import { joinCommunity, type JoinResult } from "@/app/join/actions";
+import { type JoinResult, joinCommunity  } from "@/app/join/actions";
 import { InstagramIcon } from "@/components/shared/social-icons";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";

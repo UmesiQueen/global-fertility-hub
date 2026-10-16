@@ -3,7 +3,7 @@ import { FeaturedPartners } from "@/components/sections/featured-partners";
 import { FeaturedResources } from "@/components/sections/featured-resources";
 import { FeaturedStories } from "@/components/sections/featured-stories";
 import { HomeHero } from "@/components/sections/home-hero";
-import { JoinCommunity } from "@/components/sections/join-community";
+import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
 import { UpcomingEvents } from "@/components/sections/upcoming-events";
 import { WhyWeExist } from "@/components/sections/why-we-exist";
 
@@ -23,7 +23,7 @@ export default function Home() {
       <FeaturedStories />
       <UpcomingEvents />
       <WhyWeExist />
-      <JoinCommunity />
+      <JoinCommunityCTA />
     </>
   );
 }

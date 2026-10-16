@@ -6,7 +6,6 @@ import { PageHero } from "@/components/layout/page-hero";
 import { ButtonLink } from "@/components/shared/button-link";
 import { EmptyState } from "@/components/shared/empty-state";
 import { JsonLd } from "@/components/shared/json-ld";
-import { NewsletterSignup } from "@/components/shared/newsletter-signup";
 import { ScriptAccent } from "@/components/shared/script-accent";
 import { TrustChips } from "@/components/shared/trust-chips";
 import { getDiscounts } from "@/lib/repositories/discounts";
@@ -192,8 +191,6 @@ export default async function DiscountsPage() {
             </ButtonLink>
           </div>
         </div>
-
-        <NewsletterSignup className="mt-12" />
       </Container>
     </>
   );

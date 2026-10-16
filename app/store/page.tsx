@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SearchBar } from "@/components/filters/search-bar";
 import { PageHero } from "@/components/layout/page-hero";
+import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
 import { JsonLd } from "@/components/shared/json-ld";
 import { ScriptAccent } from "@/components/shared/script-accent";
 import { withoutBody } from "@/lib/listing/trim";
@@ -64,6 +65,11 @@ export default async function StorePage() {
       <Suspense fallback={<StoreResults {...listing} params={{}} />}>
         <StoreListing {...listing} />
       </Suspense>
+
+      <JoinCommunityCTA
+        title="Be the First to Know"
+        description="Join our community to hear when new workbooks and audio are ready, and to unlock exclusive partner discounts along the way."
+      />
     </>
   );
 }

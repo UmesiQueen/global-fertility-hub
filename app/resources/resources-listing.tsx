@@ -128,23 +128,6 @@ export function ResourcesResults({
             pathname={PATHNAME}
             searchParams={params}
           />
-
-          <div className="mt-8 rounded-2xl bg-surface p-5">
-            <h2 className="font-heading text-sm font-semibold text-foreground">
-              Can&apos;t find what you&apos;re looking for?
-            </h2>
-            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              Tell us what you need and we&apos;ll look into covering it.
-            </p>
-            <ButtonLink
-              href="/contact?topic=resource"
-              variant="outline"
-              size="sm"
-              className="mt-4 w-full"
-            >
-              Request a Topic
-            </ButtonLink>
-          </div>
         </aside>
 
         <div className="mt-10 lg:mt-0">

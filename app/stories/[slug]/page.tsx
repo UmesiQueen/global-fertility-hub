@@ -1,5 +1,6 @@
 import { ArrowLeft, Clock } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ClinicCard } from "@/components/cards/clinic-card";
@@ -26,6 +27,13 @@ import {
   getStoryBySlug,
 } from "@/lib/repositories/stories";
 import { breadcrumbJsonLd, storyJsonLd } from "@/lib/seo";
+
+const FADE_OUT_LETTERING = {
+  maskImage: "linear-gradient(to right, #000 0%, #000 55%, transparent 72%)",
+  WebkitMaskImage:
+    "linear-gradient(to right, #000 0%, #000 55%, transparent 72%)",
+};
+
 
 type Params = { slug: string };
 
@@ -156,11 +164,21 @@ export default async function StoryDetailPage({
             talk to your own healthcare team about your care.
           </MedicalDisclaimer>
 
-          <div className="mt-10 max-w-[68ch] rounded-2xl bg-surface p-6 text-center">
+          <div className="mt-10 relative isolate overflow-hidden rounded-3xl bg-hero-background border border-border px-6 py-14 text-center md:px-12 md:py-16">
+            <Image
+              src="/join.webp"
+              alt=""
+              aria-hidden="true"
+              fill
+              sizes="(min-width: 1280px) 1216px, 100vw"
+              className="-z-10 object-cover opacity-[0.4]"
+              style={FADE_OUT_LETTERING}
+            />
+          
             <h2 className="font-heading text-lg font-semibold text-foreground">
               Your story could help someone feel less alone
             </h2>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-foreground/80">
               Sharing is entirely your choice, and you can stay anonymous. Every
               story is read and reviewed with care before it&apos;s published.
             </p>
@@ -224,10 +242,10 @@ export default async function StoryDetailPage({
 
       <RelatedGrid
         headingId="story-related-partners"
-        title="Educational Clinic Partners"
+        title="Clinic Directory"
         description="Partners whose educational focus covers these topics. We don't rank or recommend clinics."
         count={relatedClinics.length}
-        action={{ label: "Browse All Partners", href: "/educational-partners" }}
+        action={{ label: "Browse All Clinics", href: "/educational-partners" }}
       >
         {relatedClinics.map((item) => (
           <li key={item.id} className="flex">

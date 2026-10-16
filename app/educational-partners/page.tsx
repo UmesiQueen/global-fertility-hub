@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageHero } from "@/components/layout/page-hero";
+import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
 import { Pill } from "@/components/shared/pill";
 import { TrustChips } from "@/components/shared/trust-chips";
 import {
@@ -58,6 +59,11 @@ export default async function EducationalPartnersPage() {
       <Suspense fallback={<PartnersResults {...listing} params={{}} />}>
         <PartnersListing {...listing} />
       </Suspense>
+
+      <JoinCommunityCTA
+        title="Not Sure What to Ask a Clinic?"
+        description="We can't tell you which clinic to choose, but we can help you feel prepared. Talk it through with people who've been there, or learn alongside others in our community."
+      />
     </>
   );
 }

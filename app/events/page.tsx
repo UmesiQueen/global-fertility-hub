@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageHero } from "@/components/layout/page-hero";
+import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
 import { TrustChips } from "@/components/shared/trust-chips";
 import { getAllEvents } from "@/lib/repositories/events";
 import { EventsListing, EventsResults } from "./events-listing";
@@ -61,6 +62,11 @@ export default async function EventsPage() {
       <Suspense fallback={<EventsResults {...listing} params={{}} />}>
         <EventsListing {...listing} />
       </Suspense>
+
+      <JoinCommunityCTA
+        title="Never Miss a Session"
+        description="Join our community to hear about upcoming webinars and new replays as soon as they're announced, wherever you are in the world."
+      />
     </>
   );
 }

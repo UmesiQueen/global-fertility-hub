@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/container";
 import { AboutHero } from "@/components/sections/about-hero";
-import { JoinCommunity } from "@/components/sections/join-community";
+import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
 import { MissionVisionPromise } from "@/components/sections/mission-vision-promise";
 import { OurStoryTimeline } from "@/components/sections/our-story-timeline";
 import { JsonLd } from "@/components/shared/json-ld";
@@ -38,7 +38,7 @@ export default function AboutPage() {
         <MedicalDisclaimer variant="card" className="mx-auto max-w-2xl" />
       </Container>
 
-      <JoinCommunity />
+      <JoinCommunityCTA />
     </>
   );
 }

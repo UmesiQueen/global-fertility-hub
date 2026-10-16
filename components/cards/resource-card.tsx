@@ -50,7 +50,7 @@ export function ResourceCard({
       <div className="flex flex-1 flex-col p-4">
         <h3 className="font-heading text-base leading-snug font-semibold text-foreground">
           <Link
-            href={`/resources/${resource.slug}`}
+            href={`/collections/${resource.slug}`}
             className="rounded-sm after:absolute after:inset-0 after:content-['']"
           >
             {resource.title}

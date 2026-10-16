@@ -47,7 +47,7 @@ export function HomeHero() {
            support you through every step of your fertility journey.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/resources" size="lg">
+            <ButtonLink href="/collections" size="lg">
               <BookOpen aria-hidden="true" className="size-4" />
               Explore Collections
             </ButtonLink>
@@ -81,7 +81,7 @@ const FEATURES: FeatureCardProps[] = [
     title: "Our Collections",
     description:
       "Carefully curated articles and videos on topics to keep you enlightened.",
-    href: "/resources",
+    href: "/collections",
     linkLabel: "Explore Collections",
   },
   {

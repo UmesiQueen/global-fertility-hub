@@ -9,18 +9,18 @@ import {
   getResourceCategoryCounts,
   getResourceFormatCounts,
 } from "@/lib/repositories/resources";
-import { ResourcesListing, ResourcesResults } from "./resources-listing";
+import { CollectionsListing, CollectionsResults } from "./collections-listing";
 
-const PATHNAME = "/resources";
+const PATHNAME = "/collections";
 
 export const metadata: Metadata = {
-  title: "Resources",
+  title: "Collections",
   description:
     "Curated fertility topics to help you learn, understand and make informed decisions — articles, videos and downloads.",
   alternates: { canonical: PATHNAME },
 };
 
-export default async function ResourcesPage() {
+export default async function CollectionsPage() {
   const [resources, categoryCounts, formatCounts] = await Promise.all([
     getAllResources(),
     getResourceCategoryCounts(),
@@ -37,7 +37,7 @@ export default async function ResourcesPage() {
   return (
     <>
       <PageHero
-        title="Collections"
+        title="Our Collections"
         description="Curated fertility topics to help you learn and understand your journey."
         image={{
           src: "/resources.webp",
@@ -51,8 +51,8 @@ export default async function ResourcesPage() {
         />
       </PageHero>
 
-      <Suspense fallback={<ResourcesResults {...listing} params={{}} />}>
-        <ResourcesListing {...listing} />
+      <Suspense fallback={<CollectionsResults {...listing} params={{}} />}>
+        <CollectionsListing {...listing} />
       </Suspense>
 
       <JoinCommunityCTA

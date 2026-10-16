@@ -25,7 +25,7 @@ import {
   type ResourceFormat,
 } from "@/types";
 
-const PATHNAME = "/resources";
+const PATHNAME = "/collections";
 const PAGE_SIZE = 12;
 
 const FORMATS: ResourceFormat[] = [
@@ -42,7 +42,7 @@ const SORT_OPTIONS = [
 ];
 
 
-export interface ResourcesListingData {
+export interface CollectionsListingData {
   resources: Resource[];
   categoryCounts: Record<string, number>;
   formatCounts: Record<ResourceFormat, number>;
@@ -54,18 +54,18 @@ export interface ResourcesListingData {
  * applied here instead of by a server render per query string. See
  * app/store/store-listing.tsx for the reasoning.
  */
-export function ResourcesListing(data: ResourcesListingData) {
+export function CollectionsListing(data: CollectionsListingData) {
   const params = useRawSearchParams();
-  return <ResourcesResults {...data} params={params} />;
+  return <CollectionsResults {...data} params={params} />;
 }
 
 /** The listing for a given set of params — empty params is the prerendered fallback. */
-export function ResourcesResults({
+export function CollectionsResults({
   resources,
   categoryCounts,
   formatCounts,
   params,
-}: ResourcesListingData & { params: RawSearchParams }) {
+}: CollectionsListingData & { params: RawSearchParams }) {
   const search = readParam(params, "search");
   const category = readParam(params, "category") as
     ResourceCategory | undefined;

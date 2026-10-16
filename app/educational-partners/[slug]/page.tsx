@@ -287,7 +287,7 @@ export default async function ClinicProfilePage({
           headingId="clinic-related-resources"
           title="Related Resources"
           count={relatedResources.length}
-          action={{ label: "View All Resources", href: "/resources" }}
+          action={{ label: "View All Collections", href: "/collections" }}
         >
           {relatedResources.map((item) => (
             <li key={item.id} className="flex">

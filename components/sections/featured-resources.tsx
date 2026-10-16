@@ -19,7 +19,7 @@ export async function FeaturedResources() {
           id="featured-resources"
           title="Featured Resources"
           description="Trusted education to help you learn, understand and make informed decisions."
-          action={{ label: "View All Resources", href: "/resources" }}
+          action={{ label: "View All Collections", href: "/collections" }}
         />
 
         <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

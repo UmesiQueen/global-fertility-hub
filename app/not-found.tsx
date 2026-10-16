@@ -75,8 +75,8 @@ export default function NotFound() {
         <ButtonLink href="/" size="lg">
           Go Back Home
         </ButtonLink>
-        <ButtonLink href="/resources" variant="link" size="lg">
-          Explore Resources
+        <ButtonLink href="/collections" variant="link" size="lg">
+          Explore Collections
         </ButtonLink>
       </div>
     </Container>

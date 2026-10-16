@@ -22,7 +22,7 @@ https://global-fertility-hub.vercel.app/api/preview?secret=YOUR_SECRET&type=prod
 | ---------- | -------- | ---------------------------- |
 | `product`  | Product  | `/store/{slug}`              |
 | `story`    | Story    | `/stories/{slug}`            |
-| `resource` | Resource | `/resources/{slug}`          |
+| `resource` | Resource | `/collections/{slug}`          |
 | `clinic`   | Clinic   | `/educational-partners/{slug}` |
 | `event`    | Event    | `/events/{slug}`             |
 

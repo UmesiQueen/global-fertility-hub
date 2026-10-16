@@ -1,6 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // /resources was renamed to /collections. Permanent, so search engines
+  // carry the old URLs' ranking across and shared links keep working.
+  async redirects() {
+    return [
+      { source: "/resources", destination: "/collections", permanent: true },
+      {
+        source: "/resources/:slug",
+        destination: "/collections/:slug",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

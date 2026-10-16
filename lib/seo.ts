@@ -64,7 +64,7 @@ export function resourceJsonLd(resource: Resource) {
     ...(resource.publishedAt ? { datePublished: resource.publishedAt } : {}),
     author: { "@type": "Person", name: resource.author.name },
     publisher: { "@type": "Organization", name: siteConfig.name },
-    mainEntityOfPage: url(`/resources/${resource.slug}`),
+    mainEntityOfPage: url(`/collections/${resource.slug}`),
     ...(resource.coverImage.src
       ? { image: url(resource.coverImage.src) }
       : {}),

@@ -82,7 +82,7 @@ app/
 ├── page.tsx                          HOMEPAGE (9 sections — §5)
 ├── not-found.tsx                     404 — heart illustration, mockup 12
 │
-├── resources/
+├── collections/
 │   ├── page.tsx                      Library: search, category sidebar, format filter, pagination
 │   └── [slug]/page.tsx               Detail: title, author, category, reading time, body,
 │                                     related resources / clinics / webinars, downloads

@@ -22,7 +22,7 @@ export const siteConfig = {
 /** Primary navigation — order matches the mockups. */
 export const mainNav: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Collections", href: "/resources" },
+  { label: "Collections", href: "/collections" },
   { label: "Store", href: "/store" },
   { label: "Clinic Directory", href: "/educational-partners" },
   { label: "Community Stories", href: "/stories" },
@@ -36,7 +36,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
   {
     heading: "Explore",
     links: [
-      { label: "Collections", href: "/resources" },
+      { label: "Collections", href: "/collections" },
       { label: "Store", href: "/store" },
       { label: "Clinic Directory", href: "/educational-partners" },
       { label: "Community Stories", href: "/stories" },

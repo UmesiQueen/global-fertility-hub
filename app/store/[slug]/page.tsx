@@ -212,7 +212,7 @@ export default async function ProductDetailPage({
           title="Free to Read on This Topic"
           description="You don't have to buy anything to get help here."
           count={relatedResources.length}
-          action={{ label: "Browse All Resources", href: "/resources" }}
+          action={{ label: "Browse All Collections", href: "/collections" }}
         >
           {relatedResources.map((item) => (
             <li key={item.id} className="flex">

@@ -29,7 +29,7 @@ import { draftMode } from "next/headers";
 const PREVIEW_ROUTES = {
   product: "/store",
   story: "/stories",
-  resource: "/resources",
+  resource: "/collections",
   clinic: "/educational-partners",
   event: "/events",
 } as const;

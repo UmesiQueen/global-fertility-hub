@@ -8,9 +8,12 @@ import {
   getAllClinics,
   getClinicFilterOptions,
 } from "@/lib/repositories/clinics";
-import { PartnersListing, PartnersResults } from "./partners-listing";
+import {
+  ClinicDirectoryListing,
+  ClinicDirectoryResults,
+} from "./clinic-directory-listing";
 
-const PATHNAME = "/educational-partners";
+const PATHNAME = "/clinic-directory";
 
 export const metadata: Metadata = {
   title: "Clinic Directory",
@@ -19,7 +22,7 @@ export const metadata: Metadata = {
   alternates: { canonical: PATHNAME },
 };
 
-export default async function EducationalPartnersPage() {
+export default async function ClinicDirectoryPage() {
   const [clinics, options] = await Promise.all([
     getAllClinics(),
     getClinicFilterOptions(),
@@ -56,8 +59,8 @@ export default async function EducationalPartnersPage() {
         />
       </PageHero>
 
-      <Suspense fallback={<PartnersResults {...listing} params={{}} />}>
-        <PartnersListing {...listing} />
+      <Suspense fallback={<ClinicDirectoryResults {...listing} params={{}} />}>
+        <ClinicDirectoryListing {...listing} />
       </Suspense>
 
       <JoinCommunityCTA

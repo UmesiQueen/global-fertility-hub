@@ -24,7 +24,7 @@ export const mainNav: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "Collections", href: "/collections" },
   { label: "Store", href: "/store" },
-  { label: "Clinic Directory", href: "/educational-partners" },
+  { label: "Clinic Directory", href: "/clinic-directory" },
   { label: "Community Stories", href: "/stories" },
   { label: "Events", href: "/events" },
   { label: "About", href: "/about" },
@@ -38,7 +38,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
     links: [
       { label: "Collections", href: "/collections" },
       { label: "Store", href: "/store" },
-      { label: "Clinic Directory", href: "/educational-partners" },
+      { label: "Clinic Directory", href: "/clinic-directory" },
       { label: "Community Stories", href: "/stories" },
       { label: "Events & Webinars", href: "/events" },
       { label: "Partner Discounts", href: "/discounts" },

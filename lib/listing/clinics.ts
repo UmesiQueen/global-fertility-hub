@@ -3,7 +3,7 @@ import type { Clinic, Paginated, Treatment } from "@/types";
 
 /**
  * Pure partner filtering — shared by the repository and the
- * /educational-partners listing.
+ * /clinic-directory listing.
  *
  * Note the absence of any `sort: "rating"` or "recommended" option. Partners
  * are ordered by name or by when they joined — never ranked. That constraint

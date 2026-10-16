@@ -21,7 +21,7 @@ export async function FeaturedPartners() {
           description="We partner with fertility clinics worldwide that share our commitment to education, transparency and informed decision-making."
           action={{
             label: "Browse All Clinics",
-            href: "/educational-partners",
+            href: "/clinic-directory",
           }}
         />
 

@@ -51,7 +51,7 @@ export async function generateMetadata({
   return {
     title: `${clinic.name} — Educational Partner`,
     description: clinic.intro,
-    alternates: { canonical: `/educational-partners/${clinic.slug}` },
+    alternates: { canonical: `/clinic-directory/${clinic.slug}` },
     openGraph: { title: clinic.name, description: clinic.intro },
   };
 }
@@ -73,7 +73,7 @@ export default async function ClinicProfilePage({
 
   const crumbs = [
     { label: "Home", href: "/" },
-    { label: "Educational Partners", href: "/educational-partners" },
+    { label: "Clinic Directory", href: "/clinic-directory" },
     { label: clinic.name },
   ];
 
@@ -264,6 +264,7 @@ export default async function ClinicProfilePage({
               ) : null}
             </div>
 
+            {/* TODO: Ask about disclaimer content. ps this appear in multiple places */}
             <MedicalDisclaimer variant="card">
               This is an educational partnership. Global Fertility Hub does not
               rank, rate or recommend clinics, and does not receive a fee for
@@ -274,7 +275,7 @@ export default async function ClinicProfilePage({
         </div>
 
         <Link
-          href="/educational-partners"
+          href="/clinic-directory"
           className="mt-12 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
         >
           <ArrowLeft aria-hidden="true" className="size-4" />

@@ -11,7 +11,7 @@ Commands: `bun dev` · `bun run build` · `bun run lint`
 ## Hard rules
 
 1. **Pages never import `api/*` directly.** Always go through `lib/repositories/*`. The repositories own filtering, sorting, pagination, relatedness and the guardrails below — a page that queries Hygraph itself bypasses all of them.
-   - Listing pages (store, collections, stories, events, educational-partners) are **static**: the page fetches the full list through a repository (`getAll*`) and a `*-listing.tsx` client component filters it from the URL with the pure functions in `lib/listing/*`. Repositories call the same functions, so filter rules live in one place. Never read `searchParams` in a listing page — it makes every query string a server render (Vercel Fast Origin Transfer).
+   - Listing pages (store, collections, stories, events, clinic-directory) are **static**: the page fetches the full list through a repository (`getAll*`) and a `*-listing.tsx` client component filters it from the URL with the pure functions in `lib/listing/*`. Repositories call the same functions, so filter rules live in one place. Never read `searchParams` in a listing page — it makes every query string a server render (Vercel Fast Origin Transfer).
 2. **Repository functions are `async`**, even when returning static data.
 3. **Server Components by default.** `"use client"` only for interactivity — filters, calendars, carousels, sheets, forms. Push the boundary as far down the tree as possible.
 4. **Filter and search state lives in the URL**, not `useState`. Shareable, back-button friendly, SEO-safe.
@@ -50,7 +50,7 @@ At the end of every phase or large chunk, propose the commit message(s) alongsid
 
 ## Naming
 
-- Routes: kebab-case (`/educational-partners`)
+- Routes: kebab-case (`/clinic-directory`)
 - Components: PascalCase files in `components/<group>/`
 - Types: singular (`Resource`, `Clinic`), in `types/`
 - Repository fns: `getX()`, `getXBySlug()`, `getFeaturedX()`, `getRelatedX()`

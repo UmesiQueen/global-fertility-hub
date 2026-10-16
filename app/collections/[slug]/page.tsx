@@ -202,7 +202,7 @@ export default async function ResourceDetailPage({
           count={relatedClinics.length}
           action={{
             label: "Browse All Clinics",
-            href: "/educational-partners",
+            href: "/clinic-directory",
           }}
         >
           {relatedClinics.map((item) => (

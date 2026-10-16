@@ -87,7 +87,7 @@ app/
 │   └── [slug]/page.tsx               Detail: title, author, category, reading time, body,
 │                                     related resources / clinics / webinars, downloads
 │
-├── educational-partners/
+├── clinic-directory/
 │   ├── page.tsx                      Directory: filter by country, city, treatment, specialty, language
 │   └── [slug]/page.tsx               Profile: info, services, team, educational content,
 │                                     partner benefits, website, contact, related resources, events
@@ -112,7 +112,7 @@ app/
 └── api/                              (Phase 2 — newsletter, contact, story submission)
 ```
 
-**Naming note:** `/educational-partners` not `/clinics`. The URL itself should carry the "educational partnership, not endorsement" framing. Mockups confirm the nav label is "Educational Partners".
+**Naming note:** the directory lives at `/clinic-directory` (originally `/educational-partners`), matching the "Clinic Directory" nav label. The "educational partnership, not endorsement" framing is carried by the page copy and the *Educational Partner* badge.
 
 ---
 

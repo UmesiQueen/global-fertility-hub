@@ -20,7 +20,7 @@ import {
 import { useRawSearchParams } from "@/lib/use-raw-search-params";
 import type { Clinic, Treatment } from "@/types";
 
-const PATHNAME = "/educational-partners";
+const PATHNAME = "/clinic-directory";
 const PAGE_SIZE = 12;
 
 const SORT_OPTIONS = [
@@ -29,7 +29,7 @@ const SORT_OPTIONS = [
 ];
 
 
-export interface PartnersListingData {
+export interface ClinicDirectoryListingData {
   clinics: Clinic[];
   options: {
     countries: string[];
@@ -46,17 +46,17 @@ export interface PartnersListingData {
  * applied here instead of by a server render per query string. See
  * app/store/store-listing.tsx for the reasoning.
  */
-export function PartnersListing(data: PartnersListingData) {
+export function ClinicDirectoryListing(data: ClinicDirectoryListingData) {
   const params = useRawSearchParams();
-  return <PartnersResults {...data} params={params} />;
+  return <ClinicDirectoryResults {...data} params={params} />;
 }
 
 /** The listing for a given set of params — empty params is the prerendered fallback. */
-export function PartnersResults({
+export function ClinicDirectoryResults({
   clinics,
   options,
   params,
-}: PartnersListingData & { params: RawSearchParams }) {
+}: ClinicDirectoryListingData & { params: RawSearchParams }) {
   const search = readParam(params, "search");
   const country = readParam(params, "country");
   const specialty = readParam(params, "specialty");
@@ -178,12 +178,6 @@ export function PartnersResults({
           }
         />
       )}
-
-      <MedicalDisclaimer variant="card" className="mt-12 max-w-3xl">
-        Our partners are featured for their commitment to education. We do not
-        rank, rate or recommend clinics — choosing where to have treatment is
-        a decision for you and your healthcare team.
-      </MedicalDisclaimer>
     </Container>
   );
 }

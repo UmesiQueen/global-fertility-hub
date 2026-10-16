@@ -30,7 +30,7 @@ const PREVIEW_ROUTES = {
   product: "/store",
   story: "/stories",
   resource: "/collections",
-  clinic: "/educational-partners",
+  clinic: "/clinic-directory",
   event: "/events",
 } as const;
 

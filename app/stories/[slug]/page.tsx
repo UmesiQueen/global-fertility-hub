@@ -245,7 +245,7 @@ export default async function StoryDetailPage({
         title="Clinic Directory"
         description="Partners whose educational focus covers these topics. We don't rank or recommend clinics."
         count={relatedClinics.length}
-        action={{ label: "Browse All Clinics", href: "/educational-partners" }}
+        action={{ label: "Browse All Clinics", href: "/clinic-directory" }}
       >
         {relatedClinics.map((item) => (
           <li key={item.id} className="flex">

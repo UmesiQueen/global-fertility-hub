@@ -23,7 +23,7 @@ https://global-fertility-hub.vercel.app/api/preview?secret=YOUR_SECRET&type=prod
 | `product`  | Product  | `/store/{slug}`              |
 | `story`    | Story    | `/stories/{slug}`            |
 | `resource` | Resource | `/collections/{slug}`          |
-| `clinic`   | Clinic   | `/educational-partners/{slug}` |
+| `clinic`   | Clinic   | `/clinic-directory/{slug}` |
 | `event`    | Event    | `/events/{slug}`             |
 
 The doc's template is `?secret=…&slug={slug}` because its example site has one

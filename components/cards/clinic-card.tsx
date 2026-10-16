@@ -40,7 +40,7 @@ export function ClinicCard({
       <div className="flex flex-1 flex-col p-4">
         <h3 className="font-heading text-base leading-snug font-semibold text-foreground">
           <Link
-            href={`/educational-partners/${clinic.slug}`}
+            href={`/clinic-directory/${clinic.slug}`}
             className="rounded-sm after:absolute after:inset-0 after:content-['']"
           >
             {clinic.name}

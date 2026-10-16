@@ -88,7 +88,7 @@ const FEATURES: FeatureCardProps[] = [
     icon: Building2,
     title: "Clinic Directory",
     description: "Discover clinics that share our commitment to best practices.",
-    href: "/educational-partners",
+    href: "/clinic-directory",
     linkLabel: "Browse Clinics",
   },
   {

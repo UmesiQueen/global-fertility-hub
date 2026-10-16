@@ -374,7 +374,7 @@ export default async function EventDetailPage({
           count={relatedClinics.length}
           action={{
             label: "Browse All Clinics",
-            href: "/educational-partners",
+            href: "/clinic-directory",
           }}
         >
           {relatedClinics.map((item) => (

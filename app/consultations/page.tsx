@@ -1,8 +1,8 @@
 import { Heart, Lock, Mail, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
-import { ConsultationBookingForm } from "@/components/forms/consultation-booking-form";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { Container } from "@/components/layout/container";
+import { ConsultationBooking } from "@/components/sections/consultation-booking";
 import { ButtonLink } from "@/components/shared/button-link";
 import { EntityImage } from "@/components/shared/entity-image";
 import { JsonLd } from "@/components/shared/json-ld";
@@ -10,7 +10,6 @@ import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
 import { ScriptAccent } from "@/components/shared/script-accent";
 import { heroFadeLeft, heroFadeTopBottom } from "@/lib/hero-fade";
 import {
-  getAvailability,
   getConsultationFaqs,
   getConsultationTypes,
 } from "@/lib/repositories/consultations";
@@ -45,9 +44,8 @@ const HOW_WE_HELP = [
 ];
 
 export default async function ConsultationsPage() {
-  const [consultationTypes, availability, faqs] = await Promise.all([
+  const [consultationTypes, faqs] = await Promise.all([
     getConsultationTypes(),
-    getAvailability(),
     getConsultationFaqs(),
   ]);
 
@@ -145,29 +143,33 @@ export default async function ConsultationsPage() {
               ))}
             </ul>
 
-            <div className="mt-6 rounded-2xl bg-accent/50 p-4">
-              <Heart
+            <div className="mt-6 flex items-center gap-3 rounded-2xl bg-script/8 p-5">
+              <span
                 aria-hidden="true"
-                className="size-5 text-script"
-              />
-              <p className="mt-2 text-sm leading-relaxed text-foreground">
-                Every journey is unique.
-                <br />
-                Every session is personalised.
-              </p>
+                className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-script/12 text-script"
+              >
+                <Heart className="size-5" />
+              </span>
+              <div>
+                <h2 className="font-heading text-sm font-semibold text-foreground">
+                  100% Private &amp; Confidential
+                </h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Your story is safe with us.
+                </p>
+              </div>
             </div>
           </aside>
 
           <div>
-            <ConsultationBookingForm
+            <ConsultationBooking
               consultationTypes={consultationTypes}
-              availability={availability}
-              practitionerTimezone={siteConfig.practitionerTimezone}
+              bookingUrl={siteConfig.bookingUrl}
             />
           </div>
         </div>
 
-        <div className="mt-14 grid gap-5 md:grid-cols-2">
+        <div className="mt-14 max-w-3xl">
           <div className="flex items-center gap-4 rounded-2xl bg-surface p-5">
             <span
               aria-hidden="true"
@@ -183,50 +185,39 @@ export default async function ConsultationsPage() {
                 Send us a message and we&apos;ll help you work it out.
               </p>
             </div>
-            <ButtonLink href="/contact?topic=consultation" variant="outline" size="sm">
+            <ButtonLink
+              href="/contact?topic=consultation"
+              variant="outline"
+              size="sm"
+            >
               Send a Message
             </ButtonLink>
           </div>
-
-          <div className="flex items-center gap-4 rounded-2xl bg-script/8 p-5">
-            <span
-              aria-hidden="true"
-              className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-script/12 text-script"
-            >
-              <Heart className="size-5" />
-            </span>
-            <div>
-              <h2 className="font-heading text-sm font-semibold text-foreground">
-                100% Private &amp; Confidential
-              </h2>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                Your story is safe with us.
-              </p>
-            </div>
-          </div>
         </div>
 
-        <section aria-labelledby="consultation-faqs" className="mt-16">
-          <h2
-            id="consultation-faqs"
-            className="font-heading text-xl font-bold text-foreground md:text-2xl"
-          >
-            Questions People Often Ask
-          </h2>
+        {faqs.length > 0 && (
+          <section aria-labelledby="consultation-faqs" className="mt-16">
+            <h2
+              id="consultation-faqs"
+              className="font-heading text-xl font-bold text-foreground md:text-2xl"
+            >
+              Questions People Often Ask
+            </h2>
 
-          <dl className="mt-6 grid gap-x-10 gap-y-6 md:grid-cols-2">
-            {faqs.map((faq) => (
-              <div key={faq.question}>
-                <dt className="font-heading text-sm font-semibold text-foreground">
-                  {faq.question}
-                </dt>
-                <dd className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                  {faq.answer}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </section>
+            <dl className="mt-6 grid gap-x-10 gap-y-6 md:grid-cols-2">
+              {faqs.map((faq) => (
+                <div key={faq.question}>
+                  <dt className="font-heading text-sm font-semibold text-foreground">
+                    {faq.question}
+                  </dt>
+                  <dd className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                    {faq.answer}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
 
         <MedicalDisclaimer variant="card" className="mt-12 max-w-3xl">
           Sessions with Henry &amp; Precious are support and advocacy, not

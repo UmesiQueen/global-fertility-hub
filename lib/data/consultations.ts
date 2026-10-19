@@ -24,7 +24,7 @@ export const consultationTypes: ConsultationType[] = [
     name: "One-on-One Session",
     description:
       "A private conversation with either Henry or Precious about wherever you are in your journey.",
-    audience: "one-on-one",
+    audience: "oneOnOne",
     durationMinutes: 60,
     price: 150,
     currency: "AUD",
@@ -44,7 +44,7 @@ export const consultationTypes: ConsultationType[] = [
     name: "Follow-Up Session",
     description:
       "A shorter session for people we've already spoken with, to pick up where we left off.",
-    audience: "follow-up",
+    audience: "followUp",
     durationMinutes: 45,
     price: 120,
     currency: "AUD",

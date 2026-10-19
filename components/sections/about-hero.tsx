@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { Container } from "@/components/layout/container";
 import { EntityImage } from "@/components/shared/entity-image";
 import { ScriptAccent } from "@/components/shared/script-accent";
@@ -28,14 +27,6 @@ export function AboutHero() {
       </div>
 
       <Container className="relative z-10 pt-8 pb-12 md:pb-16">
-        <Breadcrumbs
-          crumbs={[
-            { label: "Home", href: "/" },
-            { label: "About", href: "/about" },
-            { label: "Why We Started This Journey" },
-          ]}
-        />
-
         <div className="mt-6 lg:max-w-[45%]">
           <h1 className="font-heading text-3xl leading-tight font-bold tracking-tight text-foreground md:text-4xl lg:text-[2.75rem]">
             Why We Started

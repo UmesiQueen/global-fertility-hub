@@ -5,7 +5,7 @@
  * Any copy rendered from this type must preserve that framing.
  */
 
-export type ConsultationAudience = "one-on-one" | "couple" | "follow-up";
+export type ConsultationAudience = "oneOnOne" | "couple" | "followUp";
 
 export interface ConsultationType {
   id: string;

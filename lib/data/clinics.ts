@@ -75,7 +75,7 @@ export const clinics: Clinic[] = [
     countryCode: "AU",
     city: "Perth",
     treatments: ["ivf", "iui", "icsi", "egg-freezing"],
-    specialties: ["PCOS", "Ovulation induction"],
+    specialties: ["PMOS", "Ovulation induction"],
     languages: ["English", "Italian"],
     services: [
       "Fertility assessment",
@@ -96,7 +96,7 @@ export const clinics: Clinic[] = [
       },
     ],
     website: "https://example.com/southern-cross",
-    tags: ["pcos", "iui", "ivf"],
+    tags: ["pmos", "iui", "ivf"],
     joinedAt: "2026-05-22",
   },
   {
@@ -262,7 +262,7 @@ export const clinics: Clinic[] = [
     countryCode: "CA",
     city: "Vancouver",
     treatments: ["ivf", "iui", "egg-freezing", "pgt-a"],
-    specialties: ["PCOS", "Ovulation induction"],
+    specialties: ["PMOS", "Ovulation induction"],
     languages: ["English", "Mandarin", "Punjabi"],
     services: ["Fertility assessment", "Ovulation induction", "IUI", "IVF"],
     team: [{ name: "Dr Hana Kobayashi", role: "Fertility Specialist" }],
@@ -274,7 +274,7 @@ export const clinics: Clinic[] = [
       },
     ],
     website: "https://example.com/west-coast",
-    tags: ["pcos", "ivf"],
+    tags: ["pmos", "ivf"],
     joinedAt: "2026-03-20",
   },
   {

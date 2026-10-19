@@ -160,7 +160,7 @@ Your clinic will tell you when to test. Testing earlier than that date tends to 
       "Understand your fertility test results and what they do — and don't — tell you.",
     format: "article",
     category: "tests-diagnosis",
-    tags: ["ivf", "pcos"],
+    tags: ["ivf", "pmos"],
     author: { name: "Dr Amara Ellison", role: "Fertility Educator" },
     readingTime: 8,
     publishedAt: "2026-05-14",
@@ -180,7 +180,7 @@ Follicle-stimulating hormone tells the ovaries to mature follicles. Measured ear
 
 ## LH
 
-Luteinising hormone triggers ovulation. It is the hormone that ovulation predictor kits detect. A raised LH-to-FSH ratio is one of the patterns associated with PCOS.
+Luteinising hormone triggers ovulation. It is the hormone that ovulation predictor kits detect. A raised LH-to-FSH ratio is one of the patterns associated with PMOS.
 
 ## The important caveat
 
@@ -285,7 +285,7 @@ If you are struggling with thoughts of harming yourself, please talk to your doc
       "A guide to understanding common ultrasound findings during fertility treatment.",
     format: "guide",
     category: "tests-diagnosis",
-    tags: ["ivf", "pcos"],
+    tags: ["ivf", "pmos"],
     author: { name: "Dr Amara Ellison", role: "Fertility Educator" },
     readingTime: 8,
     publishedAt: "2026-04-15",
@@ -362,24 +362,24 @@ Designed to be printed and kept somewhere visible.`,
   },
   {
     id: "res-013",
-    slug: "pcos-and-fertility-what-to-know",
-    title: "PCOS and Fertility: What to Know",
+    slug: "pmos-and-fertility-what-to-know",
+    title: "PMOS and Fertility: What to Know",
     excerpt:
       "How polycystic ovary syndrome affects fertility, and the options commonly discussed.",
     format: "guide",
     category: "fertility-conditions",
-    tags: ["pcos", "nutrition"],
+    tags: ["pmos", "nutrition"],
     author: { name: "Dr Helena Voss", role: "Fertility Educator" },
     readingTime: 11,
     publishedAt: "2026-03-18",
     coverImage: img("A person talking with a clinician in a consulting room."),
-    body: `PCOS is one of the most common causes of irregular ovulation, and one of the most variable in how it presents.
+    body: `PMOS is one of the most common causes of irregular ovulation, and one of the most variable in how it presents.
 
-Diagnosis generally rests on a combination of irregular cycles, signs of raised androgens, and ovarian appearance on ultrasound. Not everyone with PCOS has all three, which is part of why diagnosis is so often delayed.
+Diagnosis generally rests on a combination of irregular cycles, signs of raised androgens, and ovarian appearance on ultrasound. Not everyone with PMOS has all three, which is part of why diagnosis is so often delayed.
 
-Because ovulation is irregular rather than absent, many people with PCOS conceive without intervention. Where support is needed, ovulation induction is commonly the first step discussed, with IVF considered later if needed.
+Because ovulation is irregular rather than absent, many people with PMOS conceive without intervention. Where support is needed, ovulation induction is commonly the first step discussed, with IVF considered later if needed.
 
-People with PCOS often respond strongly to stimulation, which is a benefit and a risk at once — clinics usually adjust protocols accordingly.
+People with PMOS often respond strongly to stimulation, which is a benefit and a risk at once — clinics usually adjust protocols accordingly.
 
 Insulin resistance is frequently part of the picture, and management of it is often discussed alongside fertility treatment rather than separately.`,
   },

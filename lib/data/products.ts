@@ -165,7 +165,7 @@ Henry wrote most of this one. It's about what actually helps, what doesn't, and 
     source: "affiliate",
     format: "physical",
     category: "planning-and-tracking",
-    tags: ["ivf", "pcos"],
+    tags: ["ivf", "pmos"],
     externalUrl: "https://example.com/lumen-cycle",
     vendor: "Lumen Cycle",
     coverImage: img("Lumen Cycle app on a phone screen."),

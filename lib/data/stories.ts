@@ -129,10 +129,10 @@ We went on to have ICSI, and we have a son. What I'd say to any man reading this
   },
   {
     id: "sto-004",
-    slug: "living-with-pcos-and-trying-to-conceive",
-    title: "Living with PCOS and Trying to Conceive",
-    category: "PCOS",
-    tags: ["pcos", "nutrition", "success-stories"],
+    slug: "living-with-pmos-and-trying-to-conceive",
+    title: "Living with PMOS and Trying to Conceive",
+    category: "PMOS",
+    tags: ["pmos", "nutrition", "success-stories"],
     coverImage: img("A woman sitting on a sofa with a notebook."),
     preview:
       "Eleven years to a diagnosis, and what finally helped once I had one.",
@@ -140,7 +140,7 @@ We went on to have ICSI, and we have a son. What I'd say to any man reading this
     publishedAt: "2026-05-18",
     readingTime: 7,
     status: "approved",
-    body: `I was seventeen when my periods stopped being predictable. I was twenty-eight when someone finally said the word "PCOS".
+    body: `I was seventeen when my periods stopped being predictable. I was twenty-eight when someone finally said the word "PMOS".
 
 In between there were eleven years of being told to lose weight, that irregular cycles were normal, and once, memorably, that I was probably just stressed.
 
@@ -152,7 +152,7 @@ We started with ovulation induction. It worked on the third cycle.
 
 ## What I wish I'd known sooner
 
-That PCOS is enormously variable, and most of what I read early on described someone whose version looked nothing like mine.
+That PMOS is enormously variable, and most of what I read early on described someone whose version looked nothing like mine.
 
 That "just lose weight" is not a treatment plan, and you're allowed to ask what else is on the table.
 

@@ -4,11 +4,14 @@ import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
+import { VideoEmbed } from "@/components/shared/video-embed";
 import {
   isAllowedEmbed,
   isHygraphAsset,
   rehypeCitations,
+  rehypeVideoMarker,
   sanitizeSchema,
+  VIDEO_SLOT_TAG,
 } from "@/lib/markdown";
 import { cn } from "@/lib/utils";
 
@@ -184,18 +187,36 @@ const components: Components = {
 export function Prose({
   content,
   className,
+  video,
 }: {
   content: string;
   className?: string;
+  /**
+   * The resource's video. It plays where the body has a `[🎬 VIDEO — …]`
+   * line; without a video, that line is simply dropped.
+   */
+  video?: { url: string; meta?: string };
 }) {
+  // A custom tag, so it sits outside react-markdown's intrinsic-element typing.
+  const withVideo = {
+    ...components,
+    [VIDEO_SLOT_TAG]: ({ title }: { title?: string }) =>
+      video ? <VideoEmbed url={video.url} title={title} meta={video.meta} /> : null,
+  } as Components;
+
   return (
     <div className={cn("max-w-[68ch]", className)}>
       <Markdown
         // remark-breaks: in Hygraph a single newline is a deliberate
         // Shift+Enter line break, never a hard wrap.
         remarkPlugins={[remarkGfm, remarkBreaks]}
-        rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema], rehypeCitations]}
-        components={components}
+        rehypePlugins={[
+          rehypeRaw,
+          [rehypeSanitize, sanitizeSchema],
+          rehypeVideoMarker,
+          rehypeCitations,
+        ]}
+        components={withVideo}
       >
         {content}
       </Markdown>

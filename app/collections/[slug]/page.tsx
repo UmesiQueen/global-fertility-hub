@@ -14,6 +14,7 @@ import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
 import { Pill } from "@/components/shared/pill";
 import { Prose } from "@/components/shared/prose";
 import { RelatedGrid } from "@/components/shared/related-grid";
+import { VideoEmbed } from "@/components/shared/video-embed";
 import { formatDate, formatReadingTime, titleCase } from "@/lib/format";
 import { markdownToPlainText } from "@/lib/markdown";
 import {
@@ -24,6 +25,7 @@ import {
   getResourceBySlug,
 } from "@/lib/repositories/resources";
 import { breadcrumbJsonLd, resourceJsonLd } from "@/lib/seo";
+import { hasVideoMarker } from "@/lib/video";
 
 type Params = { slug: string };
 
@@ -79,6 +81,17 @@ export default async function ResourceDetailPage({
     { label: "Collections", href: "/collections" },
     { label: resource.title },
   ];
+
+  const video = resource.videoUrl
+    ? {
+        url: resource.videoUrl,
+        // "1 min watch" — only meaningful when the resource *is* the video.
+        meta:
+          resource.format === "video" || resource.format === "webinar"
+            ? formatReadingTime(resource.readingTime, resource.format)
+            : undefined,
+      }
+    : undefined;
 
   return (
     <>
@@ -137,7 +150,14 @@ export default async function ResourceDetailPage({
             />
           </div>
 
-          <Prose content={resource.body} className="mt-10" />
+          <Prose content={resource.body} className="mt-10" video={video} />
+
+          {/* No [🎬 VIDEO] line in the body: the video follows the text. */}
+          {video && !hasVideoMarker(resource.body) ? (
+            <div className="max-w-[68ch]">
+              <VideoEmbed url={video.url} title={resource.title} meta={video.meta} />
+            </div>
+          ) : null}
 
           {resource.downloadUrl ? (
             <div className="mt-10 max-w-[68ch] rounded-2xl border border-border bg-surface p-5">

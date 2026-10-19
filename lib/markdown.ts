@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { SKIP, visit } from "unist-util-visit";
+import { VIDEO_MARKER } from "@/lib/video";
 
 /**
  * Article and story bodies arrive from Hygraph as markdown and are rendered by
@@ -14,6 +15,7 @@ import { SKIP, visit } from "unist-util-visit";
  * - the sanitize schema — which raw HTML from the editor is allowed through
  * - the embed allow-lists — which iframes and videos may play
  * - the citations plugin — `[3]` links to the reference that starts with `[3]`
+ * - the video marker plugin — `[🎬 VIDEO — …]` becomes the resource's player
  * - plain-text extraction for meta descriptions
  *
  * Nothing is rendered with `dangerouslySetInnerHTML`: react-markdown builds
@@ -250,6 +252,46 @@ export function rehypeCitations() {
         ),
       );
     }
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* Video marker                                                                */
+/* -------------------------------------------------------------------------- */
+
+/** Tag the marker paragraph becomes; Prose maps it to the video player. */
+export const VIDEO_SLOT_TAG = "video-slot";
+
+function plainText(node: Element): string {
+  let out = "";
+  visit(node, "text", (t) => {
+    out += t.value;
+  });
+  return out;
+}
+
+/**
+ * Swaps the first `[🎬 VIDEO — …]` paragraph for a `<video-slot>` element,
+ * which Prose renders as the resource's video. Any further markers are
+ * removed, so a stray copy never shows as text. Runs after sanitizing — the
+ * slot is ours, not the editor's.
+ */
+export function rehypeVideoMarker() {
+  return (tree: HastRoot) => {
+    let placed = false;
+    visit(tree, "element", (node, index, parent) => {
+      if (node.tagName !== "p" || !parent || index === undefined) return;
+      const match = plainText(node).match(VIDEO_MARKER);
+      if (!match) return;
+
+      if (placed) {
+        parent.children.splice(index, 1);
+        return [SKIP, index];
+      }
+      placed = true;
+      parent.children[index] = element(VIDEO_SLOT_TAG, { title: match[1] || undefined }, []);
+      return SKIP;
+    });
   };
 }
 

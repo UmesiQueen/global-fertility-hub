@@ -1,6 +1,5 @@
 import { Heart, Lock, Mail, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
-import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { Container } from "@/components/layout/container";
 import { ConsultationBooking } from "@/components/sections/consultation-booking";
 import { ButtonLink } from "@/components/shared/button-link";
@@ -71,7 +70,6 @@ export default async function ConsultationsPage() {
         </div>
 
         <Container className="relative z-10 pt-8 pb-12 md:pb-14">
-          <Breadcrumbs crumbs={CRUMBS} />
 
           <div className="mt-6 lg:max-w-[48%]">
             <h1 className="font-heading text-3xl leading-tight font-bold tracking-tight text-foreground md:text-4xl">

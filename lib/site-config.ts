@@ -29,7 +29,7 @@ export const mainNav: NavLink[] = [
   { label: "Community Stories", href: "/stories" },
   { label: "Events", href: "/events" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 /** Secondary routes reachable from the footer and in-page CTAs. */
@@ -51,7 +51,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
       { label: "Meet Henry & Precious", href: "/about" },
       { label: "Schedule a Call", href: "/consultations" },
       { label: "Join the Community", href: "/join" },
-      { label: "Contact", href: "/contact" },
+      { label: "Contact Us", href: "/contact" },
     ],
   },
   {

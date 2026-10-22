@@ -13,12 +13,12 @@ export async function FeaturedResources() {
   if (!resources.length) return null;
 
   return (
-    <section aria-labelledby="featured-resources" className="py-16 md:py-20">
+    <section aria-labelledby="featured-collections" className="py-16 md:py-20">
       <Container>
         <SectionHeader
-          id="featured-resources"
-          title="Featured Resources"
-          description="Trusted education to help you learn, understand and make informed decisions."
+          id="featured-collections"
+          title="Featured Collections"
+          description="Curated materials to help you learn, understand and make informed decisions."
           action={{ label: "View All Collections", href: "/collections" }}
         />
 

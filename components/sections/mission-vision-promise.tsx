@@ -33,7 +33,7 @@ export function MissionVisionPromise() {
                 Our Mission
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                To provide trusted fertility education, real stories and global
+                To provide global community, real stories and 
                 support so you can make informed decisions and feel empowered
                 through every step of your journey.
               </p>

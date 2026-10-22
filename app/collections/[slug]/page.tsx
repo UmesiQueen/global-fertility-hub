@@ -103,7 +103,7 @@ export default async function ResourceDetailPage({
         </Container>
 
         <Container className="pb-10">
-          <div className="max-w-[68ch]">
+          <div className="max-w-4xl">
             <div className="flex flex-wrap items-center gap-2">
               <Pill>{titleCase(resource.format)}</Pill>
               <Pill tone="muted">
@@ -142,10 +142,10 @@ export default async function ResourceDetailPage({
             </div>
           </div>
 
-          <div className="relative mt-8 aspect-content w-full overflow-hidden rounded-3xl">
+          <div className="relative mt-8 aspect-content w-full max-w-4xl overflow-hidden rounded-3xl border border-border bg-muted">
             <EntityImage
               image={resource.coverImage}
-              sizes="(max-width: 1024px) 100vw, 1200px"
+              sizes="(max-width: 1024px) 100vw, 896px"
               priority
             />
           </div>
@@ -154,13 +154,13 @@ export default async function ResourceDetailPage({
 
           {/* No [🎬 VIDEO] line in the body: the video follows the text. */}
           {video && !hasVideoMarker(resource.body) ? (
-            <div className="max-w-[68ch]">
+            <div className="max-w-4xl">
               <VideoEmbed url={video.url} title={resource.title} meta={video.meta} />
             </div>
           ) : null}
 
           {resource.downloadUrl ? (
-            <div className="mt-10 max-w-[68ch] rounded-2xl border border-border bg-surface p-5">
+            <div className="mt-10 max-w-4xl rounded-2xl border border-border bg-surface p-5">
               <h2 className="font-heading text-base font-semibold text-foreground">
                 Download this resource
               </h2>
@@ -176,13 +176,15 @@ export default async function ResourceDetailPage({
 
           <MedicalDisclaimer variant="card" className="mt-10 max-w-[68ch]" />
 
-          <Link
-            href="/collections"
-            className="mt-10 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" />
-            Back to Collections
-          </Link>
+          <div className="mt-10 max-w-4xl">
+            <Link
+              href="/collections"
+              className="inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
+            >
+              <ArrowLeft aria-hidden="true" className="size-4" />
+              Back to Collections
+            </Link>
+          </div>
         </Container>
       </article>
 

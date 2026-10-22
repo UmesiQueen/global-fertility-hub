@@ -122,7 +122,7 @@ export function ContactForm({
                 <SelectTrigger
                   id="contact-topic"
                   aria-invalid={fieldState.invalid}
-                  className="w-full"
+                  className="w-full border border-primary/30"
                 >
                   {/* Base UI renders the raw value, so map it to its label. */}
                   <SelectValue>
@@ -155,6 +155,7 @@ export function ContactForm({
                 id="contact-name"
                 autoComplete="name"
                 aria-invalid={fieldState.invalid}
+                    className="border border-primary/30"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -173,6 +174,7 @@ export function ContactForm({
                 type="email"
                 autoComplete="email"
                 aria-invalid={fieldState.invalid}
+              className="border border-primary/30"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -194,6 +196,7 @@ export function ContactForm({
                 {...field}
                 id="contact-subject"
                 aria-invalid={fieldState.invalid}
+                className="border border-primary/30"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -213,7 +216,7 @@ export function ContactForm({
                 maxLength={MAX_MESSAGE}
                 placeholder="Tell us as much or as little as you like."
                 aria-invalid={fieldState.invalid}
-                className="min-h-40 resize-y"
+                className="min-h-40 resize-y rounded-2xl border border-primary/30"
               />
               <FieldDescription>
                 {/* Only counts up once they're near the limit — a live counter

@@ -106,7 +106,7 @@ export default async function StoryDetailPage({
         </Container>
 
         <Container className="pb-10">
-          <div className="max-w-[68ch]">
+          <div className="max-w-4xl">
             <Pill>{story.category}</Pill>
 
             <h1 className="mt-4 font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
@@ -148,10 +148,10 @@ export default async function StoryDetailPage({
             </div>
           </div>
 
-          <div className="relative mt-8 aspect-content w-full overflow-hidden rounded-3xl">
+          <div className="relative mt-8 aspect-content w-full max-w-4xl overflow-hidden rounded-3xl border border-border bg-muted">
             <EntityImage
               image={story.coverImage}
-              sizes="(max-width: 1024px) 100vw, 1200px"
+              sizes="(max-width: 1024px) 100vw, 896px"
               priority
             />
           </div>
@@ -187,13 +187,15 @@ export default async function StoryDetailPage({
             </ButtonLink>
           </div>
 
-          <Link
-            href="/stories"
-            className="mt-10 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" />
-            Back to Stories
-          </Link>
+          <div className="mt-10 max-w-4xl">
+            <Link
+              href="/stories"
+              className="inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
+            >
+              <ArrowLeft aria-hidden="true" className="size-4" />
+              Back to Stories
+            </Link>
+          </div>
         </Container>
       </article>
 

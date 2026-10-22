@@ -86,50 +86,54 @@ export default async function ProductDetailPage({
       <Container className="pb-12">
         <div className="grid gap-10 lg:grid-cols-[1fr_20rem] lg:gap-14">
           <div>
-            <div className="relative aspect-content w-full overflow-hidden rounded-3xl">
+            <div className="relative aspect-content w-full max-w-4xl overflow-hidden rounded-3xl border border-border bg-muted">
               <EntityImage
                 image={product.coverImage}
-                sizes="(max-width: 1024px) 100vw, 700px"
+                sizes="(max-width: 1024px) 100vw, 896px"
                 priority
               />
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-2">
-              <Pill>{titleCase(product.format)}</Pill>
-              <Pill tone="muted">
-                {titleCase(
-                  product.category.replace(/-and-/g, " & ").replace(/-/g, " "),
-                )}
-              </Pill>
+            <div className="max-w-4xl">
+              <div className="mt-8 flex flex-wrap items-center gap-2">
+                <Pill>{titleCase(product.format)}</Pill>
+                <Pill tone="muted">
+                  {titleCase(
+                    product.category
+                      .replace(/-and-/g, " & ")
+                      .replace(/-/g, " "),
+                  )}
+                </Pill>
+              </div>
+
+              <p className="mt-4 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                {isAffiliate ? `By ${product.vendor}` : "By Henry & Precious"}
+              </p>
+
+              <h1 className="mt-1 font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                {product.name}
+              </h1>
+
+              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+                {product.excerpt}
+              </p>
+
+              <Prose content={product.body} className="mt-8" />
+
+              <MedicalDisclaimer variant="card" className="mt-10 max-w-[68ch]">
+                This isn&apos;t a treatment and it won&apos;t change your
+                chances of conceiving. Please talk to your healthcare team
+                before starting anything new.
+              </MedicalDisclaimer>
+
+              <Link
+                href="/store"
+                className="mt-10 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
+              >
+                <ArrowLeft aria-hidden="true" className="size-4" />
+                Back to the Store
+              </Link>
             </div>
-
-            <p className="mt-4 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              {isAffiliate ? `By ${product.vendor}` : "By Henry & Precious"}
-            </p>
-
-            <h1 className="mt-1 font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              {product.name}
-            </h1>
-
-            <p className="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted-foreground">
-              {product.excerpt}
-            </p>
-
-            <Prose content={product.body} className="mt-8" />
-
-            <MedicalDisclaimer variant="card" className="mt-10 max-w-[68ch]">
-              This isn&apos;t a treatment and it won&apos;t change your chances
-              of conceiving. Please talk to your healthcare team before starting
-              anything new.
-            </MedicalDisclaimer>
-
-            <Link
-              href="/store"
-              className="mt-10 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
-            >
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              Back to the Store
-            </Link>
           </div>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">

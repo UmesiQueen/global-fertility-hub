@@ -15,7 +15,6 @@ export async function FeaturedStories() {
         <SectionHeader
           id="featured-stories"
           title="Community Stories"
-          scriptLine="You are not alone."
           description="Real journeys, shared to inspire, support and remind you that others understand."
           action={{ label: "Read All Stories", href: "/stories" }}
         />

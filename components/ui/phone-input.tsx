@@ -109,6 +109,7 @@ export interface PhoneInputProps {
   invalid?: boolean;
   className?: string;
   selectClassName?: string;
+  inputClassName?: string;
 }
 
 export function PhoneInput({
@@ -122,6 +123,7 @@ export function PhoneInput({
   invalid,
   className,
   selectClassName,
+  inputClassName,
 }: PhoneInputProps) {
   const countrySelect = useCallback(
     (props: {
@@ -152,6 +154,7 @@ export function PhoneInput({
       aria-invalid={invalid}
       className={cn("flex gap-2", className)}
       inputComponent={PhoneNumberInput}
+      numberInputProps={{ className: inputClassName }}
       countrySelectComponent={countrySelect}
     />
   );

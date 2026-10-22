@@ -106,10 +106,10 @@ export default async function EventDetailPage({
       <Container className="pb-10">
         <div className="grid gap-10 lg:grid-cols-[1fr_20rem]">
           <div>
-            <div className="relative aspect-content w-full overflow-hidden rounded-3xl">
+            <div className="relative mx-auto aspect-content w-full max-w-4xl overflow-hidden rounded-3xl border border-border bg-muted">
               <EntityImage
                 image={event.image}
-                sizes="(max-width: 1024px) 100vw, 800px"
+                sizes="(max-width: 1024px) 100vw, 896px"
                 priority
               />
               {hasReplay ? (
@@ -122,139 +122,144 @@ export default async function EventDetailPage({
               ) : null}
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-2">
-              <Pill tone={hasReplay ? "muted" : "script"}>
-                {hasReplay ? "Replay Available" : titleCase(event.type)}
-              </Pill>
-              {isPast && !hasReplay ? (
-                <Pill tone="muted">Past Event</Pill>
-              ) : null}
-            </div>
+            <div className="max-w-4xl">
+              <div className="mt-8 flex flex-wrap items-center gap-2">
+                <Pill tone={hasReplay ? "muted" : "script"}>
+                  {hasReplay ? "Replay Available" : titleCase(event.type)}
+                </Pill>
+                {isPast && !hasReplay ? (
+                  <Pill tone="muted">Past Event</Pill>
+                ) : null}
+              </div>
 
-            <h1 className="mt-4 font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              {event.title}
-            </h1>
+              <h1 className="mt-4 font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                {event.title}
+              </h1>
 
-            <p className="mt-5 max-w-[68ch] text-base leading-relaxed text-muted-foreground">
-              {event.description}
-            </p>
+              <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+                {event.description}
+              </p>
 
-            {event.speakers.length ? (
-              <section aria-labelledby="event-speakers" className="mt-10">
-                <h2
-                  id="event-speakers"
-                  className="font-heading text-lg font-bold text-foreground"
-                >
-                  {event.speakers.length > 1 ? "Speakers" : "Speaker"}
-                </h2>
-                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {event.speakers.map((speaker) => (
-                    <li
-                      key={speaker.name}
-                      className="flex items-center gap-3 rounded-xl border border-border/70 bg-card p-3.5"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent text-primary"
+              {event.speakers.length ? (
+                <section aria-labelledby="event-speakers" className="mt-10">
+                  <h2
+                    id="event-speakers"
+                    className="font-heading text-lg font-bold text-foreground"
+                  >
+                    {event.speakers.length > 1 ? "Speakers" : "Speaker"}
+                  </h2>
+                  <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {event.speakers.map((speaker) => (
+                      <li
+                        key={speaker.name}
+                        className="flex items-center gap-3 rounded-xl border border-border/70 bg-card p-3.5"
                       >
-                        <Mic className="size-4" />
-                      </span>
-                      <span>
-                        <span className="block text-sm font-medium text-foreground">
-                          {speaker.name}
+                        <span
+                          aria-hidden="true"
+                          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent text-primary"
+                        >
+                          <Mic className="size-4" />
                         </span>
-                        <span className="block text-xs text-muted-foreground">
-                          {speaker.role}
-                          {speaker.organisation
-                            ? ` · ${speaker.organisation}`
-                            : ""}
-                        </span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-
-            {event.transcript ? (
-              <section aria-labelledby="event-transcript" className="mt-10">
-                <h2
-                  id="event-transcript"
-                  className="inline-flex items-center gap-2 font-heading text-lg font-bold text-foreground"
-                >
-                  <FileText aria-hidden="true" className="size-4" />
-                  Transcript
-                </h2>
-                <p className="mt-3 max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
-                  {event.transcript}
-                </p>
-              </section>
-            ) : null}
-
-            {event.downloads?.length || event.slidesUrl ? (
-              <section aria-labelledby="event-downloads" className="mt-10">
-                <h2
-                  id="event-downloads"
-                  className="font-heading text-lg font-bold text-foreground"
-                >
-                  Downloads
-                </h2>
-                <ul className="mt-4 flex flex-col gap-2">
-                  {event.slidesUrl ? (
-                    <li>
-                      <a
-                        href={event.slidesUrl}
-                        className="flex items-center gap-3 rounded-xl border border-border/70 bg-card px-4 py-3 text-sm text-foreground transition-colors hover:border-primary/40"
-                      >
-                        <Presentation
-                          aria-hidden="true"
-                          className="size-4 shrink-0 text-primary"
-                        />
-                        <span className="flex-1">Slides</span>
-                        <Download
-                          aria-hidden="true"
-                          className="size-4 text-muted-foreground"
-                        />
-                      </a>
-                    </li>
-                  ) : null}
-
-                  {event.downloads?.map((download) => (
-                    <li key={download.url}>
-                      <a
-                        href={download.url}
-                        className="flex items-center gap-3 rounded-xl border border-border/70 bg-card px-4 py-3 text-sm text-foreground transition-colors hover:border-primary/40"
-                      >
-                        <FileText
-                          aria-hidden="true"
-                          className="size-4 shrink-0 text-primary"
-                        />
-                        <span className="flex-1">{download.label}</span>
-                        {download.meta ? (
-                          <span className="text-xs text-muted-foreground">
-                            {download.meta}
+                        <span>
+                          <span className="block text-sm font-medium text-foreground">
+                            {speaker.name}
                           </span>
-                        ) : null}
-                        <Download
-                          aria-hidden="true"
-                          className="size-4 text-muted-foreground"
-                        />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
+                          <span className="block text-xs text-muted-foreground">
+                            {speaker.role}
+                            {speaker.organisation
+                              ? ` · ${speaker.organisation}`
+                              : ""}
+                          </span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
 
-            <MedicalDisclaimer variant="card" className="mt-10 max-w-[68ch]" />
+              {event.transcript ? (
+                <section aria-labelledby="event-transcript" className="mt-10">
+                  <h2
+                    id="event-transcript"
+                    className="inline-flex items-center gap-2 font-heading text-lg font-bold text-foreground"
+                  >
+                    <FileText aria-hidden="true" className="size-4" />
+                    Transcript
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {event.transcript}
+                  </p>
+                </section>
+              ) : null}
 
-            <Link
-              href="/events"
-              className="mt-10 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
-            >
-              <ArrowLeft aria-hidden="true" className="size-4" />
-              Back to Events
-            </Link>
+              {event.downloads?.length || event.slidesUrl ? (
+                <section aria-labelledby="event-downloads" className="mt-10">
+                  <h2
+                    id="event-downloads"
+                    className="font-heading text-lg font-bold text-foreground"
+                  >
+                    Downloads
+                  </h2>
+                  <ul className="mt-4 flex flex-col gap-2">
+                    {event.slidesUrl ? (
+                      <li>
+                        <a
+                          href={event.slidesUrl}
+                          className="flex items-center gap-3 rounded-xl border border-border/70 bg-card px-4 py-3 text-sm text-foreground transition-colors hover:border-primary/40"
+                        >
+                          <Presentation
+                            aria-hidden="true"
+                            className="size-4 shrink-0 text-primary"
+                          />
+                          <span className="flex-1">Slides</span>
+                          <Download
+                            aria-hidden="true"
+                            className="size-4 text-muted-foreground"
+                          />
+                        </a>
+                      </li>
+                    ) : null}
+
+                    {event.downloads?.map((download) => (
+                      <li key={download.url}>
+                        <a
+                          href={download.url}
+                          className="flex items-center gap-3 rounded-xl border border-border/70 bg-card px-4 py-3 text-sm text-foreground transition-colors hover:border-primary/40"
+                        >
+                          <FileText
+                            aria-hidden="true"
+                            className="size-4 shrink-0 text-primary"
+                          />
+                          <span className="flex-1">{download.label}</span>
+                          {download.meta ? (
+                            <span className="text-xs text-muted-foreground">
+                              {download.meta}
+                            </span>
+                          ) : null}
+                          <Download
+                            aria-hidden="true"
+                            className="size-4 text-muted-foreground"
+                          />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+
+              <MedicalDisclaimer
+                variant="card"
+                className="mt-10 max-w-[68ch]"
+              />
+
+              <Link
+                href="/events"
+                className="mt-10 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
+              >
+                <ArrowLeft aria-hidden="true" className="size-4" />
+                Back to Events
+              </Link>
+            </div>
           </div>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
@@ -265,36 +270,36 @@ export default async function EventDetailPage({
                     omitted until there is something to show. */}
                 {event.startsAt ? (
                   <>
-                  <div className="flex items-start gap-2.5">
-                    <CalendarDays
-                      aria-hidden="true"
-                      className="mt-0.5 size-4 shrink-0 text-primary"
-                    />
-                    <div>
-                      <dt className="text-xs text-muted-foreground">Date</dt>
-                      <dd className="font-medium text-foreground">
-                        {formatEventDate(event)}
-                      </dd>
+                    <div className="flex items-start gap-2.5">
+                      <CalendarDays
+                        aria-hidden="true"
+                        className="mt-0.5 size-4 shrink-0 text-primary"
+                      />
+                      <div>
+                        <dt className="text-xs text-muted-foreground">Date</dt>
+                        <dd className="font-medium text-foreground">
+                          {formatEventDate(event)}
+                        </dd>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-start gap-2.5">
-                    <Clock
-                      aria-hidden="true"
-                      className="mt-0.5 size-4 shrink-0 text-primary"
-                    />
-                    <div>
-                      <dt className="text-xs text-muted-foreground">Time</dt>
-                      {/* Shown in the event's own timezone — the same time the
+                    <div className="flex items-start gap-2.5">
+                      <Clock
+                        aria-hidden="true"
+                        className="mt-0.5 size-4 shrink-0 text-primary"
+                      />
+                      <div>
+                        <dt className="text-xs text-muted-foreground">Time</dt>
+                        {/* Shown in the event's own timezone — the same time the
                           host advertised, not the reader's local conversion. */}
-                      <dd className="font-medium text-foreground">
-                        {formatEventTime(event)}
-                      </dd>
-                      <dd className="text-xs text-muted-foreground">
-                        {formatDuration(event.durationMinutes)}
-                      </dd>
+                        <dd className="font-medium text-foreground">
+                          {formatEventTime(event)}
+                        </dd>
+                        <dd className="text-xs text-muted-foreground">
+                          {formatDuration(event.durationMinutes)}
+                        </dd>
+                      </div>
                     </div>
-                  </div>
                   </>
                 ) : null}
               </dl>

@@ -17,7 +17,7 @@ export const siteConfig = {
   communityUrl: "https://instagram.com/henry_and_precious",
   email: "precious.and.henry@gmail.com",
   practitionerTimezone: "Australia/Perth",
-  bookingUrl: "https://calendly.com/precious-and-henry/15min",
+  bookingUrl: "https://calendly.com/precious-and-henry/20min",
 } as const;
 
 /** Primary navigation — order matches the mockups. */

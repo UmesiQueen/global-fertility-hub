@@ -88,10 +88,10 @@ export default async function ClinicProfilePage({
       </Container>
 
       <Container className="pb-10">
-        <div className="relative aspect-content w-full overflow-hidden rounded-3xl">
+        <div className="relative aspect-content w-full max-w-4xl overflow-hidden rounded-3xl border border-border bg-muted">
           <EntityImage
             image={clinic.coverImage}
-            sizes="(max-width: 1024px) 100vw, 1200px"
+            sizes="(max-width: 1024px) 100vw, 896px"
             priority
           />
         </div>

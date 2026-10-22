@@ -205,7 +205,7 @@ export function Prose({
   } as Components;
 
   return (
-    <div className={cn("max-w-[68ch]", className)}>
+    <div className={cn("max-w-4xl", className)}>
       <Markdown
         // remark-breaks: in Hygraph a single newline is a deliberate
         // Shift+Enter line break, never a hard wrap.

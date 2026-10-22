@@ -125,6 +125,7 @@ export function JoinCommunityForm({ countries }: { countries: Country[] }) {
                 autoComplete="name"
                 placeholder="Sarah Whitfield"
                 aria-invalid={fieldState.invalid}
+                className="border border-primary/30"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -149,6 +150,7 @@ export function JoinCommunityForm({ countries }: { countries: Country[] }) {
                 autoComplete="email"
                 placeholder="sarah@example.com"
                 aria-invalid={fieldState.invalid}
+                className="border border-primary/30"
               />
               <FieldDescription>
                 We&apos;ll send your member ID and the community link here.
@@ -179,7 +181,7 @@ export function JoinCommunityForm({ countries }: { countries: Country[] }) {
                 <SelectTrigger
                   id="join-country"
                   aria-invalid={fieldState.invalid}
-                  className="w-full"
+                  className="w-full border border-primary/30"
                 >
                   <SelectValue>
                     {(code: string | null) =>
@@ -222,6 +224,8 @@ export function JoinCommunityForm({ countries }: { countries: Country[] }) {
                 onBlur={field.onBlur}
                 invalid={fieldState.invalid}
                 defaultCountry={(countryCode || "AU") as PhoneCountry}
+                selectClassName="border border-primary/30"
+                inputClassName="border border-primary/30"
               />
 
               <FieldDescription>
@@ -251,7 +255,7 @@ export function JoinCommunityForm({ countries }: { countries: Country[] }) {
                 <SelectTrigger
                   id="join-referral"
                   aria-invalid={fieldState.invalid}
-                  className="w-full"
+                  className="w-full border border-primary/30"
                 >
                   <SelectValue placeholder="Choose an option" />
                 </SelectTrigger>
@@ -287,7 +291,7 @@ export function JoinCommunityForm({ countries }: { countries: Country[] }) {
                   maxLength={1000}
                   placeholder="Share as much or as little as you like — this is just for us."
                   aria-invalid={fieldState.invalid}
-                  className="min-h-24 resize-y no-scrollbar"
+                  className="min-h-24 resize-y no-scrollbar border border-primary/30"
                 />
                 <span className="absolute bottom-1 right-2 z-2 text-xs text-primary/70">
                   {field.value?.length}/1000

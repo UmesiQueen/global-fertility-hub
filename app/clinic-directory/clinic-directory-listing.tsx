@@ -8,7 +8,6 @@ import { SortSelect } from "@/components/filters/sort-select";
 import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/shared/button-link";
 import { EmptyState } from "@/components/shared/empty-state";
-import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
 import { Pagination } from "@/components/shared/pagination";
 import { titleCase } from "@/lib/format";
 import { queryClinics } from "@/lib/listing/clinics";

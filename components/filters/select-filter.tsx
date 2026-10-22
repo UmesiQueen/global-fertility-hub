@@ -5,17 +5,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useId } from "react";
 import { cn } from "@/lib/utils";
 
-/**
- * A native <select> that navigates on change — used for the Educational
- * Partners dropdowns (country, specialty, treatment, language).
- *
- * Deliberately a native select rather than a custom listbox: on mobile it
- * opens the OS picker, which is faster and more accessible than anything we'd
- * build, and it needs almost no JavaScript.
- *
- * Client-only because `onChange` navigation has no no-JS equivalent without
- * wrapping each one in its own form.
- */
 function SelectFilterControl({
   label,
   paramKey,

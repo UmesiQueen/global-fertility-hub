@@ -18,7 +18,6 @@ import { PROVIDER_NAME, parseVideoUrl } from "@/lib/video";
 export function VideoEmbed({
   url,
   title,
-  meta,
   className,
 }: {
   url: string;
@@ -76,7 +75,7 @@ export function VideoEmbed({
     <figure
       className={cn(
         "mt-8 first:mt-0 mb-8",
-        portrait ? "mx-auto w-full max-w-[400px]" : "w-full",
+        portrait ? "mx-auto w-full max-w-100" : "w-full",
         className,
       )}
     >
@@ -90,7 +89,7 @@ export function VideoEmbed({
             style={{ height: height ?? undefined }}
             className={cn(
               "w-full overflow-hidden rounded-2xl border border-border bg-card",
-              height === null && "aspect-[9/19]",
+              height === null && "aspect-9/19",
             )}
             allow="autoplay; encrypted-media; picture-in-picture; clipboard-write; fullscreen"
             allowFullScreen
@@ -99,7 +98,7 @@ export function VideoEmbed({
           <div
             className={cn(
               "relative w-full overflow-hidden rounded-2xl bg-foreground",
-              portrait ? "aspect-[9/16]" : "aspect-video",
+              portrait ? "aspect-9/16" : "aspect-video",
             )}
           >
             <iframe
@@ -119,7 +118,7 @@ export function VideoEmbed({
           className={cn(
             "group relative flex w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-2xl bg-primary p-8 text-center text-primary-foreground",
             "outline-none focus-visible:ring-4 focus-visible:ring-ring/50",
-            portrait ? "aspect-[9/16]" : "aspect-video",
+            portrait ? "aspect-9/16" : "aspect-video",
           )}
         >
           {/* Soft lavender glow so the poster isn't a flat block. */}
@@ -142,9 +141,6 @@ export function VideoEmbed({
                 {title}
               </span>
             ) : null}
-            <span className="text-sm text-primary-foreground/75">
-              {[meta, `Plays from ${provider}`].filter(Boolean).join(" · ")}
-            </span>
           </span>
         </button>
       )}

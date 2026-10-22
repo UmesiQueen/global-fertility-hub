@@ -62,11 +62,21 @@ export function JoinCommunityCTA({
                 {ctaButton.label}
               </ButtonLink>
             ) : (
-              <ButtonLink href="/join" size="lg">
+              <ButtonLink
+                href="/join"
+                size="lg"
+                className="min-w-45 lg:min-w-fit"
+              >
                 Join Our Community
               </ButtonLink>
             )}
-            <ButtonLink href="/consultations" variant="outline" size="lg">
+            {/* make this same size as above btn */}
+            <ButtonLink
+              href="/consultations"
+              variant="outline"
+              size="lg"
+              className="min-w-45 lg:min-w-fit"
+            >
               Schedule a Call
             </ButtonLink>
           </div>

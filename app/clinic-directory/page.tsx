@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageHero } from "@/components/layout/page-hero";
 import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
-import { Pill } from "@/components/shared/pill";
 import { TrustChips } from "@/components/shared/trust-chips";
 import {
   getAllClinics,
@@ -34,7 +33,6 @@ export default async function ClinicDirectoryPage() {
   return (
     <>
       <PageHero
-        eyebrow={<Pill>Trusted · Transparent · Educational</Pill>}
         title="Clinics in our community"
         description="We partner with fertility clinics worldwide that share our commitment to education, transparency and informed decision-making."
         image={{

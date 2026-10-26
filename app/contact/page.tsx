@@ -1,4 +1,4 @@
-import { CalendarDays, Heart, Mail, MessageCircle, Users } from "lucide-react";
+import { CalendarDays, MessageCircle, Users } from "lucide-react";
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Container } from "@/components/layout/container";
@@ -90,22 +90,52 @@ export default async function ContactPage({
           </div>
 
           <aside className="flex flex-col gap-8 lg:sticky lg:top-24 lg:self-start">
-            <div className="rounded-2xl border border-border bg-surface p-5">
+            <div>
               <h2 className="font-heading text-sm font-semibold text-foreground">
-                If you need help urgently
+                Social platforms
               </h2>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                We&apos;re a support platform, not a clinic, and we
-                can&apos;t help with anything medical or urgent. If something is
-                wrong with your health right now, please contact your doctor or
-                your local emergency service.
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {socialLinks.map((social) => {
+                  const Icon = SOCIAL_ICONS[social.label];
+                  return (
+                    <li key={social.label}>
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        aria-label={`${siteConfig.name} on ${social.label}`}
+                        className="flex size-11 items-center justify-center rounded-full bg-surface text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
+                      >
+                        {Icon ? <Icon className="size-4.5" /> : social.label}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+                <MessageCircle
+                  aria-hidden="true"
+                  className="mt-0.5 size-3.5 shrink-0"
+                />
+                Our Instagram community is the fastest way to reach us day to
+                day.
               </p>
             </div>
 
             <div>
               <h2 className="font-heading text-sm font-semibold text-foreground">
-                Might be quicker
+                Email us directly
               </h2>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="ml-2 text-sm text-muted-foreground hover:text-primary/80 transition-colors"
+              >
+                {siteConfig.email}
+              </a>
+            </div>
+
+            <div>
               <ul className="mt-4 flex flex-col gap-5">
                 {SHORTCUTS.map((shortcut) => (
                   <li key={shortcut.href}>
@@ -138,58 +168,16 @@ export default async function ContactPage({
               </ul>
             </div>
 
-            <div>
+            <div className="rounded-2xl border border-border bg-surface p-5">
               <h2 className="font-heading text-sm font-semibold text-foreground">
-                Find us elsewhere
+                If you need help urgently
               </h2>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {socialLinks.map((social) => {
-                  const Icon = SOCIAL_ICONS[social.label];
-                  return (
-                    <li key={social.label}>
-                      <a
-                        href={social.href}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        aria-label={`${siteConfig.name} on ${social.label}`}
-                        className="flex size-11 items-center justify-center rounded-full bg-surface text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
-                      >
-                        {Icon ? <Icon className="size-4.5" /> : social.label}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-
-              <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-                <MessageCircle
-                  aria-hidden="true"
-                  className="mt-0.5 size-3.5 shrink-0"
-                />
-                Our Instagram community is the fastest way to reach us day to
-                day.
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                We&apos;re a support platform, not a clinic, and we can&apos;t
+                help with anything medical or urgent. If something is wrong with
+                your health right now, please contact your doctor or your local
+                emergency service.
               </p>
-            </div>
-
-            <div className="rounded-2xl bg-script/8 p-5">
-              <p className="text-sm leading-relaxed text-foreground inline-flex items-base gap-1">
-                <span>Your message stays between us.</span>
-                <Heart aria-hidden="true" className="size-5 text-script" />
-              </p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                We never share what you write with clinics, partners or anyone
-                else.
-              </p>
-            </div>
-
-            <div className="flex items-center">
-              <Mail aria-hidden="true" className="size-5" />
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="ml-2 text-sm text-muted-foreground"
-              >
-                {siteConfig.email}
-              </a>
             </div>
           </aside>
         </div>

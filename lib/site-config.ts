@@ -15,7 +15,7 @@ export const siteConfig = {
     "Real stories, shared experiences, and a global community here to support you through every step of your fertility journey.",
   url: "https://globalfertilityhub.com",
   communityUrl: "https://instagram.com/henry_and_precious",
-  email: "precious.and.henry@gmail.com",
+  email: "precious.and.henry@globalfertilityhub.com",
   practitionerTimezone: "Australia/Perth",
   bookingUrl: "https://calendly.com/precious-and-henry/20min",
 } as const;

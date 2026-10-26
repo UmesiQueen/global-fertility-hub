@@ -9,6 +9,7 @@ import {
 import { footerNav, siteConfig, socialLinks } from "@/lib/site-config";
 import { Container } from "./container";
 import { SiteLogo } from "./site-logo";
+import { Mail } from "lucide-react";
 
 const SOCIAL_ICONS: Record<
   string,
@@ -51,6 +52,16 @@ export function SiteFooter() {
                 );
               })}
             </ul>
+
+            <p className="mt-6 text-sm text-muted-foreground hover:text-primary/80 transition-colors flex items-center">
+              <Mail aria-hidden="true" className="size-5" />
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="ml-2 text-sm"
+              >
+                {siteConfig.email}
+              </a>
+            </p>
           </div>
 
           {footerNav.map((column) => (

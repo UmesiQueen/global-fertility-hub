@@ -53,6 +53,11 @@ export function AboutHero() {
               <span className="text-foreground/80 font-semibold">Global Fertility Hub</span> 
               {" "}was born from that experience.
             </p>
+            <p>
+              We&apos;re here for everyone, especially people too often left
+              out because of cost, language, culture or where they live, in
+              Australia and around the world.
+            </p>
           </div>
 
           {/* Contained photo below the copy on smaller screens, where the

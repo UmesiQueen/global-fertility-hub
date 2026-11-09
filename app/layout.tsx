@@ -4,6 +4,7 @@ import { PreviewBanner } from "@/components/layout/preview-banner";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SkipToContent } from "@/components/layout/skip-to-content";
+import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -31,8 +32,7 @@ export const metadata: Metadata = {
     default: "Global Fertility Hub — Trusted Fertility Education & Support",
     template: "%s · Global Fertility Hub",
   },
-  description:
-    "Trusted education, real stories and a global community here to support you through every step of your fertility journey.",
+  description: siteConfig.description,
   openGraph: {
     type: "website",
     siteName: "Global Fertility Hub",

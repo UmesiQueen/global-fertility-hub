@@ -12,7 +12,7 @@ export const siteConfig = {
   name: "Global Fertility Hub",
   tagline: "Learn. Connect. Feel Supported.",
   description:
-    "Real stories, shared experiences, and a global community here to support you through every step of your fertility journey.",
+    "Reliable fertility information, compassionate support and a global community, so money, language, culture or location never stand between you and the help you need.",
   url: "https://globalfertilityhub.com",
   communityUrl: "https://instagram.com/henry_and_precious",
   email: "precious.and.henry@globalfertilityhub.com",

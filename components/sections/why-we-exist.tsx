@@ -67,6 +67,10 @@ export function WhyWeExist({ className }: { className?: string }) {
               realised how hard it is to find clear, helpful information and
               real support when you need it most.
             </p>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+              That&apos;s why we work to make sure cost, language, culture or
+              where you live never stop you from finding that support.
+            </p>
 
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {TRUST_INDICATORS.map((indicator) => (

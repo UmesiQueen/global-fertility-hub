@@ -4,6 +4,7 @@ import { AboutHero } from "@/components/sections/about-hero";
 import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
 import { MissionVisionPromise } from "@/components/sections/mission-vision-promise";
 import { OurStoryTimeline } from "@/components/sections/our-story-timeline";
+import { WhatWeWorkTowards } from "@/components/sections/what-we-work-towards";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
 import { breadcrumbJsonLd, organisationJsonLd } from "@/lib/seo";
@@ -11,7 +12,7 @@ import { breadcrumbJsonLd, organisationJsonLd } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Henry and Precious created Global Fertility Hub after their own fertility journey — so no one has to feel alone or confused. Our story, mission and promise.",
+    "Henry and Precious started Global Fertility Hub after their own fertility journey. Our mission: that money, language, culture or location never stop anyone finding reliable fertility information and support.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "Why We Started This Journey",
@@ -33,6 +34,7 @@ export default function AboutPage() {
       <AboutHero />
       <OurStoryTimeline />
       <MissionVisionPromise />
+      <WhatWeWorkTowards />
 
       <Container className="py-12 md:py-16">
         <MedicalDisclaimer variant="card" className="mx-auto max-w-2xl" />

@@ -5,6 +5,7 @@ const PROMISES = [
   "Support, not a clinic",
   "Research-based information",
   "Real stories from real people",
+  "Open to every culture and language",
   "A safe, respectful community",
   "Always here to support you",
 ];
@@ -33,9 +34,10 @@ export function MissionVisionPromise() {
                 Our Mission
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                To provide global community, real stories and 
-                support so you can make informed decisions and feel empowered
-                through every step of your journey.
+                To make sure money, language, culture or where you live never
+                stop you from finding reliable fertility information,
+                compassionate support and a clear path towards the right care
+                for you.
               </p>
             </div>
           </article>

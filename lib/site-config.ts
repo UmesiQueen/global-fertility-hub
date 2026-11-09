@@ -13,23 +13,53 @@ export const siteConfig = {
   tagline: "Learn. Connect. Feel Supported.",
   description:
     "Reliable fertility information, compassionate support and a global community, so money, language, culture or location never stand between you and the help you need.",
-  url: "https://globalfertilityhub.com",
+  url: "https://globalfertilityhub.org",
   communityUrl: "https://instagram.com/henry_and_precious",
-  email: "precious.and.henry@globalfertilityhub.com",
+  email: "admin@globalfertilityhub.org",
   practitionerTimezone: "Australia/Perth",
   bookingUrl: "https://calendly.com/precious-and-henry/20min",
 } as const;
 
-/** Primary navigation — order matches the mockups. */
-export const mainNav: NavLink[] = [
+/** A heading that opens a dropdown (desktop) or collapsible section (mobile). */
+export interface NavGroup {
+  label: string;
+  items: NavLink[];
+}
+
+export type NavItem = NavLink | NavGroup;
+
+export function isNavGroup(item: NavItem): item is NavGroup {
+  return "items" in item;
+}
+
+/**
+ * Primary navigation. Plain links sit on the header row; groups open a
+ * dropdown. Keep the row to about seven entries — it has to fit at 1024px
+ * next to the logo and the Join Community button.
+ */
+export const mainNav: NavItem[] = [
   { label: "Home", href: "/" },
-  { label: "Collections", href: "/collections" },
-  { label: "Store", href: "/store" },
-  { label: "Clinic Directory", href: "/clinic-directory" },
-  { label: "Community Stories", href: "/stories" },
-  { label: "Events", href: "/events" },
+  {
+    label: "Explore",
+    items: [
+      { label: "Collections", href: "/collections" },
+      { label: "Clinic Directory", href: "/clinic-directory" },
+      { label: "Events & Webinars", href: "/events" },
+      { label: "Store", href: "/store" },
+    ],
+  },
+  { label: "Programs", href: "/programs" },
+  {
+    label: "Community",
+    items: [
+      { label: "Community Stories", href: "/stories" },
+      { label: "Join the Community", href: "/join" },
+      { label: "Schedule a Call", href: "/consultations" },
+    ],
+  },
+  { label: "News", href: "/news" },
   { label: "About", href: "/about" },
-  { label: "Contact Us", href: "/contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 /** Secondary routes reachable from the footer and in-page CTAs. */
@@ -38,9 +68,11 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
     heading: "Explore",
     links: [
       { label: "Collections", href: "/collections" },
-      { label: "Store", href: "/store" },
-      { label: "Clinic Directory", href: "/clinic-directory" },
       { label: "Community Stories", href: "/stories" },
+      { label: "Clinic Directory", href: "/clinic-directory" },
+      { label: "News", href: "/news" },
+      { label: "Programs", href: "/programs" },
+      { label: "Store", href: "/store" },
       { label: "Events & Webinars", href: "/events" },
       { label: "Partner Discounts", href: "/discounts" },
     ],

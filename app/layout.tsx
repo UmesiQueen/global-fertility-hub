@@ -27,7 +27,7 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://globalfertilityhub.com"),
+  metadataBase: new URL("https://globalfertilityhub.org"),
   title: {
     default: "Global Fertility Hub — Trusted Fertility Education & Support",
     template: "%s · Global Fertility Hub",

@@ -13,7 +13,7 @@ export function SiteHeader() {
         <MainNav />
 
         <div className="flex items-center gap-1.5">
-          <ButtonLink href="/join" className="hidden sm:inline-flex">
+          <ButtonLink href="/join" className="hidden lg:inline-flex">
             Join Community
           </ButtonLink>
 

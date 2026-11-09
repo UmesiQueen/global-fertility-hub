@@ -1,4 +1,4 @@
-import { CalendarDays, MessageCircle, Users } from "lucide-react";
+import { CalendarDays, Mail, Users } from "lucide-react";
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Container } from "@/components/layout/container";
@@ -112,27 +112,18 @@ export default async function ContactPage({
                   );
                 })}
               </ul>
-
-              <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-                <MessageCircle
-                  aria-hidden="true"
-                  className="mt-0.5 size-3.5 shrink-0"
-                />
-                Our Instagram community is the fastest way to reach us day to
-                day.
-              </p>
             </div>
 
             <div>
               <h2 className="font-heading text-sm font-semibold text-foreground">
-                Email us directly
+                Send us an email
               </h2>
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="ml-2 text-sm text-muted-foreground hover:text-primary/80 transition-colors"
-              >
-                {siteConfig.email}
-              </a>
+              <p className="mt-2 text-sm text-muted-foreground hover:text-primary/80 transition-colors flex items-center">
+                <Mail aria-hidden="true" className="size-5" />
+                <a href={`mailto:${siteConfig.email}`} className="ml-2">
+                  {siteConfig.email}
+                </a>
+              </p>
             </div>
 
             <div>

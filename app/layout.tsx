@@ -58,7 +58,10 @@ export default function RootLayout({
         caveat.variable,
       )}
     >
-      <body className="flex min-h-full flex-col font-sans">
+      <body
+        className="flex min-h-full flex-col font-sans"
+        suppressHydrationWarning
+      >
         <SkipToContent />
         <PreviewBanner />
         <SiteHeader />

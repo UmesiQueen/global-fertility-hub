@@ -86,11 +86,11 @@ export function ProductCard({
           </Link>
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
           {product.excerpt}
         </p>
 
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border/70 pt-3">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-border/80 pt-3">
           {price ? (
             <span
               className={cn(

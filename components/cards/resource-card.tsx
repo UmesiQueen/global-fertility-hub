@@ -57,11 +57,11 @@ export function ResourceCard({
           </Link>
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
           {resource.excerpt}
         </p>
 
-        <div className="mt-4 flex items-center gap-3 pt-3 text-xs text-muted-foreground">
+        <div className="mt-auto flex items-center gap-3 pt-3 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
             <Clock aria-hidden="true" className="size-3.5" />
             {formatReadingTime(resource.readingTime, resource.format)}

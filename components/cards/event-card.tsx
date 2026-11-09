@@ -67,11 +67,11 @@ export function EventCard({
           </Link>
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
           {event.description}
         </p>
 
-        <dl className="mt-4 flex flex-col gap-1.5 border-t border-border/70 pt-3 text-xs text-muted-foreground">
+        <dl className="mt-auto flex flex-col gap-1.5 border-t border-border/70 pt-3 text-xs text-muted-foreground">
           {isReplay ? (
             <div className="flex items-center gap-1.5">
               <dt className="sr-only">Duration</dt>

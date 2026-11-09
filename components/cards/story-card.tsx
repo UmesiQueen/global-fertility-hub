@@ -40,11 +40,11 @@ export function StoryCard({
           </Link>
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
           {story.preview}
         </p>
 
-        <div className="mt-4 flex items-center gap-2.5 border-t border-border/70 pt-3">
+        <div className="mt-auto flex items-center gap-2.5 border-t border-border/70 pt-3">
           <span
             aria-hidden="true"
             className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent font-heading text-[0.625rem] font-semibold text-primary"

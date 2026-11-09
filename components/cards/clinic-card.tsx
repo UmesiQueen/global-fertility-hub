@@ -52,11 +52,11 @@ export function ClinicCard({
           {clinic.city}, {clinic.country}
         </p>
 
-        <p className="mt-3 line-clamp-1 text-xs text-muted-foreground">
+        <p className="mt-3 mb-4 line-clamp-1 text-xs text-muted-foreground">
           {clinic.treatments.slice(0, 3).map(titleCase).join(" · ")}
         </p>
 
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border/70 pt-3">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-border/70 pt-3">
           <Pill icon={GraduationCap}>Clinic Partner</Pill>
           <span
             aria-hidden="true"

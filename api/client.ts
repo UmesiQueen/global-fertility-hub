@@ -43,10 +43,14 @@ export async function hygraphFetch<T>(query: string): Promise<T> {
             // incognito windows and dev-server restarts alike — which makes an
             // editor's change look like it simply didn't save. Not a trade
             // worth making while authoring content.
-            revalidate: process.env.NODE_ENV === "production" ? 3600 : 0,
+            //
+            // A day, not an hour: the Hygraph publish webhook (/api/revalidate)
+            // is what keeps content fresh. This is only a backstop for a missed
+            // webhook, and every timed refresh rewrites every visited page into
+            // Vercel's ISR cache, which is billed.
+            revalidate: process.env.NODE_ENV === "production" ? 86_400 : 0,
             // Lets a Hygraph publish webhook call revalidateTag("hygraph")
-            // later and drop every query at once, instead of waiting out the
-            // hour.
+            // and drop every query at once, instead of waiting out the day.
             tags: ["hygraph"],
           },
         }),

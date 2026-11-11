@@ -8,8 +8,8 @@ import { revalidateTag } from "next/cache";
  *   x-revalidate-secret: <HYGRAPH_REVALIDATE_SECRET>
  *
  * Every published Hygraph query is tagged "hygraph" (see api/client.ts), and
- * the listing and detail pages are static, regenerated hourly. Without this,
- * a publish takes up to an hour to appear. With it, Hygraph calls here on
+ * the listing and detail pages are static, regenerated daily. Without this,
+ * a publish takes up to a day to appear. With it, Hygraph calls here on
  * publish or unpublish and the next visit to any page regenerates it once
  * with fresh content.
  *

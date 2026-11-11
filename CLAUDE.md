@@ -59,7 +59,7 @@ At the end of every phase or large chunk, propose the commit message(s) alongsid
 
 ```
 api/            Hygraph — one query per model, mapped to our own types
-  client.ts     the whole transport: POST, bearer token, 1h revalidate
+  client.ts     the whole transport: POST, bearer token, 24h revalidate (webhook does the rest)
   map.ts        enumIn / asset / md / date
 app/            routes only — thin, composed of section/card components
 components/
@@ -80,7 +80,13 @@ types/          shared TS types
 
 `api/` fetches whole collections; the repositories filter, sort and paginate
 in memory. That's deliberate — the corpus is small, Next caches each query for
-an hour, and it keeps the query layer to one plain `fetch` per model.
+a day (the publish webhook refreshes it sooner), and it keeps the query layer
+to one plain `fetch` per model.
+
+Never inline bitmaps (base64 `<image>` in SVG, data URIs) in components. The
+header and footer render on every page, so an inlined logo once made every
+page ~2.5 MB and blew through Vercel's ISR and transfer quotas. Static files
+go in `public/` and render through `next/image`.
 
 ## Verification
 

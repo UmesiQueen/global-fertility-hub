@@ -7,7 +7,7 @@
  *
  * The one argument worth keeping is `first: 100`. Hygraph returns **10**
  * records when you omit it, which looks exactly like missing content. Raise
- * it if a collection ever outgrows 100.
+ * it if a resource ever outgrows 100.
  *
  * Pages don't import this — they go through `lib/repositories/*`.
  */

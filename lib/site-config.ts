@@ -42,10 +42,10 @@ export const mainNav: NavItem[] = [
   {
     label: "Explore",
     items: [
-      { label: "Collections", href: "/collections" },
-      { label: "Clinic Directory", href: "/clinic-directory" },
-      { label: "Events & Webinars", href: "/events" },
+      { label: "Resources", href: "/resources" },
+      { label: "News", href: "/news" },
       { label: "Store", href: "/store" },
+      { label: "Events & Webinars", href: "/events" },
     ],
   },
   { label: "Programs", href: "/programs" },
@@ -57,7 +57,7 @@ export const mainNav: NavItem[] = [
       { label: "Schedule a Call", href: "/consultations" },
     ],
   },
-  { label: "News", href: "/news" },
+  { label: "Clinic Directory", href: "/clinic-directory" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
@@ -67,7 +67,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
   {
     heading: "Explore",
     links: [
-      { label: "Collections", href: "/collections" },
+      { label: "Resources", href: "/resources" },
       { label: "Community Stories", href: "/stories" },
       { label: "Clinic Directory", href: "/clinic-directory" },
       { label: "News", href: "/news" },
@@ -80,7 +80,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
   {
     heading: "About",
     links: [
-      { label: "Meet Henry & Precious", href: "/about" },
+      { label: "Meet the Founders", href: "/about" },
       { label: "Schedule a Call", href: "/consultations" },
       { label: "Join the Community", href: "/join" },
       { label: "Contact Us", href: "/contact" },

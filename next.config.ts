@@ -1,28 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Renamed routes. Permanent, so search engines carry the old URLs'
-  // ranking across and shared links keep working.
-  async redirects() {
-    return [
-      { source: "/resources", destination: "/collections", permanent: true },
-      {
-        source: "/resources/:slug",
-        destination: "/collections/:slug",
-        permanent: true,
-      },
-      {
-        source: "/educational-partners",
-        destination: "/clinic-directory",
-        permanent: true,
-      },
-      {
-        source: "/educational-partners/:slug",
-        destination: "/clinic-directory/:slug",
-        permanent: true,
-      },
-    ];
-  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

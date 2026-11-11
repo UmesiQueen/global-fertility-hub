@@ -9,18 +9,18 @@ import {
   getResourceCategoryCounts,
   getResourceFormatCounts,
 } from "@/lib/repositories/resources";
-import { CollectionsListing, CollectionsResults } from "./collections-listing";
+import { ResourcesListing, ResourcesResults } from "./resources-listing";
 
-const PATHNAME = "/collections";
+const PATHNAME = "/resources";
 
 export const metadata: Metadata = {
-  title: "Collections",
+  title: "Resources",
   description:
     "Curated fertility topics to help you learn, understand and make informed decisions — articles, videos and downloads.",
   alternates: { canonical: PATHNAME },
 };
 
-export default async function CollectionsPage() {
+export default async function ResourcesPage() {
   const [resources, categoryCounts, formatCounts] = await Promise.all([
     getAllResources(),
     getResourceCategoryCounts(),
@@ -37,7 +37,7 @@ export default async function CollectionsPage() {
   return (
     <>
       <PageHero
-        title="Our Collections"
+        title="Our Resources"
         description="Curated fertility topics to help you learn and understand your journey."
         image={{
           src: "/resources.webp",
@@ -45,19 +45,19 @@ export default async function CollectionsPage() {
         }}
       >
         <SearchBar
-          label="Search collections"
-          placeholder="Search collections, topics or keywords…"
+          label="Search resources"
+          placeholder="Search resources, topics or keywords…"
           className="max-w-md"
         />
       </PageHero>
 
-      <Suspense fallback={<CollectionsResults {...listing} params={{}} />}>
-        <CollectionsListing {...listing} />
+      <Suspense fallback={<ResourcesResults {...listing} params={{}} />}>
+        <ResourcesListing {...listing} />
       </Suspense>
 
       <JoinCommunityCTA
         title="Can't Find What You're Looking For?"
-        description="Tell us what you'd like to understand better. Many of our collections started as a question someone in our community asked."
+        description="Tell us what you'd like to understand better. Many of our resources started as a question someone in our community asked."
         ctaButton={{ href: "/contact?topic=resource", label: "Suggest a Topic" }}
       />
     </>

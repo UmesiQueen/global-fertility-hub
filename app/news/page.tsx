@@ -21,8 +21,8 @@ export default function NewsPage() {
         description="Fertility and reproductive health news, plus updates from Global Fertility Hub. Our first stories are on their way."
       />
       <Container className="flex flex-col gap-3 py-12 sm:flex-row md:py-16">
-        <ButtonLink href="/collections" size="lg">
-          Explore Collections
+        <ButtonLink href="/resources" size="lg">
+          Explore Resources
         </ButtonLink>
         <ButtonLink href="/" variant="outline" size="lg">
           Back to Home

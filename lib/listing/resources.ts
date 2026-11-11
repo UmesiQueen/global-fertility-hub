@@ -6,7 +6,7 @@ import type {
   ResourceFormat,
 } from "@/types";
 
-/** Pure resource filtering — shared by the repository and the /collections listing. */
+/** Pure resource filtering — shared by the repository and the /resources listing. */
 
 export interface ResourceQuery {
   search?: string;

@@ -25,7 +25,7 @@ import {
   type ResourceFormat,
 } from "@/types";
 
-const PATHNAME = "/collections";
+const PATHNAME = "/resources";
 const PAGE_SIZE = 12;
 
 const FORMATS: ResourceFormat[] = [
@@ -42,7 +42,7 @@ const SORT_OPTIONS = [
 ];
 
 
-export interface CollectionsListingData {
+export interface ResourcesListingData {
   resources: Resource[];
   categoryCounts: Record<string, number>;
   formatCounts: Record<ResourceFormat, number>;
@@ -54,18 +54,18 @@ export interface CollectionsListingData {
  * applied here instead of by a server render per query string. See
  * app/store/store-listing.tsx for the reasoning.
  */
-export function CollectionsListing(data: CollectionsListingData) {
+export function ResourcesListing(data: ResourcesListingData) {
   const params = useRawSearchParams();
-  return <CollectionsResults {...data} params={params} />;
+  return <ResourcesResults {...data} params={params} />;
 }
 
 /** The listing for a given set of params — empty params is the prerendered fallback. */
-export function CollectionsResults({
+export function ResourcesResults({
   resources,
   categoryCounts,
   formatCounts,
   params,
-}: CollectionsListingData & { params: RawSearchParams }) {
+}: ResourcesListingData & { params: RawSearchParams }) {
   const search = readParam(params, "search");
   const category = readParam(params, "category") as
     ResourceCategory | undefined;
@@ -134,7 +134,7 @@ export function CollectionsResults({
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p aria-live="polite" className="text-sm text-muted-foreground">
               {results.total > 0
-                ? `Showing ${from}–${to} of ${results.total} collections`
+                ? `Showing ${from}–${to} of ${results.total} resources`
                 : "No results found"}
             </p>
             <SortSelect options={SORT_OPTIONS} />

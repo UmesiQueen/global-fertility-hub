@@ -362,7 +362,7 @@ export default async function EventDetailPage({
         headingId="event-related-resources"
         title="Related Resources"
         count={relatedResources.length}
-        action={{ label: "View All Collections", href: "/collections" }}
+        action={{ label: "View All Resources", href: "/resources" }}
       >
         {relatedResources.map((item) => (
           <li key={item.id} className="flex">

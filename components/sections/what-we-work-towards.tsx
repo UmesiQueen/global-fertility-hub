@@ -10,16 +10,8 @@ import {
   Users,
 } from "lucide-react";
 import { Container } from "@/components/layout/container";
-import { ScriptAccent } from "@/components/shared/script-accent";
 
-/**
- * "What We Work Towards" — the nine focus areas behind Our Mission.
- *
- * COPY GUARDRAILS: this is the section most likely to drift towards clinical
- * or recommending language. Clinics are something we help people *find and
- * understand*, never something we choose for them, and "care" always means
- * care from their own clinicians. Keep it that way when editing.
- */
+
 const FOCUS_AREAS = [
   {
     icon: BookOpen,
@@ -91,9 +83,6 @@ export function WhatWeWorkTowards() {
           >
             What We Work Towards
           </h2>
-          <ScriptAccent className="mt-1 block text-2xl md:text-3xl">
-            So no one is left out.
-          </ScriptAccent>
           <p className="mt-5 text-base leading-relaxed text-muted-foreground">
             Our mission shapes everything we do. Here&apos;s what it means in
             practice.

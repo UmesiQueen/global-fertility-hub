@@ -49,7 +49,7 @@ export async function generateMetadata({
     // Falls back to the body when there's no excerpt, so a missing field in
     // the CMS never produces a page with no meta description.
     description: resource.excerpt || markdownToPlainText(resource.body, 155),
-    alternates: { canonical: `/collections/${resource.slug}` },
+    alternates: { canonical: `/resources/${resource.slug}` },
     openGraph: {
       type: "article",
       title: resource.title,
@@ -78,7 +78,7 @@ export default async function ResourceDetailPage({
 
   const crumbs = [
     { label: "Home", href: "/" },
-    { label: "Collections", href: "/collections" },
+    { label: "Resources", href: "/resources" },
     { label: resource.title },
   ];
 
@@ -178,11 +178,11 @@ export default async function ResourceDetailPage({
 
           <div className="mt-10 max-w-4xl">
             <Link
-              href="/collections"
+              href="/resources"
               className="inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-primary hover:underline"
             >
               <ArrowLeft aria-hidden="true" className="size-4" />
-              Back to Collections
+              Back to Resources
             </Link>
           </div>
         </Container>
@@ -193,7 +193,7 @@ export default async function ResourceDetailPage({
           headingId="related-resources"
           title="Related Resources"
           count={related.length}
-          action={{ label: "View All Collections", href: "/collections" }}
+          action={{ label: "View All Resources", href: "/resources" }}
         >
           {related.map((item) => (
             <li key={item.id} className="flex">

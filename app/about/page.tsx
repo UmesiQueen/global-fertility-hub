@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/layout/container";
 import { AboutHero } from "@/components/sections/about-hero";
 import { JoinCommunityCTA } from "@/components/sections/join-community-cta";
 import { MissionVisionPromise } from "@/components/sections/mission-vision-promise";
 import { OurStoryTimeline } from "@/components/sections/our-story-timeline";
 import { WhatWeWorkTowards } from "@/components/sections/what-we-work-towards";
 import { JsonLd } from "@/components/shared/json-ld";
-import { MedicalDisclaimer } from "@/components/shared/medical-disclaimer";
 import { breadcrumbJsonLd, organisationJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -35,10 +33,6 @@ export default function AboutPage() {
       <OurStoryTimeline />
       <MissionVisionPromise />
       <WhatWeWorkTowards />
-
-      <Container className="py-12 md:py-16">
-        <MedicalDisclaimer variant="card" className="mx-auto max-w-2xl" />
-      </Container>
 
       <JoinCommunityCTA />
     </>

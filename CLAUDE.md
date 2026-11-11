@@ -11,7 +11,7 @@ Commands: `bun dev` · `bun run build` · `bun run lint`
 ## Hard rules
 
 1. **Pages never import `api/*` directly.** Always go through `lib/repositories/*`. The repositories own filtering, sorting, pagination, relatedness and the guardrails below — a page that queries Hygraph itself bypasses all of them.
-   - Listing pages (store, collections, stories, events, clinic-directory) are **static**: the page fetches the full list through a repository (`getAll*`) and a `*-listing.tsx` client component filters it from the URL with the pure functions in `lib/listing/*`. Repositories call the same functions, so filter rules live in one place. Never read `searchParams` in a listing page — it makes every query string a server render (Vercel Fast Origin Transfer).
+   - Listing pages (store, resources, stories, events, clinic-directory) are **static**: the page fetches the full list through a repository (`getAll*`) and a `*-listing.tsx` client component filters it from the URL with the pure functions in `lib/listing/*`. Repositories call the same functions, so filter rules live in one place. Never read `searchParams` in a listing page — it makes every query string a server render (Vercel Fast Origin Transfer).
 2. **Repository functions are `async`**, even when returning static data.
 3. **Server Components by default.** `"use client"` only for interactivity — filters, calendars, carousels, sheets, forms. Push the boundary as far down the tree as possible.
 4. **Filter and search state lives in the URL**, not `useState`. Shareable, back-button friendly, SEO-safe.
@@ -78,7 +78,7 @@ lib/
 types/          shared TS types
 ```
 
-`api/` fetches whole collections; the repositories filter, sort and paginate
+`api/` fetches whole resources; the repositories filter, sort and paginate
 in memory. That's deliberate — the corpus is small, Next caches each query for
 a day (the publish webhook refreshes it sooner), and it keeps the query layer
 to one plain `fetch` per model.

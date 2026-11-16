@@ -1,4 +1,4 @@
-import { matches, paginate } from "@/lib/repositories/shared";
+import { byNewest, matches, paginate } from "@/lib/repositories/shared";
 import type {
   Paginated,
   Product,
@@ -24,8 +24,7 @@ export interface ProductQuery {
   pageSize?: number;
 }
 
-export const byNewestProduct = (a: Product, b: Product) =>
-  b.publishedAt.localeCompare(a.publishedAt);
+export const byNewestProduct = (a: Product, b: Product) => byNewest(a, b);
 
 /**
  * Free counts as zero, and affiliate products have no price we control.

@@ -1,6 +1,6 @@
 import type { Resource } from "@/types";
 import { hygraphFetch } from "./client";
-import { asset, date, enumIn, md } from "./map";
+import { asset, enumIn, md, publishDate, type WithPublishDate } from "./map";
 
 const QUERY = `query Resources($stage: Stage!) {
   resources(stage: $stage, first: 100) {
@@ -13,6 +13,7 @@ const QUERY = `query Resources($stage: Stage!) {
     category
     tags
     readingTime
+    publishDate
     publishedAt
     isNew
     isFeatured
@@ -24,7 +25,9 @@ const QUERY = `query Resources($stage: Stage!) {
 }`;
 
 export async function fetchResources(): Promise<Resource[]> {
-  const data = await hygraphFetch<{ resources: Resource[] }>(QUERY);
+  const data = await hygraphFetch<{
+    resources: WithPublishDate<Resource>[];
+  }>(QUERY);
 
   return data.resources.map((r) => ({
     id: r.id,
@@ -37,7 +40,7 @@ export async function fetchResources(): Promise<Resource[]> {
     tags: (r.tags ?? []).map(enumIn) as Resource["tags"],
     author: { name: r.author?.name ?? "", role: r.author?.role ?? undefined },
     readingTime: r.readingTime ?? 1,
-    publishedAt: date(r.publishedAt),
+    publishedAt: publishDate(r),
     coverImage: asset(r.coverImage, r.title),
     isNew: r.isNew ?? undefined,
     isFeatured: r.isFeatured ?? undefined,

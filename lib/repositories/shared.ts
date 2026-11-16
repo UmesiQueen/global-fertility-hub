@@ -50,6 +50,14 @@ export function featuredFirst<T extends { id: string }>(
   return sorted.slice(0, limit);
 }
 
+/**
+ * Newest first by publish date. For oldest first, call it with the arguments
+ * swapped.
+ */
+export function byNewest<T extends { publishedAt: string }>(a: T, b: T): number {
+  return b.publishedAt.localeCompare(a.publishedAt);
+}
+
 /** Case-insensitive contains, tolerant of undefined query values. */
 export function matches(haystack: string, needle?: string): boolean {
   if (!needle) return true;

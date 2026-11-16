@@ -1,4 +1,4 @@
-import { matches, paginate } from "@/lib/repositories/shared";
+import { byNewest, matches, paginate } from "@/lib/repositories/shared";
 import type { Paginated, Story } from "@/types";
 
 /**
@@ -35,11 +35,7 @@ export function queryStories(
     );
   }
 
-  items.sort((a, b) =>
-    sort === "oldest"
-      ? a.publishedAt.localeCompare(b.publishedAt)
-      : b.publishedAt.localeCompare(a.publishedAt),
-  );
+  items.sort((a, b) => (sort === "oldest" ? byNewest(b, a) : byNewest(a, b)));
 
   return paginate(items, page, pageSize);
 }

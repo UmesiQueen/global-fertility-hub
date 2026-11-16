@@ -1,6 +1,6 @@
 import type { Product } from "@/types";
 import { hygraphFetch } from "./client";
-import { asset, date, enumIn, md } from "./map";
+import { asset, enumIn, md, publishDate, type WithPublishDate } from "./map";
 
 const QUERY = `query Products($stage: Stage!) {
   products(stage: $stage, first: 100) {
@@ -19,6 +19,7 @@ const QUERY = `query Products($stage: Stage!) {
     externalUrl
     vendor
     includes
+    publishDate
     publishedAt
     isFeatured
     isNew
@@ -27,7 +28,9 @@ const QUERY = `query Products($stage: Stage!) {
 }`;
 
 export async function fetchProducts(): Promise<Product[]> {
-  const data = await hygraphFetch<{ products: Product[] }>(QUERY);
+  const data = await hygraphFetch<{
+    products: WithPublishDate<Product>[];
+  }>(QUERY);
 
   return data.products.map((p) => ({
     id: p.id,
@@ -47,7 +50,7 @@ export async function fetchProducts(): Promise<Product[]> {
     vendor: p.vendor ?? "",
     includes: p.includes?.length ? p.includes : undefined,
     coverImage: asset(p.coverImage, p.name),
-    publishedAt: date(p.publishedAt),
+    publishedAt: publishDate(p),
     isFeatured: p.isFeatured ?? undefined,
     isNew: p.isNew ?? undefined,
   }));

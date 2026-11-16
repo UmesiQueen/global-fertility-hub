@@ -1,7 +1,7 @@
 import { isDraftEnabled } from "@/lib/preview";
 import type { Story } from "@/types";
 import { hygraphFetch } from "./client";
-import { asset, date, enumIn, md } from "./map";
+import { asset, enumIn, md, publishDate, type WithPublishDate } from "./map";
 
 const QUERY = `query Stories($stage: Stage!) {
   stories(stage: $stage, first: 100) {
@@ -13,6 +13,7 @@ const QUERY = `query Stories($stage: Stage!) {
     body { markdown }
     tags
     readingTime
+    publishDate
     publishedAt
     isFeatured
     author { name country }
@@ -21,7 +22,9 @@ const QUERY = `query Stories($stage: Stage!) {
 }`;
 
 export async function fetchStories(): Promise<Story[]> {
-  const data = await hygraphFetch<{ stories: Story[] }>(QUERY);
+  const data = await hygraphFetch<{
+    stories: WithPublishDate<Story>[];
+  }>(QUERY);
 
   // On the published stage, publishing *is* the review — nothing this token can
   // see got there without a human approving it. On the draft stage that
@@ -42,7 +45,7 @@ export async function fetchStories(): Promise<Story[]> {
       country: s.author?.country ?? undefined,
     },
     readingTime: s.readingTime ?? 1,
-    publishedAt: date(s.publishedAt),
+    publishedAt: publishDate(s),
     coverImage: asset(s.coverImage, s.title),
     status: draft ? "pending" : "approved",
     isFeatured: s.isFeatured ?? undefined,

@@ -12,10 +12,11 @@ import type { ConsultationType, Event } from "@/types";
  * `Intl.DateTimeFormat#format` throws `RangeError: Invalid time value` on an
  * invalid Date, and its constructor throws on an invalid IANA timezone — and a
  * throw inside a Server Component is a 500 for the whole page. Published
- * content always has its dates, because Hygraph sets `publishedAt` at publish
- * time and nobody publishes an event without a start. A draft read through
- * preview has neither guarantee: `publishedAt` is null until first publish, and
- * `startsAt` and `timezone` are whatever the editor has typed so far. An
+ * content always has its dates, because `publishDate` is required (with
+ * Hygraph's own `publishedAt` as a fallback) and nobody publishes an event
+ * without a start. A draft read through preview has neither guarantee: its
+ * publish date may be empty, and `startsAt` and `timezone` are whatever the
+ * editor has typed so far. An
  * unfinished draft must not be able to take a page down.
  *
  * "" is the backstop, not the design. Callers that would rather omit the

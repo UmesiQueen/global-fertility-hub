@@ -6,7 +6,7 @@ import { queryStories, type StoryQuery } from "@/lib/listing/stories";
 import { isDraftEnabled } from "@/lib/preview";
 import { findRelated } from "@/lib/relations";
 import type { Clinic, Event, Paginated, Resource, Story } from "@/types";
-import { featuredFirst } from "./shared";
+import { byNewest, featuredFirst } from "./shared";
 
 /**
  * The only supported way for a page to read community stories.
@@ -63,7 +63,7 @@ export async function getFeaturedStories(limit = 6): Promise<Story[]> {
   return featuredFirst(
     await published(),
     (item) => Boolean(item.isFeatured),
-    (a, b) => b.publishedAt.localeCompare(a.publishedAt),
+    byNewest,
     limit,
   );
 }

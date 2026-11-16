@@ -1,4 +1,4 @@
-import { paginate } from "@/lib/repositories/shared";
+import { byNewest, paginate } from "@/lib/repositories/shared";
 import type {
   Paginated,
   Resource,
@@ -18,8 +18,7 @@ export interface ResourceQuery {
   pageSize?: number;
 }
 
-export const byNewestResource = (a: Resource, b: Resource) =>
-  b.publishedAt.localeCompare(a.publishedAt);
+export const byNewestResource = (a: Resource, b: Resource) => byNewest(a, b);
 
 export function queryResources(
   all: Resource[],
@@ -57,7 +56,7 @@ export function queryResources(
 
   switch (sort) {
     case "oldest":
-      items.sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
+      items.sort((a, b) => byNewest(b, a));
       break;
     case "reading-time":
       items.sort((a, b) => a.readingTime - b.readingTime);

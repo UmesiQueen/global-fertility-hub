@@ -19,8 +19,8 @@ const url = (path: string) => `${siteConfig.url}${path}`;
 /**
  * A date field, or nothing at all.
  *
- * Draft entries read through preview have no `publishedAt` until they are first
- * published, and an event being drafted may not have its `startsAt` filled in.
+ * Draft entries read through preview may not have a publish date yet, and an
+ * event being drafted may not have its `startsAt` filled in.
  * Structured data that is absent is fine; structured data that is wrong is not,
  * and a Date built from "" throws on `toISOString()` — which is a 500 for the
  * page rather than a missing meta tag.

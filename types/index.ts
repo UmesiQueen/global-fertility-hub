@@ -6,3 +6,4 @@ export * from "./event";
 export * from "./consultation";
 export * from "./discount";
 export * from "./product";
+export * from "./news";

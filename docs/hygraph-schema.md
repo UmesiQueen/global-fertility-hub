@@ -28,7 +28,7 @@ Other conventions:
 
 ## 1. Enumerations
 
-Create all nine before touching models. Each has a description of its own, then a description per value.
+Create all ten before touching models. Each has a description of its own, then a description per value.
 
 ### `FertilityTopic`
 
@@ -162,6 +162,17 @@ Create all nine before touching models. Each has a description of its own, then 
 | `donor_conception` | Donor Conception | Conceiving with donor eggs, sperm or embryos. |
 | `international_ivf` | International IVF | Travelling to another country for treatment. |
 
+### `NewsType`
+
+> **Enum description:** What kind of news this is. Sets the badge on the card and the filter chip on the News page. Pick the one thing it's mainly about.
+
+| API ID | Display name | Description |
+|---|---|---|
+| `research` | Research | A new study or finding. Say what was studied and how big the study was. Never claim more than the study does. |
+| `policy` | Policy & Law | A change to law, regulation, funding or access, e.g. IVF rebates or donor laws. Always fill in Region. |
+| `field_news` | Fertility News | Anything else from the wider fertility world: new services, technology, public debate. |
+| `hub_update` | Hub Update | News from Global Fertility Hub itself: new programs, events, partners, milestones. No Sources needed. |
+
 ---
 
 ## 2. Components
@@ -238,6 +249,17 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Question | Single line text | `question` | Yes | In the reader's words, e.g. "Are you doctors?". |
 | Answer | Multi line text | `answer` | Yes | Plain, honest, and never implying medical advice. |
 
+### `NewsSource`
+
+> **Component description:** Where an outside news item came from. Every Research, Policy & Law and Fertility News post needs at least one, so readers can check the original for themselves.
+
+| Field | Type | API ID | Required | Description |
+|---|---|---|---|---|
+| Publisher | Single line text | `publisher` | Yes | Who published it, e.g. "BBC News", "Human Reproduction", "Australian Government Department of Health". |
+| Title | Single line text | `title` | Yes | The original headline or paper title, exactly as written. |
+| URL | Single line text | `url` | Yes | A clean link: delete anything from `?utm_` onwards. For research papers, use the DOI link. |
+| Publish date | Date | `publishDate` | | When the original came out. |
+
 ### `AvailabilityDay` — only if availability moves to Hygraph (see §6)
 
 > **Component description:** One day of bookable consultation slots. Times are stored as exact moments so the site can show them correctly to someone in any country.
@@ -250,6 +272,10 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 ---
 
 ## 3. Models
+
+> **Publish date.** Hygraph has a built-in `publishedAt` that changes every time you republish, so never create a field with that name. Resource, Story, Product and NewsPost each have their own **Publish date** (`publishDate`) instead: the date readers see, and what orders the lists.
+>
+> **Adding it to a model that already has entries:** add the field *without* ticking "Make field required" → fill it in on every existing entry using its real publish date → then tick required. The site uses Hygraph's own date for any entry still missing one, so nothing breaks in between.
 
 ### `Resource`
 
@@ -266,7 +292,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Tags | Enumeration → `FertilityTopic`, list | `tags` | Yes | **At least one.** Tags are how this connects to related stories, events and partners — a resource with no tags appears nowhere else on the site. |
 | Author | Component → `Author` | `author` | Yes | Who wrote it. |
 | Reading time | Number (integer) | `readingTime` | Yes | Minutes, rounded. Roughly 200 words per minute for reading, or the actual length for a video. |
-| Published at | Date | `publishedAt` | Yes | The date shown to readers. Not the same as when it was created. |
+| Publish date | Date | `publishDate` | Yes | The date readers see, and what orders "Newest". Set it once when you first publish and leave it — editing and republishing won't change it. |
 | Cover image | Asset | `coverImage` | | Shown on the card and at the top of the article. |
 | Is new | Boolean | `isNew` | | Shows a "New" pill on the card. Remember to untick it after a few weeks. |
 | Is featured | Boolean | `isFeatured` | | Prefers this for the homepage. The homepage fills any gaps automatically, so this is a nudge rather than a guarantee. |
@@ -286,7 +312,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Body | Rich text | `body` | Yes | Their words. Edit only lightly, for clarity or length — never to make it more dramatic. |
 | Tags | Enumeration → `FertilityTopic`, list | `tags` | Yes | At least one. Connects the story to related content. |
 | Author | Component → `StoryAuthor` | `author` | Yes | How they asked to be credited. |
-| Published at | Date | `publishedAt` | Yes | The date shown on the story. |
+| Publish date | Date | `publishDate` | Yes | The date shown on the story. Set it once when you first publish and leave it — editing and republishing won't change it. |
 | Reading time | Number (integer) | `readingTime` | Yes | Minutes, rounded. |
 | Cover image | Asset | `coverImage` | | Choose something gentle. Avoid baby imagery on loss stories. |
 | Is featured | Boolean | `isFeatured` | | Prefers this story for the homepage. |
@@ -368,7 +394,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Vendor | Single line text | `vendor` | Yes | Who sells it. Use "Global Fertility Hub" for our own products. |
 | Includes | Single line text, list | `includes` | | What they get, one per entry: "180-page PDF", "6 audio sessions". |
 | Cover image | Asset | `coverImage` | | Product image or cover. |
-| Published at | Date | `publishedAt` | Yes | When it went on sale. |
+| Publish date | Date | `publishDate` | Yes | When it went on sale. Orders "Newest" in the store. Set it once and leave it — republishing won't change it. |
 | Is featured | Boolean | `isFeatured` | | Prefers this product for prominent placement. |
 | Is new | Boolean | `isNew` | | Shows a "New" pill. Untick after a few weeks. |
 
@@ -411,6 +437,27 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Answer | Multi line text | `answer` | Yes | Honest and plain. Never implies medical advice. |
 | Sort order | Number (integer) | `sortOrder` | | Lower numbers appear first. |
 
+### `NewsPost`
+
+> **Model description:** Short, timely news on one page: fertility developments explained in plain English, plus updates from Global Fertility Hub. Every post gets its own page with a short summary in your own words and a link to the original. **Never paste or closely reword the source article.** Like everything else on the site, news explains and never advises.
+
+| Field | Type | API ID | Required | Description |
+|---|---|---|---|---|
+| Title | Single line text | `title` | Yes | Plain and accurate. No clickbait, and no "breakthrough" unless the source itself says so. |
+| Slug | Slug | `slug` | Yes, unique | The web address. Don't change it once published, or existing links break. |
+| Type | Enumeration → `NewsType` | `type` | Yes | The badge on the card and the filter chip. |
+| Excerpt | Multi line text | `excerpt` | Yes | One or two sentences. Used on cards *and* as the search-engine description, so make it stand alone. |
+| Body | Rich text | `body` | Yes | A short summary in your own words: what happened, who it affects and why it matters. A few paragraphs is plenty — the source link carries the detail. Use Heading 2 if you need sections. |
+| Tags | Enumeration → `FertilityTopic`, list | `tags` | Yes | **At least one.** Connects the post to related resources and stories. |
+| Region | Single line text | `region` | | Where this applies, e.g. "Australia", "UK", "Global". Essential for Policy & Law posts — laws differ by country. |
+| Sources | Component → `NewsSource`, list | `sources` | | **Required for Research, Policy & Law and Fertility News.** Leave empty for Hub Updates. |
+| Author | Component → `Author` | `author` | Yes | Usually "Global Fertility Hub Editorial Team". |
+| Publish date | Date | `publishDate` | Yes | The date readers see, and what orders the News page. Set it once when you first publish and leave it — editing and republishing won't change it. |
+| Reading time | Number (integer) | `readingTime` | | Minutes, rounded. Roughly 200 words per minute. |
+| Cover image | Asset | `coverImage` | | 16:9. Gentle and on-brand. |
+| Cover credit | Single line text | `coverImageCredit` | | Fill this in if the image isn't ours, e.g. "Photo: Name / Unsplash". |
+| Is featured | Boolean | `isFeatured` | | Pins this post to the top of the News page. Untick it when it's no longer the lead story. |
+
 ---
 
 ## 4. Assets
@@ -435,6 +482,8 @@ Both models must exist before you can create a relation. None are needed for lau
 | `Resource` | `relatedClinics` | `Clinic` | Many-to-many | Partners particularly relevant to this topic. |
 | `Event` | `relatedResources` | `Resource` | Many-to-many | Reading to go with this session. |
 | `Clinic` | `featuredResources` | `Resource` | Many-to-many | Content this partner contributed or is connected to. |
+| `NewsPost` | `relatedResources` | `Resource` | Many-to-many | Background reading for the story, e.g. a post on a new embryo-grading study links to "Embryo Grading Explained". Leave empty and the site chooses by shared tags. |
+| `NewsPost` | `relatedEvent` | `Event` | Many-to-one | For Hub Updates that announce an event. Links the post to the event page. |
 
 Until populated, `lib/relations.ts` computes everything from tag overlap. The code should prefer a curated relation when present and fall back to tags otherwise.
 

@@ -17,6 +17,7 @@ export { fetchClinics } from "./clinics";
 export { fetchConsultationFaqs, fetchConsultationTypes } from "./consultations";
 export { fetchDiscounts } from "./discounts";
 export { fetchEvents } from "./events";
+export { fetchNewsPosts } from "./news";
 export { fetchProducts } from "./products";
 export { fetchResources } from "./resources";
 export { fetchStories } from "./stories";

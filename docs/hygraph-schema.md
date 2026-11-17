@@ -258,7 +258,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Publisher | Single line text | `publisher` | Yes | Who published it, e.g. "BBC News", "Human Reproduction", "Australian Government Department of Health". |
 | Title | Single line text | `title` | Yes | The original headline or paper title, exactly as written. |
 | URL | Single line text | `url` | Yes | A clean link: delete anything from `?utm_` onwards. For research papers, use the DOI link. |
-| Publish date | Date | `publishDate` | | When the original came out. |
+| Publish date | Date and time | `publishDate` | | When the original came out. |
 
 ### `AvailabilityDay` — only if availability moves to Hygraph (see §6)
 
@@ -292,7 +292,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Tags | Enumeration → `FertilityTopic`, list | `tags` | Yes | **At least one.** Tags are how this connects to related stories, events and partners — a resource with no tags appears nowhere else on the site. |
 | Author | Component → `Author` | `author` | Yes | Who wrote it. |
 | Reading time | Number (integer) | `readingTime` | Yes | Minutes, rounded. Roughly 200 words per minute for reading, or the actual length for a video. |
-| Publish date | Date | `publishDate` | Yes | The date readers see, and what orders "Newest". Set it once when you first publish and leave it — editing and republishing won't change it. |
+| Publish date | Date and time | `publishDate` | Yes | The date readers see, and what orders "Newest". Set it once when you first publish and leave it — editing and republishing won't change it. |
 | Cover image | Asset | `coverImage` | | Shown on the card and at the top of the article. |
 | Is new | Boolean | `isNew` | | Shows a "New" pill on the card. Remember to untick it after a few weeks. |
 | Is featured | Boolean | `isFeatured` | | Prefers this for the homepage. The homepage fills any gaps automatically, so this is a nudge rather than a guarantee. |
@@ -312,7 +312,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Body | Rich text | `body` | Yes | Their words. Edit only lightly, for clarity or length — never to make it more dramatic. |
 | Tags | Enumeration → `FertilityTopic`, list | `tags` | Yes | At least one. Connects the story to related content. |
 | Author | Component → `StoryAuthor` | `author` | Yes | How they asked to be credited. |
-| Publish date | Date | `publishDate` | Yes | The date shown on the story. Set it once when you first publish and leave it — editing and republishing won't change it. |
+| Publish date | Date and time | `publishDate` | Yes | The date shown on the story. Set it once when you first publish and leave it — editing and republishing won't change it. |
 | Reading time | Number (integer) | `readingTime` | Yes | Minutes, rounded. |
 | Cover image | Asset | `coverImage` | | Choose something gentle. Avoid baby imagery on loss stories. |
 | Is featured | Boolean | `isFeatured` | | Prefers this story for the homepage. |
@@ -394,7 +394,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Vendor | Single line text | `vendor` | Yes | Who sells it. Use "Global Fertility Hub" for our own products. |
 | Includes | Single line text, list | `includes` | | What they get, one per entry: "180-page PDF", "6 audio sessions". |
 | Cover image | Asset | `coverImage` | | Product image or cover. |
-| Publish date | Date | `publishDate` | Yes | When it went on sale. Orders "Newest" in the store. Set it once and leave it — republishing won't change it. |
+| Publish date | Date and time | `publishDate` | Yes | When it went on sale. Orders "Newest" in the store. Set it once and leave it — republishing won't change it. |
 | Is featured | Boolean | `isFeatured` | | Prefers this product for prominent placement. |
 | Is new | Boolean | `isNew` | | Shows a "New" pill. Untick after a few weeks. |
 
@@ -452,7 +452,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Region | Single line text | `region` | | Where this applies, e.g. "Australia", "UK", "Global". Essential for Policy & Law posts — laws differ by country. |
 | Sources | Component → `NewsSource`, list | `sources` | | **Required for Research, Policy & Law and Fertility News.** Leave empty for Hub Updates. |
 | Author | Component → `Author` | `author` | Yes | Usually "Global Fertility Hub Editorial Team". |
-| Publish date | Date | `publishDate` | Yes | The date readers see, and what orders the News page. Set it once when you first publish and leave it — editing and republishing won't change it. |
+| Publish date | Date and time | `publishDate` | Yes | The date readers see, and what orders the News page. Set it once when you first publish and leave it — editing and republishing won't change it. |
 | Reading time | Number (integer) | `readingTime` | | Minutes, rounded. Roughly 200 words per minute. |
 | Cover image | Asset | `coverImage` | | 16:9. Gentle and on-brand. |
 | Cover credit | Single line text | `coverImageCredit` | | Fill this in if the image isn't ours, e.g. "Photo: Name / Unsplash". |

@@ -3,7 +3,6 @@ import { Caveat, Inter, Space_Grotesk } from "next/font/google";
 import { PreviewBanner } from "@/components/layout/preview-banner";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { SkipToContent } from "@/components/layout/skip-to-content";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import "./globals.css";
@@ -62,7 +61,6 @@ export default function RootLayout({
         className="flex min-h-full flex-col font-sans"
         suppressHydrationWarning
       >
-        <SkipToContent />
         <PreviewBanner />
         <SiteHeader />
         <main id="main-content" className="flex-1">

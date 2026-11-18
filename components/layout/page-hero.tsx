@@ -28,6 +28,7 @@ export function PageHero({
   scriptLine,
   description,
   image,
+  fadeLeft,
   children,
   className,
 }: {
@@ -36,6 +37,8 @@ export function PageHero({
   scriptLine?: React.ReactNode;
   description?: string;
   image?: ImageAsset;
+  /** % of the photo's width the left fade covers. Defaults to HERO_FADE.left. */
+  fadeLeft?: number;
   children?: React.ReactNode;
   className?: string;
 }) {
@@ -55,7 +58,7 @@ export function PageHero({
             sizes="(min-width: 1024px) 60vw, 100vw"
             priority
             className="object-cover"
-            style={heroFadeLeft()}
+            style={heroFadeLeft(fadeLeft)}
           />
         </div>
       ) : null}

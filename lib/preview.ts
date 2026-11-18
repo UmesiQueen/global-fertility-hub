@@ -32,6 +32,7 @@ const PREVIEW_ROUTES = {
   resource: "/resources",
   clinic: "/clinic-directory",
   event: "/events",
+  news: "/news",
 } as const;
 
 export type PreviewType = keyof typeof PREVIEW_ROUTES;

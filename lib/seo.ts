@@ -1,5 +1,5 @@
 import { siteConfig } from "@/lib/site-config";
-import type { Clinic, Event, Resource, Story } from "@/types";
+import type { Clinic, Event, NewsPost, Resource, Story } from "@/types";
 
 /**
  * JSON-LD builders.
@@ -82,6 +82,23 @@ export function storyJsonLd(story: Story) {
     publisher: { "@type": "Organization", name: siteConfig.name },
     mainEntityOfPage: url(`/stories/${story.slug}`),
     ...(story.coverImage.src ? { image: url(story.coverImage.src) } : {}),
+  };
+}
+
+export function newsJsonLd(post: NewsPost) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: post.title,
+    description: post.excerpt,
+    ...(post.publishedAt ? { datePublished: post.publishedAt } : {}),
+    author: { "@type": "Organization", name: post.author.name },
+    publisher: { "@type": "Organization", name: siteConfig.name },
+    mainEntityOfPage: url(`/news/${post.slug}`),
+    ...(post.coverImage.src ? { image: url(post.coverImage.src) } : {}),
+    ...(post.sources.length
+      ? { citation: post.sources.map((source) => source.url) }
+      : {}),
   };
 }
 

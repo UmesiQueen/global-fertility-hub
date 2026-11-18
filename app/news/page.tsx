@@ -1,33 +1,39 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/layout/container";
+import { Suspense } from "react";
 import { PageHero } from "@/components/layout/page-hero";
-import { ButtonLink } from "@/components/shared/button-link";
+import { countNewsTypes } from "@/lib/listing/news";
+import { withoutBody } from "@/lib/listing/trim";
+import { getAllNewsPosts } from "@/lib/repositories/news";
+import { NewsListing, NewsResults } from "./news-listing";
 
-// PLACEHOLDER: the menu links here before the news content exists.
-// Remove `robots` once the real page lands.
+const PATHNAME = "/news";
+
 export const metadata: Metadata = {
   title: "News",
   description:
-    "Fertility and reproductive health news, plus updates from Global Fertility Hub.",
-  alternates: { canonical: "/news" },
-  robots: { index: false, follow: true },
+    "Fertility and reproductive health news from Australia and around the world, explained in plain English, plus updates from Global Fertility Hub.",
+  alternates: { canonical: PATHNAME },
 };
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const posts = await getAllNewsPosts();
+
+  // One object for both, so the shared reference is serialised once.
+  const listing = {
+    posts: withoutBody(posts),
+    counts: countNewsTypes(posts),
+  };
+
   return (
     <>
       <PageHero
         title="News"
-        description="Fertility and reproductive health news, plus updates from Global Fertility Hub. Our first stories are on their way."
+        description="Fertility and reproductive health news from Australia and around the world, explained in plain English, plus updates from Global Fertility Hub."
       />
-      <Container className="flex flex-col gap-3 py-12 sm:flex-row md:py-16">
-        <ButtonLink href="/resources" size="lg">
-          Explore Resources
-        </ButtonLink>
-        <ButtonLink href="/" variant="outline" size="lg">
-          Back to Home
-        </ButtonLink>
-      </Container>
+
+      <Suspense fallback={<NewsResults {...listing} params={{}} />}>
+        <NewsListing {...listing} />
+      </Suspense>
     </>
   );
 }

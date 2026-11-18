@@ -80,6 +80,22 @@ async function scopePreviewCookie(secure: boolean): Promise<void> {
   });
 }
 
+/**
+ * Whether the draft cookie can be SameSite=None, so Hygraph's preview panel
+ * (an iframe on hygraph.com) sends it. That needs Secure, which browsers
+ * accept on HTTPS, and on http://localhost in Chrome, Edge and Firefox.
+ *
+ * Locally it's only used when the request comes from that iframe. A preview
+ * opened in a normal tab keeps the Lax cookie that already works there,
+ * including in Safari, which rejects Secure cookies on http://localhost.
+ */
+function canShareAcrossSites(request: Request, url: URL): boolean {
+  if (url.protocol === "https:") return true;
+
+  const local = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+  return local && request.headers.get("sec-fetch-dest") === "iframe";
+}
+
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
 
@@ -109,7 +125,7 @@ export async function GET(request: Request): Promise<Response> {
 
   (await draftMode()).enable();
 
-  await scopePreviewCookie(url.protocol === "https:");
+  await scopePreviewCookie(canShareAcrossSites(request, url));
 
   // Throws NEXT_REDIRECT, which Next turns into a 307 — so nothing below runs
   // and this must stay outside a try/catch.

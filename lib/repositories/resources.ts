@@ -1,6 +1,6 @@
-import { fetchClinics } from "@/api/clinics";
-import { fetchEvents } from "@/api/events";
-import { fetchResources } from "@/api/resources";
+import { fetchClinics } from "@/cms/clinics";
+import { fetchEvents } from "@/cms/events";
+import { fetchResources } from "@/cms/resources";
 import {
   byNewestResource as byNewest,
   queryResources,

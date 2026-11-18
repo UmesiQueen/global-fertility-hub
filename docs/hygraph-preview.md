@@ -77,10 +77,10 @@ Two consequences:
 - `app/api/preview/route.ts` — constant-time secret check, model → path
   whitelist, `draftMode().enable()`, the SameSite rewrite, then a redirect.
 - `lib/preview.ts` — the whitelist and `isDraftEnabled()`.
-- `api/client.ts` — asks `isDraftEnabled()` per request and sends
+- `cms/client.ts` — asks `isDraftEnabled()` per request and sends
   `stage: DRAFT` with the draft token and `cache: "no-store"`, or
   `stage: PUBLISHED` with the published token and the usual 1h revalidate.
-  Every query in `api/*.ts` declares `$stage: Stage!` for this.
+  Every query in `cms/*.ts` declares `$stage: Stage!` for this.
 
   The doc reads `draftMode()` in the page component and passes the stage down.
   Doing it here instead keeps the "no page imports `@/api` directly" rule — the

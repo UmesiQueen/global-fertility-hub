@@ -1,7 +1,7 @@
 import {
   fetchConsultationFaqs,
   fetchConsultationTypes,
-} from "@/api/consultations";
+} from "@/cms/consultations";
 import { availability } from "@/lib/availability";
 import type {
   AvailabilitySlot,

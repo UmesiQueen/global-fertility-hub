@@ -1,5 +1,5 @@
-import { fetchProducts } from "@/api/products";
-import { fetchResources } from "@/api/resources";
+import { fetchProducts } from "@/cms/products";
+import { fetchResources } from "@/cms/resources";
 import {
   byNewestProduct as byNewest,
   type ProductQuery,

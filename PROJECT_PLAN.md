@@ -289,7 +289,7 @@ The dividing line: Hygraph is where *editors write*; Convex is where *the public
 ### Steps
 
 1. ✅ **Model the schema in Hygraph.** Transcribed from `docs/hygraph-schema.md`, which maps our existing `types/` one-to-one.
-2. ✅ **Build the query layer** in `api/`. `client.ts` is the whole transport — one POST with the bearer token and `next: { revalidate: 3600 }`. `map.ts` holds four shared mappers. Then one file per model: a single query constant and a single `fetchX(): Promise<X[]>`.
+2. ✅ **Build the query layer** in `cms/` (originally `api/`, renamed because Vercel deploys a root `api/` folder as serverless functions). `client.ts` is the whole transport — one POST with the bearer token and `next: { revalidate: 3600 }`. `map.ts` holds four shared mappers. Then one file per model: a single query constant and a single `fetchX(): Promise<X[]>`.
 3. ✅ **Rewrite the repository bodies.** Every exported signature stayed identical, so no page changed.
 4. ✅ **Delete `lib/data`.** `legal.ts` moved to `lib/legal.ts` and availability to `lib/availability.ts`; the six mock content files are gone.
 5. ✅ **Split verification** into `verify:code` (offline logic) and `verify:hygraph` (live content invariants).
@@ -299,7 +299,7 @@ The dividing line: Hygraph is where *editors write*; Convex is where *the public
 
 ### Why the query layer is this small
 
-The repositories already do filtering, sorting, pagination, counts and relatedness in memory over arrays. So `api/` only ever needs to hand them an array. One query per model, cached by Next for an hour — no `where` builders, no connection/aggregate counts, no card/full field splits, no draft stage. If the corpus grows past a few hundred records, push filtering into GraphQL then; not before.
+The repositories already do filtering, sorting, pagination, counts and relatedness in memory over arrays. So `cms/` only ever needs to hand them an array. One query per model, cached by Next for an hour — no `where` builders, no connection/aggregate counts, no card/full field splits, no draft stage. If the corpus grows past a few hundred records, push filtering into GraphQL then; not before.
 
 The `status: "approved"` story gate survives as a defensive filter in the repository, but Hygraph's publish step is now the actual review.
 

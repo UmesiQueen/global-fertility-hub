@@ -1,5 +1,5 @@
-import { fetchNewsPosts } from "@/api/news";
-import { fetchResources } from "@/api/resources";
+import { fetchNewsPosts } from "@/cms/news";
+import { fetchResources } from "@/cms/resources";
 import { pickLead, queryNews, type NewsQuery } from "@/lib/listing/news";
 import { findRelated, findRelatedWithFallback } from "@/lib/relations";
 import type { NewsPost, Resource } from "@/types";

@@ -10,7 +10,7 @@ Commands: `bun dev` · `bun run build` · `bun run lint`
 
 ## Hard rules
 
-1. **Pages never import `api/*` directly.** Always go through `lib/repositories/*`. The repositories own filtering, sorting, pagination, relatedness and the guardrails below — a page that queries Hygraph itself bypasses all of them.
+1. **Pages never import `cms/*` directly.** Always go through `lib/repositories/*`. The repositories own filtering, sorting, pagination, relatedness and the guardrails below — a page that queries Hygraph itself bypasses all of them.
    - Listing pages (store, resources, stories, events, clinic-directory) are **static**: the page fetches the full list through a repository (`getAll*`) and a `*-listing.tsx` client component filters it from the URL with the pure functions in `lib/listing/*`. Repositories call the same functions, so filter rules live in one place. Never read `searchParams` in a listing page — it makes every query string a server render (Vercel Fast Origin Transfer).
 2. **Repository functions are `async`**, even when returning static data.
 3. **Server Components by default.** `"use client"` only for interactivity — filters, calendars, carousels, sheets, forms. Push the boundary as far down the tree as possible.
@@ -58,7 +58,7 @@ At the end of every phase or large chunk, propose the commit message(s) alongsid
 ## Structure
 
 ```
-api/            Hygraph — one query per model, mapped to our own types
+cms/            Hygraph — one query per model, mapped to our own types
   client.ts     the whole transport: POST, bearer token, 24h revalidate (webhook does the rest)
   map.ts        enumIn / asset / md / date
 app/            routes only — thin, composed of section/card components
@@ -78,7 +78,11 @@ lib/
 types/          shared TS types
 ```
 
-`api/` fetches whole resources; the repositories filter, sort and paginate
+Not `api/`: Vercel deploys every file in a root `api/` folder as its own
+serverless function, and the Hobby plan allows 12 per deployment. Route
+handlers live in `app/api/`; the Hygraph query layer lives in `cms/`.
+
+`cms/` fetches whole resources; the repositories filter, sort and paginate
 in memory. That's deliberate — the corpus is small, Next caches each query for
 a day (the publish webhook refreshes it sooner), and it keeps the query layer
 to one plain `fetch` per model.

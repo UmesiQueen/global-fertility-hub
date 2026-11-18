@@ -1,4 +1,4 @@
-import { fetchDiscounts } from "@/api/discounts";
+import { fetchDiscounts } from "@/cms/discounts";
 import type { Discount } from "@/types";
 
 /** The only supported way for a page to read partner discounts. */

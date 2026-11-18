@@ -1,7 +1,7 @@
-import { fetchClinics } from "@/api/clinics";
-import { fetchEvents } from "@/api/events";
-import { fetchResources } from "@/api/resources";
-import { fetchStories } from "@/api/stories";
+import { fetchClinics } from "@/cms/clinics";
+import { fetchEvents } from "@/cms/events";
+import { fetchResources } from "@/cms/resources";
+import { fetchStories } from "@/cms/stories";
 import { queryStories, type StoryQuery } from "@/lib/listing/stories";
 import { isDraftEnabled } from "@/lib/preview";
 import { findRelated } from "@/lib/relations";

@@ -275,7 +275,9 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 
 > **Publish date.** Hygraph has a built-in `publishedAt` that changes every time you republish, so never create a field with that name. Resource, Story, Product and NewsPost each have their own **Publish date** (`publishDate`) instead: the date readers see, and what orders the lists.
 >
-> **Adding it to a model that already has entries:** add the field *without* ticking "Make field required" → fill it in on every existing entry using its real publish date → then tick required. The site uses Hygraph's own date for any entry still missing one, so nothing breaks in between.
+> **Leave it empty when you publish.** The site fills it in automatically the first time an entry is published (the `/api/publish-date` webhook) and never changes it after that. Set it by hand only to backdate something. **Don't tick "Make field required"** — Hygraph would then refuse to publish an entry with it empty, before the site gets the chance to fill it in.
+>
+> Dates are shown in Perth time, where the site is based.
 
 ### `Resource`
 
@@ -292,7 +294,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Tags | Enumeration → `FertilityTopic`, list | `tags` | Yes | **At least one.** Tags are how this connects to related stories, events and partners — a resource with no tags appears nowhere else on the site. |
 | Author | Component → `Author` | `author` | Yes | Who wrote it. |
 | Reading time | Number (integer) | `readingTime` | Yes | Minutes, rounded. Roughly 200 words per minute for reading, or the actual length for a video. |
-| Publish date | Date and time | `publishDate` | Yes | The date readers see, and what orders "Newest". Set it once when you first publish and leave it — editing and republishing won't change it. |
+| Publish date | Date and time | `publishDate` | | Leave empty — filled in automatically on first publish. Orders "Newest". Set it by hand only to backdate. |
 | Cover image | Asset | `coverImage` | | Shown on the card and at the top of the article. |
 | Is new | Boolean | `isNew` | | Shows a "New" pill on the card. Remember to untick it after a few weeks. |
 | Is featured | Boolean | `isFeatured` | | Prefers this for the homepage. The homepage fills any gaps automatically, so this is a nudge rather than a guarantee. |
@@ -312,7 +314,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Body | Rich text | `body` | Yes | Their words. Edit only lightly, for clarity or length — never to make it more dramatic. |
 | Tags | Enumeration → `FertilityTopic`, list | `tags` | Yes | At least one. Connects the story to related content. |
 | Author | Component → `StoryAuthor` | `author` | Yes | How they asked to be credited. |
-| Publish date | Date and time | `publishDate` | Yes | The date shown on the story. Set it once when you first publish and leave it — editing and republishing won't change it. |
+| Publish date | Date and time | `publishDate` | | Leave empty — filled in automatically on first publish. The date shown on the story. Set it by hand only to backdate. |
 | Reading time | Number (integer) | `readingTime` | Yes | Minutes, rounded. |
 | Cover image | Asset | `coverImage` | | Choose something gentle. Avoid baby imagery on loss stories. |
 | Is featured | Boolean | `isFeatured` | | Prefers this story for the homepage. |
@@ -394,7 +396,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Vendor | Single line text | `vendor` | Yes | Who sells it. Use "Global Fertility Hub" for our own products. |
 | Includes | Single line text, list | `includes` | | What they get, one per entry: "180-page PDF", "6 audio sessions". |
 | Cover image | Asset | `coverImage` | | Product image or cover. |
-| Publish date | Date and time | `publishDate` | Yes | When it went on sale. Orders "Newest" in the store. Set it once and leave it — republishing won't change it. |
+| Publish date | Date and time | `publishDate` | | Leave empty — filled in automatically on first publish. Orders "Newest" in the store. Set it by hand only to backdate. |
 | Is featured | Boolean | `isFeatured` | | Prefers this product for prominent placement. |
 | Is new | Boolean | `isNew` | | Shows a "New" pill. Untick after a few weeks. |
 
@@ -452,7 +454,7 @@ Hygraph **components** are reusable field groups — the equivalent of our neste
 | Region | Single line text | `region` | | Where this applies, e.g. "Australia", "UK", "Global". Essential for Policy & Law posts — laws differ by country. |
 | Sources | Component → `NewsSource`, list | `sources` | | **Required for Research, Policy & Law and Fertility News.** Leave empty for Hub Updates. |
 | Author | Component → `Author` | `author` | Yes | Usually "Global Fertility Hub Editorial Team". |
-| Publish date | Date and time | `publishDate` | Yes | The date readers see, and what orders the News page. Set it once when you first publish and leave it — editing and republishing won't change it. |
+| Publish date | Date and time | `publishDate` | | Leave empty — filled in automatically on first publish. Orders the News page. Set it by hand only to backdate. |
 | Reading time | Number (integer) | `readingTime` | | Minutes, rounded. Roughly 200 words per minute. |
 | Cover image | Asset | `coverImage` | | 16:9. Gentle and on-brand. |
 | Cover credit | Single line text | `coverImageCredit` | | Fill this in if the image isn't ours, e.g. "Photo: Name / Unsplash". |

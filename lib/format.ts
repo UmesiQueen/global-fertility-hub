@@ -1,3 +1,4 @@
+import { siteConfig } from "@/lib/site-config";
 import type { ConsultationType, Event } from "@/types";
 
 /**
@@ -49,28 +50,35 @@ function render(
   }
 }
 
-/** "12 June 2026" */
-export function formatDate(iso: string): string {
+/**
+ * Prints the calendar day a value stands for.
+ *
+ * A plain "2026-10-20" is already a day and prints as itself. A full
+ * timestamp is a moment, and Hygraph stores those in UTC: midnight on 20 Oct
+ * picked in Lagos arrives as 23:00 on the 19th, so cutting the UTC date shows
+ * the day before. Read in the site's own timezone it lands on the 20th.
+ */
+function calendarDay(
+  iso: string,
+  options: Pick<Intl.DateTimeFormatOptions, "day" | "month" | "year">,
+): string {
   if (!iso) return "";
 
-  return render(at(`${iso.slice(0, 10)}T00:00:00Z`), {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+  if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+    return render(at(`${iso}T00:00:00Z`), { ...options, timeZone: "UTC" });
+  }
+
+  return render(at(iso), { ...options, timeZone: siteConfig.contentTimezone });
+}
+
+/** "12 June 2026" */
+export function formatDate(iso: string): string {
+  return calendarDay(iso, { day: "numeric", month: "long", year: "numeric" });
 }
 
 /** "12 Jun 2026" — for tight card footers. */
 export function formatDateShort(iso: string): string {
-  if (!iso) return "";
-
-  return render(at(`${iso.slice(0, 10)}T00:00:00Z`), {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+  return calendarDay(iso, { day: "numeric", month: "short", year: "numeric" });
 }
 
 /**

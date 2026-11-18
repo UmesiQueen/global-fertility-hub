@@ -17,6 +17,12 @@ export const siteConfig = {
   communityUrl: "https://instagram.com/henry_and_precious",
   email: "admin@globalfertilityhub.org",
   practitionerTimezone: "Australia/Perth",
+  /**
+   * The timezone content dates are shown in. Hygraph stores date-times in UTC,
+   * so a date has to be read in one fixed place to land on the day the editor
+   * picked. Perth is where the site is based.
+   */
+  contentTimezone: "Australia/Perth",
   bookingUrl: "https://calendly.com/precious-and-henry/20min",
 } as const;
 

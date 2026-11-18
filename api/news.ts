@@ -1,6 +1,6 @@
 import type { NewsPost, NewsSource } from "@/types";
 import { hygraphFetch } from "./client";
-import { asset, date, enumIn, md, publishDate, type WithPublishDate } from "./map";
+import { asset, enumIn, md, publishDate, type WithPublishDate } from "./map";
 
 const QUERY = `query NewsPosts($stage: Stage!) {
   newsPosts(stage: $stage, first: 100) {
@@ -49,7 +49,7 @@ export async function fetchNewsPosts(): Promise<NewsPost[]> {
       publisher: s.publisher,
       title: s.title,
       url: s.url,
-      publishedAt: s.publishDate ? date(s.publishDate) : undefined,
+      publishedAt: s.publishDate ?? undefined,
     })),
     author: { name: n.author?.name ?? "", role: n.author?.role ?? undefined },
     publishedAt: publishDate(n),

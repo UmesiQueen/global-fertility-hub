@@ -50,12 +50,22 @@ export function featuredFirst<T extends { id: string }>(
   return sorted.slice(0, limit);
 }
 
+/** Milliseconds, with a missing or unreadable date sorting last. */
+const time = (iso: string) => {
+  const ms = Date.parse(iso);
+  return Number.isNaN(ms) ? Number.NEGATIVE_INFINITY : ms;
+};
+
 /**
- * Newest first by publish date. For oldest first, call it with the arguments
- * swapped.
+ * Newest first by publish date and time. Compared as instants rather than
+ * strings, so "2026-11-01" and "2026-11-01T13:30:00+00:00" order correctly
+ * against each other. For oldest first, call it with the arguments swapped.
  */
 export function byNewest<T extends { publishedAt: string }>(a: T, b: T): number {
-  return b.publishedAt.localeCompare(a.publishedAt);
+  const left = time(a.publishedAt);
+  const right = time(b.publishedAt);
+  if (left === right) return 0;
+  return right > left ? 1 : -1;
 }
 
 /** Case-insensitive contains, tolerant of undefined query values. */

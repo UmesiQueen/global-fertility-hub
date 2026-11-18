@@ -28,7 +28,11 @@ export default async function NewsPage() {
     <>
       <PageHero
         title="News"
-        description="Fertility and reproductive health news from Australia and around the world, explained in plain English, plus updates from Global Fertility Hub."
+        description="Fertility and reproductive health news from Australia and around the world, plus updates from Global Fertility Hub."
+        image={{
+          src: "/news.webp",
+          alt: "A folded newspaper and a pen on a white marble desk, beside a cup of coffee, a small potted plant and a gold globe.",
+        }}
       />
 
       <Suspense fallback={<NewsResults {...listing} params={{}} />}>

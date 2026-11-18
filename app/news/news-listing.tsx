@@ -105,7 +105,7 @@ export function NewsResults({
           {latest.length ? (
             <section
               aria-labelledby="latest-news"
-              className="flex flex-col rounded-3xl border border-border/70 bg-surface p-4 md:p-5"
+              className="flex flex-col rounded-3xl border border-border/70 bg-hero-background/80 p-4 md:p-5"
             >
               <h2
                 id="latest-news"

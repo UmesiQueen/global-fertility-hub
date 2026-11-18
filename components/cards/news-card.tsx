@@ -118,7 +118,7 @@ export function NewsCard({
       <article
         className={cn(
           CARD,
-          "flex flex-col rounded-3xl md:min-h-104 lg:min-h-120",
+          "flex flex-col rounded-3xl md:min-h-96 lg:min-h-104",
           className,
         )}
       >
@@ -164,10 +164,10 @@ export function NewsCard({
           className,
         )}
       >
-        <div className="relative aspect-video w-full shrink-0 self-start overflow-hidden rounded-xl">
+        <div className="relative aspect-5/2 w-full shrink-0 self-start overflow-hidden rounded-xl">
           <EntityImage
             image={post.coverImage}
-            sizes="(min-width: 1024px) 180px, 160px"
+            sizes="(min-width: 1024px) 360px, 100vw"
             className="transition-transform duration-300 group-hover:scale-[1.03]"
           />
         </div>

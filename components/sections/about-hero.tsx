@@ -11,15 +11,16 @@ export function AboutHero() {
     >
       <div
         className="pointer-events-none absolute inset-y-0 right-0 hidden w-[55%] lg:block"
-        style={heroFadeTopBottom()}
+        style={heroFadeTopBottom(0, 0)}
       >
-        <div className="absolute inset-0" style={heroFadeLeft()}>
+        <div className="absolute inset-0" style={heroFadeLeft(50)}>
           <EntityImage
             image={{
-              src: "/about.webp",
-              alt: "Henry and Precious standing together at home, smiling.",
+              src: "/henry-and-precious.webp",
+              alt: "Henry and Precious at home, smiling with their heads together and Henry's arm around Precious.",
             }}
-            className="object-right"
+            // Keep the upper part of the frame, where their faces are.
+            className="object-[100%_30%]"
             sizes="55vw"
             priority
           />
@@ -50,12 +51,14 @@ export function AboutHero() {
               real support when you need it most.
             </p>
             <p>
-              <span className="text-foreground/80 font-semibold">Global Fertility Hub</span> 
-              {" "}was born from that experience.
+              <span className="text-foreground/80 font-semibold">
+                Global Fertility Hub
+              </span>{" "}
+              was born from that experience.
             </p>
             <p>
-              We&apos;re here for everyone, especially people too often left
-              out because of cost, language, culture or where they live, in
+              We&apos;re here for everyone, especially people too often left out
+              because of cost, language, culture or where they live, in
               Australia and around the world.
             </p>
           </div>
@@ -65,9 +68,10 @@ export function AboutHero() {
           <div className="relative mt-8 aspect-3/2 w-full overflow-hidden rounded-2xl lg:hidden">
             <EntityImage
               image={{
-                src: "/about.webp",
-                alt: "Henry and Precious standing together at home, smiling.",
+                src: "/henry-and-precious.webp",
+                alt: "Henry and Precious at home, smiling with their heads together and Henry's arm around Precious.",
               }}
+              className="object-[50%_30%]"
               sizes="100vw"
               priority
             />

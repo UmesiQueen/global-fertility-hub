@@ -4,10 +4,10 @@ import { NEWS_TYPES, type NewsPost, type NewsType, type Paginated } from "@/type
 /**
  * Pure news layout — shared by the repository and the /news listing.
  *
- * The page leads with one big "news of the day" card, a short "Latest news"
- * sidebar beside it, and a grid of everything else. The same split applies
- * inside a type filter, so filtering to Policy & Law still leads with the most
- * important policy post.
+ * With no type filter, the page leads with one big "news of the day" card, a
+ * short "Latest news" sidebar beside it, and a grid of everything else. Once a
+ * type is chosen it's a plain grid of that type, newest first: the lead and
+ * sidebar are the front page, not part of every view.
  */
 
 /** How many posts sit in the sidebar beside the lead card. */
@@ -20,10 +20,12 @@ export interface NewsQuery {
 }
 
 export interface NewsLayout {
-  /** The pinned post, or the newest one when nothing is pinned. */
+  /** The pinned post, or the newest one when nothing is pinned. Null when filtered. */
   lead: NewsPost | null;
+  /** Empty when filtered. */
   latest: NewsPost[];
-  /** Everything after the lead and the sidebar, newest first. */
+  /** Everything after the lead and the sidebar, newest first — or, when
+   * filtered, every post of that type. */
   rest: Paginated<NewsPost>;
   /** Posts matching the filter, lead and sidebar included. */
   total: number;
@@ -45,10 +47,17 @@ export function queryNews(
   all: NewsPost[],
   { type, page = 1, pageSize = 9 }: NewsQuery = {},
 ): NewsLayout {
-  const filtered = isNewsType(type)
-    ? all.filter((post) => post.type === type)
-    : all;
-  const sorted = [...filtered].sort(byNewest);
+  if (isNewsType(type)) {
+    const sorted = all.filter((post) => post.type === type).sort(byNewest);
+    return {
+      lead: null,
+      latest: [],
+      rest: paginate(sorted, page, pageSize),
+      total: sorted.length,
+    };
+  }
+
+  const sorted = [...all].sort(byNewest);
 
   const lead = pickLead(sorted);
   const others = sorted.filter((post) => post !== lead);

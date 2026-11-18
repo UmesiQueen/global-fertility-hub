@@ -6,10 +6,10 @@ import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/shared/button-link";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Pagination } from "@/components/shared/pagination";
-import { cn } from "@/lib/utils";
 import { isNewsType, queryNews } from "@/lib/listing/news";
 import { type RawSearchParams, readPage, readParam } from "@/lib/search-params";
 import { useRawSearchParams } from "@/lib/use-raw-search-params";
+import { cn } from "@/lib/utils";
 import { NEWS_TYPE_LABELS, NEWS_TYPES, type NewsPost, type NewsType } from "@/types";
 
 const PATHNAME = "/news";
@@ -127,16 +127,18 @@ export function NewsResults({
 
       {rest.total > 0 ? (
         <section
-          aria-labelledby="more-news"
+          aria-labelledby={type ? undefined : "more-news"}
           className={cn(showTop ? "mt-12 md:mt-16" : "mt-8")}
         >
-          <h2
-            id="more-news"
-            className="font-heading text-xl font-semibold text-foreground md:text-2xl"
-          >
-            More News
-          </h2>
-          <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {type ? null : (
+            <h2
+              id="more-news"
+              className="mb-6 font-heading text-xl font-semibold text-foreground md:text-2xl"
+            >
+              More News
+            </h2>
+          )}
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {rest.items.map((post) => (
               <li key={post.id} className="flex">
                 <NewsCard post={post} className="w-full" />

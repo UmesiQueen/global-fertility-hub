@@ -35,32 +35,43 @@ function NewsMeta({
   showReadingTime?: boolean;
   className?: string;
 }) {
-  const parts: React.ReactNode[] = [];
+  const parts: { key: string; content: React.ReactNode }[] = [];
 
   if (showType) {
-    parts.push(
-      <span key="type" className="font-semibold text-primary">
-        {NEWS_TYPE_LABELS[post.type] ?? "News"}
-      </span>,
-    );
+    parts.push({
+      key: "type",
+      content: (
+        <span className="font-semibold text-primary">
+          {NEWS_TYPE_LABELS[post.type] ?? "News"}
+        </span>
+      ),
+    });
   }
 
   // A draft read through preview may not have a date yet.
   if (post.publishedAt) {
-    parts.push(
-      <time key="date" dateTime={post.publishedAt}>
-        {formatDateShort(post.publishedAt)}
-      </time>,
-    );
+    parts.push({
+      key: "date",
+      content: (
+        <time dateTime={post.publishedAt}>
+          {formatDateShort(post.publishedAt)}
+        </time>
+      ),
+    });
   }
-  if (post.region) parts.push(<span key="region">{post.region}</span>);
+  if (post.region) {
+    parts.push({ key: "region", content: <span>{post.region}</span> });
+  }
   if (showReadingTime && post.readingTime) {
-    parts.push(
-      <span key="time" className="inline-flex items-center gap-1">
-        <Clock aria-hidden="true" className="size-3" />
-        {formatReadingTime(post.readingTime)}
-      </span>,
-    );
+    parts.push({
+      key: "time",
+      content: (
+        <span className="inline-flex items-center gap-1">
+          <Clock aria-hidden="true" className="size-3" />
+          {formatReadingTime(post.readingTime)}
+        </span>
+      ),
+    });
   }
 
   return (
@@ -71,9 +82,9 @@ function NewsMeta({
       )}
     >
       {parts.map((part, index) => (
-        <span key={index} className="inline-flex items-center gap-1.5">
+        <span key={part.key} className="inline-flex items-center gap-1.5">
           {index > 0 ? <span aria-hidden="true">·</span> : null}
-          {part}
+          {part.content}
         </span>
       ))}
     </p>
@@ -107,7 +118,7 @@ export function NewsCard({
       <article
         className={cn(
           CARD,
-          "flex flex-col rounded-3xl md:min-h-[26rem] lg:min-h-[30rem]",
+          "flex flex-col rounded-3xl md:min-h-104 lg:min-h-120",
           className,
         )}
       >
@@ -149,11 +160,11 @@ export function NewsCard({
       <article
         className={cn(
           CARD,
-          "flex items-stretch gap-4 rounded-2xl p-3",
+          "flex flex-1 flex-col gap-2 rounded-2xl p-3",
           className,
         )}
       >
-        <div className="relative aspect-4/3 w-28 shrink-0 self-start overflow-hidden rounded-xl sm:w-40 lg:aspect-auto lg:w-[42%] lg:self-stretch">
+        <div className="relative aspect-video w-full shrink-0 self-start overflow-hidden rounded-xl">
           <EntityImage
             image={post.coverImage}
             sizes="(min-width: 1024px) 180px, 160px"
@@ -161,15 +172,11 @@ export function NewsCard({
           />
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col py-1">
-          <NewsMeta post={post} />
-          <h3 className="mt-1.5 line-clamp-3 font-heading text-sm leading-snug font-semibold text-foreground sm:text-base">
-            <TitleLink post={post} />
-          </h3>
-          <p className="mt-1.5 hidden line-clamp-2 text-sm leading-relaxed text-muted-foreground sm:block">
-            {post.excerpt}
-          </p>
-        </div>
+        <NewsMeta post={post} />
+        
+        <h3 className="mt-1.5 line-clamp-3 font-heading text-sm leading-snug font-semibold text-foreground sm:text-base">
+          <TitleLink post={post} />
+        </h3>
       </article>
     );
   }
